@@ -5,21 +5,124 @@
 [ext_resource type="PackedScene" uid="uid://ds8qhbocxa2ii" path="res://assets/door.glb" id="1_abmy8"]
 [ext_resource type="PackedScene" uid="uid://dnr18df7sul6" path="res://assets/OfficeAssets_free.glb" id="1_pjbg2"]
 [ext_resource type="PackedScene" uid="uid://crjw6d4u1q1tc" path="res://assets/oldRoom.glb" id="2_abmy8"]
+[ext_resource type="Script" uid="uid://caoc3hw73cx53" path="res://Scripts/camera_3d.gd" id="6_1v8qo"]
+[ext_resource type="Shader" uid="uid://c6qhkhar3xobg" path="res://Scripts/edge_detection.gdshader" id="7_hnr4c"]
+
+[sub_resource type="QuadMesh" id="QuadMesh_1v8qo"]
+size = Vector2(2, 2)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_hnr4c"]
+render_priority = 0
+shader = ExtResource("7_hnr4c")
+shader_parameter/lightIntensity = 1.25
+shader_parameter/lineAlpha = 0.7
+shader_parameter/useLighting = true
+shader_parameter/lineHighlight = 0.2
+shader_parameter/lineShadow = 0.55
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_meq1q"]
+sky_top_color = Color(0.0011252849, 0.12802976, 0.30780676, 1)
+sky_horizon_color = Color(0.003070068, 0.10436324, 0.25312415, 1)
+ground_bottom_color = Color(0, 0, 0, 1)
+ground_horizon_color = Color(0, 0, 0, 1)
+
+[sub_resource type="Sky" id="Sky_hnr4c"]
+sky_material = SubResource("ProceduralSkyMaterial_meq1q")
+
+[sub_resource type="Environment" id="Environment_1vivr"]
+sky = SubResource("Sky_hnr4c")
+ambient_light_source = 3
+ambient_light_color = Color(0.0012205493, 8.534494e-05, 0.0036303957, 0.8980392)
+ambient_light_sky_contribution = 0.4
+ambient_light_energy = 0.16
+fog_enabled = true
+fog_light_color = Color(0.06469653, 0.06469653, 0.06469653, 1)
+fog_light_energy = 0.4
+fog_depth_begin = 5.0
+fog_depth_end = 15.0
+volumetric_fog_density = 0.0165
+volumetric_fog_albedo = Color(0.09884685, 0.14581767, 0.19554113, 1)
 
 [node name="Node2D" type="Node2D" unique_id=117264161]
 
-[node name="SubViewport" type="SubViewport" parent="." unique_id=1982693907]
+[node name="SubViewportContainer" type="SubViewportContainer" parent="." unique_id=1300685362]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = 1.0
+offset_right = 1920.0
+offset_bottom = 1081.0
+grow_horizontal = 2
+grow_vertical = 2
 
-[node name="door" parent="." unique_id=22472216 instance=ExtResource("1_abmy8")]
-transform = Transform3D(-9.438777e-09, 0, 0.6246864, 0, 0.47113827, 0, -0.21593404, 0, -2.7305907e-08, 9.17397, 50.464397, -96.50599)
+[node name="SubViewport" type="SubViewport" parent="SubViewportContainer" unique_id=1982693907]
+canvas_item_default_texture_filter = 0
+size = Vector2i(1920, 1080)
 
-[node name="board" parent="." unique_id=1853175376 instance=ExtResource("1_2r27c")]
-transform = Transform3D(-4.371139e-05, 0, -1, 0, 1000, 0, 1000, 0, -4.371139e-08, 102.31978, -18.326767, 16.781366)
+[node name="OfficeAssets_free" parent="SubViewportContainer/SubViewport" unique_id=895085341 instance=ExtResource("1_pjbg2")]
+transform = Transform3D(-1.7484556e-06, 0, -40, 0, 40, 0, 40, 0, -1.7484556e-06, 52.74849, -0.3891487, 26.601063)
 
-[node name="oldRoom" parent="." unique_id=1685391351 instance=ExtResource("2_abmy8")]
-
-[node name="blinds" parent="." unique_id=941499674 instance=ExtResource("1_2ktxb")]
+[node name="blinds" parent="SubViewportContainer/SubViewport" unique_id=941499674 instance=ExtResource("1_2ktxb")]
 transform = Transform3D(-1.0053619e-06, 0, 23, 0, 35, 0, -23, 0, -1.0053619e-06, -67.338, 22, 37.028)
 
-[node name="OfficeAssets_free" parent="." unique_id=895085341 instance=ExtResource("1_pjbg2")]
-transform = Transform3D(-1.7484556e-06, 0, -40, 0, 40, 0, 40, 0, -1.7484556e-06, 52.74849, -0.3891487, 26.601063)
+[node name="oldRoom" parent="SubViewportContainer/SubViewport" unique_id=1685391351 instance=ExtResource("2_abmy8")]
+
+[node name="door" parent="SubViewportContainer/SubViewport" unique_id=22472216 instance=ExtResource("1_abmy8")]
+transform = Transform3D(-9.438777e-09, 0, 0.6246864, 0, 0.47113827, 0, -0.21593404, 0, -2.7305907e-08, 9.17397, 50.464397, -96.50599)
+
+[node name="board" parent="SubViewportContainer/SubViewport" unique_id=1853175376 instance=ExtResource("1_2r27c")]
+transform = Transform3D(-4.371139e-05, 0, -1, 0, 1000, 0, 1000, 0, -4.371139e-08, 97.83049, -18.326767, 16.781366)
+
+[node name="Camera3D" type="Camera3D" parent="SubViewportContainer/SubViewport" unique_id=1960914920]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.9874725, 45.12148, 73.03577)
+fov = 80.0
+script = ExtResource("6_1v8qo")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="SubViewportContainer/SubViewport/Camera3D" unique_id=1804123908]
+visible = false
+extra_cull_margin = 16384.0
+mesh = SubResource("QuadMesh_1v8qo")
+surface_material_override/0 = SubResource("ShaderMaterial_hnr4c")
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="SubViewportContainer/SubViewport" unique_id=1739561079]
+environment = SubResource("Environment_1vivr")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="SubViewportContainer/SubViewport" unique_id=382455948]
+transform = Transform3D(-0.5916348, -0.8053435, -0.03728479, -0.04207623, -0.015339805, 0.9989966, -0.8051075, 0.5926101, -0.024810124, -630.02515, 572.2554, 0)
+light_color = Color(0.76132476, 0.8897189, 1, 1)
+light_energy = 0.175
+shadow_enabled = true
+
+[node name="ComputerLight" type="AreaLight3D" parent="SubViewportContainer/SubViewport" unique_id=223051972]
+transform = Transform3D(0.003871342, -0.9679196, -0.25123048, 0.9999925, 0.0038249746, 0.0006728678, 0.0003096683, -0.2512312, 0.9679271, 30.091263, 46.904716, 39.69116)
+light_color = Color(0.17211533, 0.1721153, 0.1721153, 1)
+light_energy = 2.39
+light_indirect_energy = 1.825
+area_range = 6.302
+area_attenuation = -4.714
+area_normalize_energy = false
+area_size = Vector2(0.3, 4.8)
+
+[node name="LampLight" type="SpotLight3D" parent="SubViewportContainer/SubViewport" unique_id=468872029]
+transform = Transform3D(0.99578464, 0.0043802923, -0.09161764, 0.09172229, -0.047554724, 0.9946485, 0, -0.99885905, -0.04775603, -4.442393, 56.67152, 35.41704)
+light_color = Color(0.99215686, 1, 0.7137255, 1)
+light_energy = 3.315
+spot_range = 40.981
+spot_attenuation = 0.2
+spot_angle = 180.0
+spot_angle_attenuation = 0.02915735
+
+[node name="AreaLight3D" type="AreaLight3D" parent="SubViewportContainer/SubViewport" unique_id=1307799295]
+transform = Transform3D(0.99937147, 0.034607075, -0.007686572, -0.010346181, 0.07734091, -0.99695104, -0.03390707, 0.99640393, 0.07765034, -4.343107, 55.343033, 35.767494)
+light_color = Color(0.99215686, 1, 0.7137255, 1)
+light_energy = 1.03
+area_range = 4.24
+area_attenuation = -7.095
+
+[node name="SpotLight3D" type="SpotLight3D" parent="SubViewportContainer/SubViewport" unique_id=1375620858]
+transform = Transform3D(-0.9594581, -0.0017425737, 0.28184587, -0.002918467, 0.99998885, -0.0037523827, -0.28183615, -0.004422812, -0.95945245, 32.562824, 46.898403, 31.052029)
+light_energy = 4.339
+spot_range = 66.907
+spot_attenuation = 0.17
+spot_angle = 26.59
+spot_angle_attenuation = 0.40612692
