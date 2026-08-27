@@ -1,0 +1,25 @@
+[gd_scene format=3 uid="uid://bidhay1q88cyu"]
+
+[ext_resource type="PackedScene" uid="uid://baxlul85hfohl" path="res://assets/blinds.glb" id="1_2ktxb"]
+[ext_resource type="PackedScene" uid="uid://xsp31e413nc0" path="res://assets/board.glb" id="1_2r27c"]
+[ext_resource type="PackedScene" uid="uid://ds8qhbocxa2ii" path="res://assets/door.glb" id="1_abmy8"]
+[ext_resource type="PackedScene" uid="uid://dnr18df7sul6" path="res://assets/OfficeAssets_free.glb" id="1_pjbg2"]
+[ext_resource type="PackedScene" uid="uid://crjw6d4u1q1tc" path="res://assets/oldRoom.glb" id="2_abmy8"]
+
+[node name="Node2D" type="Node2D" unique_id=117264161]
+
+[node name="SubViewport" type="SubViewport" parent="." unique_id=1982693907]
+
+[node name="door" parent="." unique_id=22472216 instance=ExtResource("1_abmy8")]
+transform = Transform3D(-9.438777e-09, 0, 0.6246864, 0, 0.47113827, 0, -0.21593404, 0, -2.7305907e-08, 9.17397, 50.464397, -96.50599)
+
+[node name="board" parent="." unique_id=1853175376 instance=ExtResource("1_2r27c")]
+transform = Transform3D(-4.371139e-05, 0, -1, 0, 1000, 0, 1000, 0, -4.371139e-08, 102.31978, -18.326767, 16.781366)
+
+[node name="oldRoom" parent="." unique_id=1685391351 instance=ExtResource("2_abmy8")]
+
+[node name="blinds" parent="." unique_id=941499674 instance=ExtResource("1_2ktxb")]
+transform = Transform3D(-1.0053619e-06, 0, 23, 0, 35, 0, -23, 0, -1.0053619e-06, -67.338, 22, 37.028)
+
+[node name="OfficeAssets_free" parent="." unique_id=895085341 instance=ExtResource("1_pjbg2")]
+transform = Transform3D(-1.7484556e-06, 0, -40, 0, 40, 0, 40, 0, -1.7484556e-06, 52.74849, -0.3891487, 26.601063)
