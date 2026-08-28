@@ -2,10 +2,17 @@
 
 [ext_resource type="PackedScene" uid="uid://baxlul85hfohl" path="res://assets/blinds.glb" id="1_2ktxb"]
 [ext_resource type="PackedScene" uid="uid://xsp31e413nc0" path="res://assets/board.glb" id="1_2r27c"]
+[ext_resource type="PackedScene" uid="uid://cicypmtndshsm" path="res://assets/persian_carpet.glb" id="1_a78iu"]
 [ext_resource type="PackedScene" uid="uid://ds8qhbocxa2ii" path="res://assets/door.glb" id="1_abmy8"]
+[ext_resource type="PackedScene" uid="uid://cqmn18xn636es" path="res://assets/potted_plant_mediterranean_med_leaf_low_poly.glb" id="1_i67a4"]
+[ext_resource type="PackedScene" uid="uid://btl0rfr13l74n" path="res://assets/wall_lamp_-_2048px2.glb" id="1_kgvsv"]
 [ext_resource type="PackedScene" uid="uid://dnr18df7sul6" path="res://assets/OfficeAssets_free.glb" id="1_pjbg2"]
+[ext_resource type="PackedScene" uid="uid://b1gp7cc2u2ob5" path="res://assets/old_ceiling_fan.glb" id="1_shaa1"]
+[ext_resource type="PackedScene" uid="uid://5u34c4adp7ka" path="res://assets/beneviento_house_chandelier.glb" id="1_yp7vf"]
 [ext_resource type="PackedScene" uid="uid://crjw6d4u1q1tc" path="res://assets/oldRoom.glb" id="2_abmy8"]
 [ext_resource type="Script" uid="uid://caoc3hw73cx53" path="res://Scripts/camera_3d.gd" id="6_1v8qo"]
+[ext_resource type="PackedScene" uid="uid://cyqja83grytb8" path="res://assets/drawers.glb" id="6_meq1q"]
+[ext_resource type="PackedScene" uid="uid://2e75sofl7wrw" path="res://assets/lamp.glb" id="7_ef07n"]
 [ext_resource type="Shader" uid="uid://c6qhkhar3xobg" path="res://Scripts/edge_detection.gdshader" id="7_hnr4c"]
 
 [sub_resource type="QuadMesh" id="QuadMesh_1v8qo"]
@@ -56,8 +63,26 @@ grow_horizontal = 2
 grow_vertical = 2
 
 [node name="SubViewport" type="SubViewport" parent="SubViewportContainer" unique_id=1982693907]
+handle_input_locally = false
 canvas_item_default_texture_filter = 0
 size = Vector2i(1920, 1080)
+render_target_update_mode = 4
+
+[node name="ceilingFan" parent="SubViewportContainer/SubViewport" unique_id=1386564586 instance=ExtResource("1_shaa1")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.694628, 112.96598, -26.152098)
+
+[node name="plant" parent="SubViewportContainer/SubViewport" unique_id=434987080 instance=ExtResource("1_i67a4")]
+transform = Transform3D(-20.449396, 0, -45.626995, 0, 50, 0, 45.626995, 0, -20.449396, 87.13385, -0.137, -77.40123)
+
+[node name="chandelier" parent="SubViewportContainer/SubViewport" unique_id=1754562649 instance=ExtResource("1_yp7vf")]
+transform = Transform3D(3, 0, 0, 0, 3, 0, 0, 0, 3, 6.694628, 102.0322, -26.152098)
+visible = false
+
+[node name="carpet" parent="SubViewportContainer/SubViewport" unique_id=932345867 instance=ExtResource("1_a78iu")]
+transform = Transform3D(-1.5298986e-06, 0, 35, 0, 35, 0, -35, 0, -1.5298986e-06, 11.323753, 0.41077805, -37.59288)
+
+[node name="wall_lamp" parent="SubViewportContainer/SubViewport" unique_id=2059848015 instance=ExtResource("1_kgvsv")]
+transform = Transform3D(-2.1855694e-06, 0, -50, 0, 50, 0, 50, 0, -2.1855694e-06, 102.41513, 92.557945, 0)
 
 [node name="OfficeAssets_free" parent="SubViewportContainer/SubViewport" unique_id=895085341 instance=ExtResource("1_pjbg2")]
 transform = Transform3D(-1.7484556e-06, 0, -40, 0, 40, 0, 40, 0, -1.7484556e-06, 52.74849, -0.3891487, 26.601063)
@@ -71,10 +96,29 @@ transform = Transform3D(-1.0053619e-06, 0, 23, 0, 35, 0, -23, 0, -1.0053619e-06,
 transform = Transform3D(-9.438777e-09, 0, 0.6246864, 0, 0.47113827, 0, -0.21593404, 0, -2.7305907e-08, 9.17397, 50.464397, -96.50599)
 
 [node name="board" parent="SubViewportContainer/SubViewport" unique_id=1853175376 instance=ExtResource("1_2r27c")]
-transform = Transform3D(-4.371139e-05, 0, -1, 0, 1000, 0, 1000, 0, -4.371139e-08, 97.83049, -18.326767, 16.781366)
+transform = Transform3D(-4.371139e-05, 0, -1, 0, 1000, 0, 1000, 0, -4.371139e-08, 101.71396, -25.461136, 7.6665287)
+
+[node name="drawers" parent="SubViewportContainer/SubViewport" unique_id=1858668345 instance=ExtResource("6_meq1q")]
+transform = Transform3D(-19.83509, 0, -28.836943, 0, 35, 0, 28.836943, 0, -19.83509, 89.2066, 0.30471325, 68.81477)
+
+[node name="drawers2" parent="SubViewportContainer/SubViewport" unique_id=2059156432 instance=ExtResource("6_meq1q")]
+transform = Transform3D(-1.5298986e-06, 0, -35, 0, 35, 0, 35, 0, -1.5298986e-06, 95.84112, -0.12066269, 46.128838)
+
+[node name="drawers4" parent="SubViewportContainer/SubViewport" unique_id=1633751758 instance=ExtResource("6_meq1q")]
+transform = Transform3D(35, 0, 0, 0, 35.000004, 0, 0, 0, 35, -58.52832, -0.13716173, -86.272736)
+
+[node name="drawers5" parent="SubViewportContainer/SubViewport" unique_id=1391999240 instance=ExtResource("6_meq1q")]
+transform = Transform3D(35, 0, 0, 0, 35, 0, 0, 0, 35, -37.637238, -0.137, -86.278)
+
+[node name="plant2" parent="SubViewportContainer/SubViewport" unique_id=1961198631 instance=ExtResource("1_i67a4")]
+transform = Transform3D(-19.139526, 0, -56.865433, 0, 59.999996, 0, 56.865433, 0, -19.139526, 61.934967, -0.137, -76.721214)
+
+[node name="lamp" parent="SubViewportContainer/SubViewport" unique_id=1124553725 instance=ExtResource("7_ef07n")]
+transform = Transform3D(0.45, 0, 0, 0, 0.45, 0, 0, 0, 0.45, 67.04639, 88.4188, -81.62609)
+visible = false
 
 [node name="Camera3D" type="Camera3D" parent="SubViewportContainer/SubViewport" unique_id=1960914920]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.9874725, 45.12148, 73.03577)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.9874725, 54.503563, 73.03577)
 fov = 80.0
 script = ExtResource("6_1v8qo")
 
@@ -126,3 +170,18 @@ spot_range = 66.907
 spot_attenuation = 0.17
 spot_angle = 26.59
 spot_angle_attenuation = 0.40612692
+
+[node name="chandlight" type="SpotLight3D" parent="SubViewportContainer/SubViewport" unique_id=2046102301]
+transform = Transform3D(1, 0, 0, 0, -0.010758074, 0.9999422, 0, -0.9999422, -0.010758074, 6.754937, 134.96062, -25.66743)
+light_color = Color(0.99215686, 1, 0.7137255, 1)
+light_energy = 16.0
+light_indirect_energy = 2.098
+spot_range = 100.794
+spot_attenuation = -1.03
+spot_angle = 7.16
+
+[node name="OmniLight3D" type="OmniLight3D" parent="SubViewportContainer/SubViewport" unique_id=1423770689]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7.297717, 104.04524, -26.021004)
+light_color = Color(0.3528652, 0.35286516, 0, 1)
+omni_range = 4096.0
+omni_attenuation = 0.15
