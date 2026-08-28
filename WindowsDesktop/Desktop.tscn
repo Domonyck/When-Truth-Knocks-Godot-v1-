@@ -1,0 +1,221 @@
+[gd_scene format=3 uid="uid://bs3qohxmybk7q"]
+
+[ext_resource type="Texture2D" uid="uid://c5wl32yu8exsg" path="res://WindowsDesktop/PatchRegular.png" id="1"]
+[ext_resource type="Texture2D" uid="uid://bbyns3lwtfaux" path="res://WindowsDesktop/PatchInverted.png" id="2"]
+[ext_resource type="FontFile" uid="uid://dh3sljjjsyr82" path="res://WindowsDesktop/Battlenet.ttf" id="2_5udwm"]
+[ext_resource type="Texture2D" uid="uid://bo5wjykv7x6m1" path="res://WindowsDesktop/Flag.png" id="3"]
+[ext_resource type="Texture2D" uid="uid://dg348brh18k0l" path="res://WindowsDesktop/Window.png" id="5"]
+[ext_resource type="Texture2D" uid="uid://ux3o81dhp5aw" path="res://WindowsDesktop/CloseRegular.png" id="6"]
+[ext_resource type="Texture2D" uid="uid://chbakxufv82m5" path="res://WindowsDesktop/ClosePressed.png" id="7"]
+[ext_resource type="Script" uid="uid://bq04howwaxtq1" path="res://WindowsDesktop/Desktop.gd" id="8"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_1vivr"]
+bg_color = Color(0.7179641, 0.7179642, 0.7179641, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_tt8ow"]
+bg_color = Color(1, 1, 1, 1)
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_d2pp6"]
+texture = ExtResource("1")
+texture_margin_left = 1.0
+texture_margin_top = 1.0
+texture_margin_right = 1.0
+texture_margin_bottom = 1.0
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_u7cuq"]
+texture = ExtResource("2")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_pvn8f"]
+texture = ExtResource("2")
+texture_margin_left = 1.0
+texture_margin_top = 1.0
+texture_margin_right = 1.0
+texture_margin_bottom = 1.0
+
+[sub_resource type="Shader" id="7"]
+code = "shader_type canvas_item;
+
+uniform float SCREEN_HEIGHT = 240.0;
+
+void fragment() {
+	int y_pixel = int(UV.y * SCREEN_HEIGHT);
+	if (y_pixel % 2 == 0) {
+		COLOR.a = 0.0;
+	} else {
+		COLOR.a = 0.05;
+	}
+}"
+
+[sub_resource type="ShaderMaterial" id="8"]
+shader = SubResource("7")
+shader_parameter/SCREEN_HEIGHT = 240.0
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_1vivr"]
+texture = ExtResource("5")
+texture_margin_left = 4.0
+texture_margin_top = 20.0
+texture_margin_right = 4.0
+texture_margin_bottom = 4.0
+expand_margin_top = 23.0
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_ql4es"]
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_auskg"]
+texture = ExtResource("6")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_0sxyj"]
+texture = ExtResource("7")
+
+[node name="Desktop" type="Control" unique_id=735576688]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("8")
+
+[node name="ColorRect" type="ColorRect" parent="." unique_id=1541305369]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0.501961, 0.501961, 1)
+
+[node name="Panel" type="Panel" parent="." unique_id=1053473271]
+layout_mode = 1
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -132.0
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_styles/panel = SubResource("StyleBoxFlat_1vivr")
+
+[node name="Line" type="Panel" parent="Panel" unique_id=1012572532]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_bottom = -123.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_tt8ow")
+
+[node name="Button" type="Button" parent="Panel" unique_id=282410808]
+texture_filter = 1
+layout_mode = 1
+anchors_preset = 9
+anchor_bottom = 1.0
+offset_left = 28.0
+offset_top = 18.0
+offset_right = 264.0
+offset_bottom = -22.0
+grow_vertical = 2
+focus_mode = 0
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_constants/h_separation = -5
+theme_override_constants/icon_max_width = 60
+theme_override_fonts/font = ExtResource("2_5udwm")
+theme_override_font_sizes/font_size = 80
+theme_override_styles/normal = SubResource("StyleBoxTexture_d2pp6")
+theme_override_styles/hover = SubResource("StyleBoxTexture_u7cuq")
+text = "Start"
+icon = ExtResource("3")
+expand_icon = true
+
+[node name="Time" type="Panel" parent="Panel" unique_id=992704792]
+texture_filter = 1
+layout_mode = 1
+anchors_preset = 11
+anchor_left = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -326.0
+offset_top = 16.0
+offset_right = -19.0
+offset_bottom = -23.0
+grow_horizontal = 0
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxTexture_pvn8f")
+
+[node name="Label" type="Label" parent="Panel/Time" unique_id=1149134049]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 5.0
+offset_top = 15.0
+offset_right = 5.0
+offset_bottom = -18.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_fonts/font = ExtResource("2_5udwm")
+theme_override_font_sizes/font_size = 80
+text = "12:30 AM"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="ScanLines" type="ColorRect" parent="." unique_id=1968879553]
+material = SubResource("8")
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 1.0
+offset_right = 1.0
+offset_bottom = -133.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="WindowDialog" type="Panel" parent="." unique_id=844715670]
+texture_filter = 1
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -564.0
+offset_top = -322.0
+offset_right = 573.5
+offset_bottom = 293.5
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxTexture_1vivr")
+
+[node name="Panel" type="Panel" parent="WindowDialog" unique_id=994434739]
+layout_mode = 0
+offset_left = 118.5
+offset_top = -16.5
+offset_right = 937.5
+offset_bottom = 70.5
+theme_override_styles/panel = SubResource("StyleBoxEmpty_ql4es")
+
+[node name="Label" type="Label" parent="WindowDialog/Panel" unique_id=185906134]
+layout_mode = 0
+offset_left = 271.0
+offset_top = 3.0
+offset_right = 501.0
+offset_bottom = 73.0
+theme_override_fonts/font = ExtResource("2_5udwm")
+theme_override_font_sizes/font_size = 80
+text = "Welcome"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="CloseButton" type="Button" parent="WindowDialog/Panel" unique_id=1257988295]
+texture_filter = 1
+layout_mode = 0
+offset_left = 928.0
+offset_top = 5.0
+offset_right = 997.0
+offset_bottom = 83.0
+theme_override_fonts/font = ExtResource("2_5udwm")
+theme_override_font_sizes/font_size = 80
+theme_override_styles/normal = SubResource("StyleBoxTexture_auskg")
+theme_override_styles/pressed = SubResource("StyleBoxTexture_0sxyj")
