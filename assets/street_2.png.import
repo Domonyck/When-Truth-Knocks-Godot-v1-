@@ -2,20 +2,20 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://db3qhxma6vnq7"
-path.s3tc="res://.godot/imported/board_lambert38_baseColor.png-cd3598123c00129376d8a4de353abc8a.s3tc.ctex"
+uid="uid://bs51ge4tp0fwl"
+path.s3tc="res://.godot/imported/street_2.png-d6476e7a08561ed0081764ab4130b131.s3tc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc"],
 "vram_texture": true
 }
 generator_parameters={
-"md5": "172e34a6358b83f16b1d2a1d4f6b5feb"
+"md5": "d7b6a9e3ba6ac54c42945f737e1f7d2f"
 }
 
 [deps]
 
-source_file="res://assets/board_lambert38_baseColor.png"
-dest_files=["res://.godot/imported/board_lambert38_baseColor.png-cd3598123c00129376d8a4de353abc8a.s3tc.ctex"]
+source_file="res://assets/street_2.png"
+dest_files=["res://.godot/imported/street_2.png-d6476e7a08561ed0081764ab4130b131.s3tc.ctex"]
 
 [params]
 
