@@ -9,10 +9,104 @@
 [ext_resource type="PackedScene" uid="uid://dnr18df7sul6" path="res://assets/OfficeAssets_free.glb" id="1_pjbg2"]
 [ext_resource type="PackedScene" uid="uid://b1gp7cc2u2ob5" path="res://assets/old_ceiling_fan.glb" id="1_shaa1"]
 [ext_resource type="PackedScene" uid="uid://crjw6d4u1q1tc" path="res://assets/oldRoom.glb" id="2_abmy8"]
+[ext_resource type="Script" uid="uid://dwt054jdqyovy" path="res://Scripts/ceilingfan.gd" id="2_shaa1"]
+[ext_resource type="Script" uid="uid://c5xk2yrkpt2ox" path="res://Scripts/walllamp.gd" id="4_g5nle"]
+[ext_resource type="Script" uid="uid://b6752tbe2hh42" path="res://Scripts/tablelamp.gd" id="5_gyk08"]
 [ext_resource type="Script" uid="uid://caoc3hw73cx53" path="res://Scripts/camera_3d.gd" id="6_1v8qo"]
 [ext_resource type="PackedScene" uid="uid://cyqja83grytb8" path="res://assets/drawers.glb" id="6_meq1q"]
 [ext_resource type="PackedScene" uid="uid://2e75sofl7wrw" path="res://assets/lamp.glb" id="7_ef07n"]
 [ext_resource type="Shader" uid="uid://c6qhkhar3xobg" path="res://Scripts/edge_detection.gdshader" id="7_hnr4c"]
+[ext_resource type="Texture2D" uid="uid://ciyhrfo3ktu1c" path="res://assets/windows.png" id="7_r3ooc"]
+[ext_resource type="Shader" uid="uid://blxi3tfpewclm" path="res://Scripts/Computer.gdshader" id="8_bpvhh"]
+[ext_resource type="Script" uid="uid://bjuft8qkilucf" path="res://Scripts/door.gd" id="12_h4fbr"]
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_g5nle"]
+radius = 8.944255
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_8vrlf"]
+radius = 0.14664489
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_v5gy4"]
+radius = 0.102847904
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_8vrlf"]
+render_priority = 0
+shader = ExtResource("8_bpvhh")
+shader_parameter/albedo_texture = ExtResource("7_r3ooc")
+shader_parameter/brightness = 1.4
+shader_parameter/scanlines_opacity = 0.4
+shader_parameter/vignette_intensity = 0.4
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_bpvhh"]
+albedo_color = Color(1, 1, 1, 0)
+
+[sub_resource type="QuadMesh" id="QuadMesh_v5gy4"]
+lightmap_size_hint = Vector2i(3, 3)
+size = Vector2(0.388, 0.276)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_1vivr"]
+size = Vector3(41.89514, 208.83926, 95.39064)
+
+[sub_resource type="Animation" id="Animation_o5ftv"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:rotation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(0, 1.5707964, 0)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath(".:position")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(9.17397, 50.464397, -96.50599)]
+}
+
+[sub_resource type="Animation" id="Animation_muwe1"]
+resource_name = "door_animation"
+length = 0.93333334
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:rotation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.43333334, 0.9),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [Vector3(0, 1.5707964, 0), Vector3(0, 2.5529609, 0), Vector3(0, 3.1303422, 0)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath(".:position")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.43333334, 0.9),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [Vector3(9.17397, 50.464397, -96.50599), Vector3(21.428349, 50.464397, -71.59764), Vector3(37.412327, 50.464397, -66.40285)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_garkl"]
+_data = {
+&"RESET": SubResource("Animation_o5ftv"),
+&"door_animation": SubResource("Animation_muwe1")
+}
 
 [sub_resource type="QuadMesh" id="QuadMesh_1v8qo"]
 size = Vector2(2, 2)
@@ -75,6 +169,15 @@ light_color = Color(0.9772658, 0.8928154, 0.77385867, 1)
 omni_range = 112.168
 omni_attenuation = 0.547
 
+[node name="Area3D" type="Area3D" parent="SubViewportContainer/SubViewport/ceilingFan" unique_id=554449739 node_paths=PackedStringArray("lights")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -5.9794083, 0)
+script = ExtResource("2_shaa1")
+lights = [NodePath("../OmniLight3D")]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="SubViewportContainer/SubViewport/ceilingFan/Area3D" unique_id=553895734]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.12462044, 5.238121, 4.00811)
+shape = SubResource("SphereShape3D_g5nle")
+
 [node name="wall_lamp" parent="SubViewportContainer/SubViewport" unique_id=2059848015 instance=ExtResource("1_kgvsv")]
 transform = Transform3D(-2.1855694e-06, 0, -50, 1.49096, 49.977764, -6.517193e-08, 49.977764, -1.49096, -2.1845974e-06, 102.41513, 92.557945, 0)
 
@@ -91,6 +194,16 @@ light_color = Color(0.99215686, 1, 0.7137255, 1)
 area_range = 6.955
 area_attenuation = -0.904
 
+[node name="Area3D" type="Area3D" parent="SubViewportContainer/SubViewport/wall_lamp" unique_id=1555366965 node_paths=PackedStringArray("lights")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, -1.110223e-16, 1, 1.4901161e-08, 0, 0.31826973)
+collision_layer = 2
+script = ExtResource("4_g5nle")
+lights = [NodePath("../SpotLight3D"), NodePath("../AreaLight3D")]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="SubViewportContainer/SubViewport/wall_lamp/Area3D" unique_id=1475012275]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, -3.330669e-16, 1, 0.00091458857, 0.03065741, -0.09841335)
+shape = SubResource("SphereShape3D_8vrlf")
+
 [node name="OfficeAssets_free" parent="SubViewportContainer/SubViewport" unique_id=895085341 instance=ExtResource("1_pjbg2")]
 transform = Transform3D(-1.7484556e-06, 0, -40, 0, 40, 0, 40, 0, -1.7484556e-06, 52.74849, -0.3891487, 26.601063)
 
@@ -103,16 +216,6 @@ spot_attenuation = 0.2
 spot_angle = 180.0
 spot_angle_attenuation = 0.02915735
 
-[node name="ComputerLight" type="AreaLight3D" parent="SubViewportContainer/SubViewport/OfficeAssets_free" unique_id=223051972]
-transform = Transform3D(7.7417035e-06, -0.006280779, 0.024198178, 0.024999812, 9.562437e-05, 1.6821696e-05, -9.678355e-05, 0.02419799, 0.006280761, 0.3272524, 1.1823466, 0.56643057)
-light_color = Color(0.17211533, 0.1721153, 0.1721153, 1)
-light_energy = 2.39
-light_indirect_energy = 1.825
-area_range = 6.302
-area_attenuation = -4.714
-area_normalize_energy = false
-area_size = Vector2(0.3, 4.8)
-
 [node name="AreaLight3D" type="AreaLight3D" parent="SubViewportContainer/SubViewport/OfficeAssets_free" unique_id=1307799295]
 transform = Transform3D(-0.013867448, 0.017830329, 0.010713233, -0.0006885714, 0.012475141, -0.021654023, -0.020789897, -0.012306511, -0.0064288354, 0.2508903, 1.3933045, 1.4272898)
 light_color = Color(0.99215686, 1, 0.7137255, 1)
@@ -120,27 +223,63 @@ light_energy = 1.03
 area_range = 3.84
 area_attenuation = -4.873
 
+[node name="Area3D" type="Area3D" parent="SubViewportContainer/SubViewport/OfficeAssets_free" unique_id=1541577694 node_paths=PackedStringArray("lights")]
+collision_layer = 4
+script = ExtResource("5_gyk08")
+lights = [NodePath("../LampLight"), NodePath("../AreaLight3D")]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="SubViewportContainer/SubViewport/OfficeAssets_free/Area3D" unique_id=1755598275]
+transform = Transform3D(1, 0, -3.5527137e-15, 0, 1, 0, 3.5527137e-15, 0, 1, 0.29414552, 1.4353473, 1.4273034)
+shape = SubResource("SphereShape3D_v5gy4")
+
+[node name="MeshInstance3D2" type="MeshInstance3D" parent="SubViewportContainer/SubViewport/OfficeAssets_free" unique_id=1554393159]
+transform = Transform3D(0.27060556, -0.000263336, 0.9626902, -0.0052359556, 0.99998474, 0.0017453282, -0.96267605, -0.0055128993, 0.27060005, 0.26167542, 1.1809999, 0.54899997)
+material_override = SubResource("ShaderMaterial_8vrlf")
+material_overlay = SubResource("StandardMaterial3D_bpvhh")
+mesh = SubResource("QuadMesh_v5gy4")
+
+[node name="ComputerLight" type="AreaLight3D" parent="SubViewportContainer/SubViewport/OfficeAssets_free/MeshInstance3D2" unique_id=223051972]
+transform = Transform3D(-3.5631725e-05, -0.024994945, 0.00050173467, 0.024999963, -3.6124165e-05, -2.4176008e-05, 2.4896115e-05, 0.00050169975, 0.024994956, 0.00637269, 0.0013768673, 0.06858069)
+light_color = Color(0.17211533, 0.1721153, 0.1721153, 1)
+light_energy = 2.39
+light_indirect_energy = 1.825
+area_range = 6.513
+area_attenuation = -1.698
+area_normalize_energy = false
+area_size = Vector2(0.3, 4.8)
+
 [node name="blinds" parent="SubViewportContainer/SubViewport" unique_id=941499674 instance=ExtResource("1_2ktxb")]
 transform = Transform3D(-1.0053619e-06, 0, 23, 0, 35, 0, -23, 0, -1.0053619e-06, -67.338, 22, 37.028)
 
 [node name="SpotLight3D" type="SpotLight3D" parent="SubViewportContainer/SubViewport/blinds" unique_id=1964491833]
 transform = Transform3D(-0.043147095, 0.0020564897, -0.004945539, -0.0026609981, 0.009037119, 0.02697362, 0.0035057538, 0.04119477, -0.013455859, 2.2185032, 3.0937448, -0.5160568)
-light_color = Color(0.42745098, 0.6901961, 0.99215686, 1)
+light_color = Color(0.007843138, 0.2, 0.38039216, 1)
 spot_range = 111.703
-spot_attenuation = -0.12
+spot_attenuation = -0.28
 spot_angle = 28.88
 
 [node name="SpotLight3D2" type="SpotLight3D" parent="SubViewportContainer/SubViewport/blinds" unique_id=431082759]
 transform = Transform3D(-0.043147095, 0.0020564897, -0.0049455394, -0.0026609981, 0.009037118, 0.02697362, 0.0035057538, 0.041194767, -0.013455859, 0.46114707, 3.0937448, -0.5160568)
-light_color = Color(0.42672852, 0.69059724, 0.99095446, 1)
+light_color = Color(0.0081017045, 0.19818735, 0.3819381, 1)
 spot_range = 111.703
-spot_attenuation = -0.12
+spot_attenuation = -0.28
 spot_angle = 28.88
 
 [node name="oldRoom" parent="SubViewportContainer/SubViewport" unique_id=1685391351 instance=ExtResource("2_abmy8")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0040893555, 0.11688995, -0.012580872)
 
 [node name="door" parent="SubViewportContainer/SubViewport" unique_id=22472216 instance=ExtResource("1_abmy8")]
-transform = Transform3D(-9.438777e-09, 0, 0.6246864, 0, 0.47113827, 0, -0.21593404, 0, -2.7305907e-08, 9.17397, 50.464397, -96.50599)
+transform = Transform3D(-9.438777e-09, 0, 0.62468654, 0, 0.47113836, 0, -0.21593405, 0, -2.7305916e-08, 9.17397, 50.464397, -96.50599)
+
+[node name="Area3D" type="Area3D" parent="SubViewportContainer/SubViewport/door" unique_id=1270961778]
+script = ExtResource("12_h4fbr")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="SubViewportContainer/SubViewport/door/Area3D" unique_id=1197394498]
+transform = Transform3D(1, 0, -8.100187e-13, 0, 0.9999811, 0, -1.7763568e-15, 0, 1, -9.364136, 0.085235596, -0.08973026)
+shape = SubResource("BoxShape3D_1vivr")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="SubViewportContainer/SubViewport/door" unique_id=942226544]
+libraries/ = SubResource("AnimationLibrary_garkl")
 
 [node name="board" parent="SubViewportContainer/SubViewport" unique_id=1853175376 instance=ExtResource("1_2r27c")]
 transform = Transform3D(-4.371139e-05, 0, -1, 0, 1000, 0, 1000, 0, -4.371139e-08, 101.71396, -25.461136, 7.6665287)
@@ -155,6 +294,11 @@ visible = false
 extra_cull_margin = 16384.0
 mesh = SubResource("QuadMesh_1v8qo")
 surface_material_override/0 = SubResource("ShaderMaterial_hnr4c")
+
+[node name="RayCast3D" type="RayCast3D" parent="SubViewportContainer/SubViewport/Camera3D" unique_id=249997934]
+target_position = Vector3(0, 0, -200)
+collide_with_areas = true
+collide_with_bodies = false
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="SubViewportContainer/SubViewport" unique_id=1739561079]
 environment = SubResource("Environment_1vivr")

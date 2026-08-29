@@ -3,11 +3,15 @@
 [ext_resource type="Texture2D" uid="uid://c5wl32yu8exsg" path="res://WindowsDesktop/PatchRegular.png" id="1"]
 [ext_resource type="Texture2D" uid="uid://bbyns3lwtfaux" path="res://WindowsDesktop/PatchInverted.png" id="2"]
 [ext_resource type="FontFile" uid="uid://dh3sljjjsyr82" path="res://WindowsDesktop/Battlenet.ttf" id="2_5udwm"]
+[ext_resource type="Texture2D" uid="uid://dtmlduh024pcc" path="res://WindowsDesktop/wallpaperflare.com_wallpaper.jpg" id="2_pwha1"]
 [ext_resource type="Texture2D" uid="uid://bo5wjykv7x6m1" path="res://WindowsDesktop/Flag.png" id="3"]
+[ext_resource type="Texture2D" uid="uid://dvjjm7mlwm15b" path="res://WindowsDesktop/512x512.png" id="3_n6gkq"]
 [ext_resource type="Texture2D" uid="uid://dg348brh18k0l" path="res://WindowsDesktop/Window.png" id="5"]
 [ext_resource type="Texture2D" uid="uid://ux3o81dhp5aw" path="res://WindowsDesktop/CloseRegular.png" id="6"]
 [ext_resource type="Texture2D" uid="uid://chbakxufv82m5" path="res://WindowsDesktop/ClosePressed.png" id="7"]
+[ext_resource type="Script" uid="uid://b3s4q7ewvr0wa" path="res://WindowsDesktop/window_dialog.gd" id="7_jxju5"]
 [ext_resource type="Script" uid="uid://bq04howwaxtq1" path="res://WindowsDesktop/Desktop.gd" id="8"]
+[ext_resource type="Shader" uid="uid://b36d4lhtok4yi" path="res://WindowsDesktop/Desktop2D.gdshader" id="12_4upda"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_1vivr"]
 bg_color = Color(0.7179641, 0.7179642, 0.7179641, 1)
@@ -24,6 +28,10 @@ texture_margin_bottom = 1.0
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_u7cuq"]
 texture = ExtResource("2")
+texture_margin_left = 1.0
+texture_margin_top = 1.0
+texture_margin_right = 1.0
+texture_margin_bottom = 1.0
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_pvn8f"]
 texture = ExtResource("2")
@@ -66,6 +74,33 @@ texture = ExtResource("6")
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_0sxyj"]
 texture = ExtResource("7")
 
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_jxju5"]
+texture = ExtResource("7")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_8vrlf"]
+shader = ExtResource("12_4upda")
+shader_parameter/overlay = true
+shader_parameter/scanlines_opacity = 0.0
+shader_parameter/scanlines_width = 0.0
+shader_parameter/grille_opacity = 0.142000006745
+shader_parameter/resolution = Vector2(640, 480)
+shader_parameter/pixelate = false
+shader_parameter/roll = true
+shader_parameter/roll_speed = 3.9699999999999998
+shader_parameter/roll_size = 13.9230006613425
+shader_parameter/roll_variation = 1.5010000680376199
+shader_parameter/distort_intensity = 0.0
+shader_parameter/noise_opacity = 0.214000010165
+shader_parameter/noise_speed = 5.0
+shader_parameter/static_noise_intensity = 0.07200000342
+shader_parameter/aberration = 0.004000047689999953
+shader_parameter/brightness = 1.4
+shader_parameter/discolor = true
+shader_parameter/warp_amount = 0.0330000015675
+shader_parameter/clip_warp = false
+shader_parameter/vignette_intensity = 0.4
+shader_parameter/vignette_opacity = 0.3200000152
+
 [node name="Desktop" type="Control" unique_id=735576688]
 layout_mode = 3
 anchors_preset = 15
@@ -75,14 +110,29 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("8")
 
-[node name="ColorRect" type="ColorRect" parent="." unique_id=1541305369]
+[node name="ColorRect" type="TextureRect" parent="." unique_id=1778084006]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
+offset_left = 1.0
+offset_top = 3.0
+offset_right = -2.555542
+offset_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-color = Color(0, 0.501961, 0.501961, 1)
+texture = ExtResource("2_pwha1")
+expand_mode = 1
+
+[node name="Notepad" type="TextureButton" parent="." unique_id=926456888]
+layout_mode = 0
+offset_left = 105.0
+offset_top = 101.0
+offset_right = 228.0
+offset_bottom = 224.0
+texture_normal = ExtResource("3_n6gkq")
+ignore_texture_size = true
+stretch_mode = 0
 
 [node name="Panel" type="Panel" parent="." unique_id=1053473271]
 layout_mode = 1
@@ -90,7 +140,7 @@ anchors_preset = 12
 anchor_top = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_top = -132.0
+offset_top = -130.0
 grow_horizontal = 2
 grow_vertical = 0
 theme_override_styles/panel = SubResource("StyleBoxFlat_1vivr")
@@ -156,7 +206,7 @@ grow_vertical = 2
 theme_override_colors/font_color = Color(0, 0, 0, 1)
 theme_override_fonts/font = ExtResource("2_5udwm")
 theme_override_font_sizes/font_size = 80
-text = "12:30 AM"
+text = "9:00 PM"
 horizontal_alignment = 1
 vertical_alignment = 1
 
@@ -167,12 +217,14 @@ anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 offset_left = 1.0
+offset_top = 2.0
 offset_right = 1.0
-offset_bottom = -133.0
+offset_bottom = -131.0
 grow_horizontal = 2
 grow_vertical = 2
 
 [node name="WindowDialog" type="Panel" parent="." unique_id=844715670]
+visible = false
 texture_filter = 1
 layout_mode = 1
 anchors_preset = 8
@@ -187,6 +239,7 @@ offset_bottom = 293.5
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_styles/panel = SubResource("StyleBoxTexture_1vivr")
+script = ExtResource("7_jxju5")
 
 [node name="Panel" type="Panel" parent="WindowDialog" unique_id=994434739]
 layout_mode = 0
@@ -219,3 +272,10 @@ theme_override_fonts/font = ExtResource("2_5udwm")
 theme_override_font_sizes/font_size = 80
 theme_override_styles/normal = SubResource("StyleBoxTexture_auskg")
 theme_override_styles/pressed = SubResource("StyleBoxTexture_0sxyj")
+theme_override_styles/hover = SubResource("StyleBoxTexture_jxju5")
+
+[node name="ColorRect2" type="ColorRect" parent="." unique_id=1797555366]
+material = SubResource("ShaderMaterial_8vrlf")
+layout_mode = 0
+offset_right = 1924.0
+offset_bottom = 1077.0
