@@ -14,7 +14,6 @@
 [ext_resource type="PackedScene" uid="uid://cyqja83grytb8" path="res://assets/drawers.glb" id="6_meq1q"]
 [ext_resource type="Shader" uid="uid://c6qhkhar3xobg" path="res://Scripts/edge_detection.gdshader" id="7_hnr4c"]
 [ext_resource type="Texture2D" uid="uid://ciyhrfo3ktu1c" path="res://assets/windows.png" id="7_r3ooc"]
-[ext_resource type="Shader" uid="uid://blxi3tfpewclm" path="res://Scripts/Computer.gdshader" id="8_bpvhh"]
 [ext_resource type="Script" uid="uid://cgmgswxwycere" path="res://computer_transition.gd" id="9_5lia8"]
 [ext_resource type="Script" uid="uid://cgure35pg5rek" path="res://Scripts/static_body_3d.gd" id="9_garkl"]
 [ext_resource type="PackedScene" uid="uid://ceky6qpeonkyd" path="res://assets/blindsOpened.glb" id="9_muwe1"]
@@ -23,6 +22,7 @@
 [ext_resource type="Script" uid="uid://bjuft8qkilucf" path="res://Scripts/door.gd" id="12_h4fbr"]
 [ext_resource type="PackedScene" uid="uid://clyu56rrwntd2" path="res://assets/bilboard.glb" id="15_o5ftv"]
 [ext_resource type="PackedScene" uid="uid://n4js8nvhuj4j" path="res://assets/street.glb" id="16_o5ftv"]
+[ext_resource type="Shader" uid="uid://csl0dj0kglv7v" path="res://overlay.gdshader" id="19_vprmq"]
 
 [sub_resource type="SphereShape3D" id="SphereShape3D_g5nle"]
 radius = 8.944255
@@ -33,19 +33,12 @@ radius = 0.14664489
 [sub_resource type="SphereShape3D" id="SphereShape3D_v5gy4"]
 radius = 0.102847904
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_8vrlf"]
-render_priority = 0
-shader = ExtResource("8_bpvhh")
-shader_parameter/albedo_texture = ExtResource("7_r3ooc")
-shader_parameter/brightness = 1.4
-shader_parameter/scanlines_opacity = 0.4
-shader_parameter/vignette_intensity = 0.4
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_bpvhh"]
-albedo_color = Color(1, 1, 1, 0)
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_5lia8"]
+albedo_texture = ExtResource("7_r3ooc")
 
 [sub_resource type="QuadMesh" id="QuadMesh_v5gy4"]
 lightmap_size_hint = Vector2i(3, 3)
+material = SubResource("StandardMaterial3D_5lia8")
 size = Vector2(0.388, 0.276)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_muwe1"]
@@ -130,6 +123,16 @@ shader_parameter/useLighting = true
 shader_parameter/lineHighlight = 0.2
 shader_parameter/lineShadow = 0.55
 
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_cpeaq"]
+render_priority = 0
+shader = ExtResource("19_vprmq")
+shader_parameter/pixel_size = 2.0
+
+[sub_resource type="QuadMesh" id="QuadMesh_d0hwy"]
+material = SubResource("ShaderMaterial_cpeaq")
+flip_faces = true
+size = Vector2(2, 2)
+
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_meq1q"]
 sky_top_color = Color(0.0011252849, 0.12802976, 0.30780676, 1)
 sky_horizon_color = Color(0.003070068, 0.10436324, 0.25312415, 1)
@@ -211,7 +214,7 @@ area_attenuation = -0.904
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, -1.110223e-16, 1, 1.4901161e-08, 0, 0.31826973)
 collision_layer = 2
 script = ExtResource("4_g5nle")
-lights = [NodePath("../SpotLight3D"), null]
+lights = [NodePath("../SpotLight3D"), NodePath("../AreaLight3D")]
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="SubViewportContainer/SubViewport/wall_lamp/Area3D" unique_id=1475012275]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, -3.330669e-16, 1, 0.00091458857, 0.03065741, -0.09841335)
@@ -239,7 +242,7 @@ area_attenuation = -4.873
 [node name="Area3D" type="Area3D" parent="SubViewportContainer/SubViewport/OfficeAssets_free" unique_id=1541577694 node_paths=PackedStringArray("lights")]
 collision_layer = 4
 script = ExtResource("5_gyk08")
-lights = [NodePath("../LampLight"), null]
+lights = [NodePath("../LampLight"), NodePath("../AreaLight3D")]
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="SubViewportContainer/SubViewport/OfficeAssets_free/Area3D" unique_id=1755598275]
 transform = Transform3D(1, 0, -3.5527137e-15, 0, 1, 0, 3.5527137e-15, 0, 1, 0.29414552, 1.4353473, 1.4273034)
@@ -247,8 +250,6 @@ shape = SubResource("SphereShape3D_v5gy4")
 
 [node name="MeshInstance3D2" type="MeshInstance3D" parent="SubViewportContainer/SubViewport/OfficeAssets_free" unique_id=1554393159]
 transform = Transform3D(0.27060556, -0.000263336, 0.9626902, -0.0052359556, 0.99998474, 0.0017453282, -0.96267605, -0.0055128993, 0.27060005, 0.26167542, 1.1809999, 0.54899997)
-material_override = SubResource("ShaderMaterial_8vrlf")
-material_overlay = SubResource("StandardMaterial3D_bpvhh")
 mesh = SubResource("QuadMesh_v5gy4")
 
 [node name="ComputerLight" type="AreaLight3D" parent="SubViewportContainer/SubViewport/OfficeAssets_free/MeshInstance3D2" unique_id=223051972]
@@ -261,14 +262,18 @@ area_attenuation = -1.698
 area_normalize_energy = false
 area_size = Vector2(0.3, 4.8)
 
-[node name="Computer2" type="Area3D" parent="SubViewportContainer/SubViewport/OfficeAssets_free" unique_id=383840388]
+[node name="Computer2" type="Area3D" parent="SubViewportContainer/SubViewport/OfficeAssets_free" unique_id=383840388 node_paths=PackedStringArray("zoom_target")]
 transform = Transform3D(1, 0, -3.5527137e-15, 0, 1, 0, 3.5527137e-15, 0, 1, -0.12150985, 1.0552012, 0)
 script = ExtResource("9_5lia8")
 desktop_scene = ExtResource("10_5lia8")
+zoom_target = NodePath("Marker3D")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="SubViewportContainer/SubViewport/OfficeAssets_free/Computer2" unique_id=230402999]
 transform = Transform3D(0.9799247, 0, -0.19936794, 0, 1, 0, 0.19936794, 0, 0.9799247, 0.42918855, 0.14781904, 0.5675705)
 shape = SubResource("BoxShape3D_muwe1")
+
+[node name="Marker3D" type="Marker3D" parent="SubViewportContainer/SubViewport/OfficeAssets_free/Computer2" unique_id=2085428728]
+transform = Transform3D(0.19080895, 0, 0.98162717, 0, 1, 0, -0.98162717, 0, 0.19080895, 0.4870656, 0.15880299, 0.5376288)
 
 [node name="StaticBody3D" type="StaticBody3D" parent="SubViewportContainer/SubViewport" unique_id=744718775 node_paths=PackedStringArray("open_mesh", "closed_mesh")]
 transform = Transform3D(-1.0053619e-06, 0, 23, 0, 35, 0, -23, 0, -1.0053619e-06, -67.34046, 22, 37.235493)
@@ -287,16 +292,16 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.601774, 0, -4.7683716e-07)
 visible = false
 
 [node name="SpotLight3D" type="SpotLight3D" parent="SubViewportContainer/SubViewport/StaticBody3D" unique_id=1964491833]
-transform = Transform3D(-0.043147095, 0.00205649, -0.004945539, -0.0026609981, 0.009037119, 0.02697362, 0.0035057538, 0.04119477, -0.013455859, 2.2185032, 3.0937448, -0.51605725)
+transform = Transform3D(-0.042335097, 0.0067589874, 0.0072398256, 0.005052301, 0.027903358, 0.0034933428, -0.0062441393, 0.0064564073, -0.04254039, 2.9343076, 1.5404227, -7.857197)
 light_color = Color(0.007843138, 0.2, 0.38039216, 1)
-spot_range = 111.703
+spot_range = 191.513
 spot_attenuation = -0.28
 spot_angle = 28.88
 
 [node name="SpotLight3D2" type="SpotLight3D" parent="SubViewportContainer/SubViewport/StaticBody3D" unique_id=431082759]
-transform = Transform3D(-0.043147095, 0.0020564897, -0.004945539, -0.0026609981, 0.009037119, 0.02697362, 0.0035057538, 0.04119477, -0.013455859, 0.46114695, 3.0937448, -0.516057)
+transform = Transform3D(-0.043371223, 0.003002096, 0.000532565, 0.0020032781, 0.02814883, 0.0044673015, -5.5293425e-05, 0.006818672, -0.042940214, 1.0125996, 1.9035571, -6.514703)
 light_color = Color(0.0081017045, 0.19818735, 0.3819381, 1)
-spot_range = 111.703
+spot_range = 191.513
 spot_attenuation = -0.28
 spot_angle = 28.88
 
@@ -327,6 +332,10 @@ extra_cull_margin = 16384.0
 mesh = SubResource("QuadMesh_1v8qo")
 surface_material_override/0 = SubResource("ShaderMaterial_hnr4c")
 
+[node name="MeshInstance3dscreen" type="MeshInstance3D" parent="SubViewportContainer/SubViewport/Camera3D" unique_id=307845774]
+extra_cull_margin = 16384.0
+mesh = SubResource("QuadMesh_d0hwy")
+
 [node name="RayCast3D" type="RayCast3D" parent="SubViewportContainer/SubViewport/Camera3D" unique_id=249997934]
 target_position = Vector3(0, 0, -200)
 collide_with_areas = true
@@ -336,7 +345,7 @@ collide_with_bodies = false
 environment = SubResource("Environment_1vivr")
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="SubViewportContainer/SubViewport" unique_id=382455948]
-transform = Transform3D(-0.5916348, -0.8053435, -0.03728479, -0.04207623, -0.015339805, 0.9989966, -0.8051075, 0.5926101, -0.024810124, -630.02515, 572.2554, 0)
+transform = Transform3D(-0.6414909, 0.108675785, -0.7593938, -0.7566488, 0.07344728, 0.64968306, 0.12638023, 0.9913603, 0.035113778, -630.02515, 572.2554, 0)
 light_color = Color(0.76132476, 0.8897189, 1, 1)
 light_energy = 0.175
 shadow_enabled = true

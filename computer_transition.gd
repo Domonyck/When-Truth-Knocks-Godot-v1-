@@ -1,32 +1,74 @@
 extends Area3D
- 
+
 @export var desktop_scene: PackedScene
- 
+@export var zoom_target: Node3D 
+@export var zoom_duration: float = 1.0 
+
 var is_transitioning := false
- 
+var is_desktop_open := false 
+var original_camera_transform: Transform3D 
+var camera: Camera3D
+var active_desktop_overlay: Node 
+
+func _ready() -> void:
+	process_mode = Node.PROCESS_MODE_ALWAYS
+
 func interact() -> void:
-	if is_transitioning:
+	if is_transitioning or is_desktop_open:
 		return
- 
+
 	if desktop_scene == null:
-		print("desktop_scene is not assigned in the Inspector")
 		return
- 
-	var camera = get_tree().get_first_node_in_group("player_camera")
-	if camera == null:
-		print("no camera found in group 'player_camera'")
+
+	camera = get_tree().get_first_node_in_group("player_camera") as Camera3D
+	if camera == null or zoom_target == null:
 		return
- 
+
 	is_transitioning = true
- 
 	camera.set_process(false)
 	camera.set_process_input(false)
- 
+	original_camera_transform = camera.global_transform
+
+	var tween = create_tween()
+	tween.set_trans(Tween.TRANS_QUAD) 
+	tween.set_ease(Tween.EASE_IN_OUT)
+	tween.tween_property(camera, "global_transform", zoom_target.global_transform, zoom_duration)
+
+	await tween.finished
+
 	get_tree().paused = true
- 
-	var desktop_overlay = desktop_scene.instantiate()
-	desktop_overlay.process_mode = Node.PROCESS_MODE_ALWAYS
-	get_tree().root.add_child(desktop_overlay)
- 
+	
+	active_desktop_overlay = desktop_scene.instantiate()
+	active_desktop_overlay.process_mode = Node.PROCESS_MODE_ALWAYS
+	
+	active_desktop_overlay.tree_exited.connect(zoom_out_camera)
+	
+	get_tree().root.add_child(active_desktop_overlay)
+	is_desktop_open = true
 	is_transitioning = false
- 
+
+func _input(event: InputEvent) -> void:
+	if is_desktop_open and not is_transitioning and event.is_action_pressed("ui_cancel"):
+		if is_instance_valid(active_desktop_overlay):
+			active_desktop_overlay.queue_free()
+
+func zoom_out_camera() -> void:
+	if not is_desktop_open: 
+		return 
+		
+	is_transitioning = true
+	is_desktop_open = false
+	
+	var tween = create_tween()
+	tween.set_trans(Tween.TRANS_QUAD) 
+	tween.set_ease(Tween.EASE_IN_OUT)
+	tween.tween_property(camera, "global_transform", original_camera_transform, zoom_duration)
+	
+	await tween.finished
+	
+	get_tree().paused = false
+	
+	camera.set_process(true)
+	camera.set_process_input(true)
+	
+	is_transitioning = false
