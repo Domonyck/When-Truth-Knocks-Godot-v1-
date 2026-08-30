@@ -6,12 +6,14 @@
 [ext_resource type="Texture2D" uid="uid://dtmlduh024pcc" path="res://WindowsDesktop/wallpaperflare.com_wallpaper.jpg" id="2_pwha1"]
 [ext_resource type="Texture2D" uid="uid://bo5wjykv7x6m1" path="res://WindowsDesktop/Flag.png" id="3"]
 [ext_resource type="Texture2D" uid="uid://dvjjm7mlwm15b" path="res://WindowsDesktop/512x512.png" id="3_n6gkq"]
+[ext_resource type="Script" uid="uid://2tfa5ls4ttxr" path="res://WindowsDesktop/notepad.gd" id="4_7al4d"]
 [ext_resource type="Texture2D" uid="uid://dg348brh18k0l" path="res://WindowsDesktop/Window.png" id="5"]
 [ext_resource type="Texture2D" uid="uid://ux3o81dhp5aw" path="res://WindowsDesktop/CloseRegular.png" id="6"]
 [ext_resource type="Texture2D" uid="uid://chbakxufv82m5" path="res://WindowsDesktop/ClosePressed.png" id="7"]
 [ext_resource type="Script" uid="uid://b3s4q7ewvr0wa" path="res://WindowsDesktop/window_dialog.gd" id="7_jxju5"]
 [ext_resource type="Script" uid="uid://bq04howwaxtq1" path="res://WindowsDesktop/Desktop.gd" id="8"]
 [ext_resource type="Shader" uid="uid://b36d4lhtok4yi" path="res://WindowsDesktop/Desktop2D.gdshader" id="12_4upda"]
+[ext_resource type="Script" uid="uid://baveadn6se0a4" path="res://WindowsDesktop/noteTypingGame.gd" id="13_utm18"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_1vivr"]
 bg_color = Color(0.7179641, 0.7179642, 0.7179641, 1)
@@ -39,24 +41,6 @@ texture_margin_left = 1.0
 texture_margin_top = 1.0
 texture_margin_right = 1.0
 texture_margin_bottom = 1.0
-
-[sub_resource type="Shader" id="7"]
-code = "shader_type canvas_item;
-
-uniform float SCREEN_HEIGHT = 240.0;
-
-void fragment() {
-	int y_pixel = int(UV.y * SCREEN_HEIGHT);
-	if (y_pixel % 2 == 0) {
-		COLOR.a = 0.0;
-	} else {
-		COLOR.a = 0.05;
-	}
-}"
-
-[sub_resource type="ShaderMaterial" id="8"]
-shader = SubResource("7")
-shader_parameter/SCREEN_HEIGHT = 240.0
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_1vivr"]
 texture = ExtResource("5")
@@ -86,20 +70,38 @@ shader_parameter/grille_opacity = 0.142000006745
 shader_parameter/resolution = Vector2(640, 480)
 shader_parameter/pixelate = false
 shader_parameter/roll = true
-shader_parameter/roll_speed = 3.9699999999999998
+shader_parameter/roll_speed = 3.97
 shader_parameter/roll_size = 13.9230006613425
-shader_parameter/roll_variation = 1.5010000680376199
+shader_parameter/roll_variation = 1.50100006803762
 shader_parameter/distort_intensity = 0.0
 shader_parameter/noise_opacity = 0.214000010165
 shader_parameter/noise_speed = 5.0
 shader_parameter/static_noise_intensity = 0.07200000342
-shader_parameter/aberration = 0.004000047689999953
+shader_parameter/aberration = 0.00400004768999995
 shader_parameter/brightness = 1.4
 shader_parameter/discolor = true
 shader_parameter/warp_amount = 0.0330000015675
 shader_parameter/clip_warp = false
 shader_parameter/vignette_intensity = 0.4
 shader_parameter/vignette_opacity = 0.3200000152
+
+[sub_resource type="Shader" id="7"]
+code = "shader_type canvas_item;
+
+uniform float SCREEN_HEIGHT = 240.0;
+
+void fragment() {
+	int y_pixel = int(UV.y * SCREEN_HEIGHT);
+	if (y_pixel % 2 == 0) {
+		COLOR.a = 0.0;
+	} else {
+		COLOR.a = 0.05;
+	}
+}"
+
+[sub_resource type="ShaderMaterial" id="8"]
+shader = SubResource("7")
+shader_parameter/SCREEN_HEIGHT = 240.0
 
 [node name="Desktop" type="Control" unique_id=735576688]
 layout_mode = 3
@@ -124,7 +126,7 @@ grow_vertical = 2
 texture = ExtResource("2_pwha1")
 expand_mode = 1
 
-[node name="Notepad" type="TextureButton" parent="." unique_id=926456888]
+[node name="NotepadApp" type="TextureButton" parent="." unique_id=926456888]
 layout_mode = 0
 offset_left = 105.0
 offset_top = 101.0
@@ -133,6 +135,7 @@ offset_bottom = 224.0
 texture_normal = ExtResource("3_n6gkq")
 ignore_texture_size = true
 stretch_mode = 0
+script = ExtResource("4_7al4d")
 
 [node name="Panel" type="Panel" parent="." unique_id=1053473271]
 layout_mode = 1
@@ -210,19 +213,6 @@ text = "9:00 PM"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="ScanLines" type="ColorRect" parent="." unique_id=1968879553]
-material = SubResource("8")
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_left = 1.0
-offset_top = 2.0
-offset_right = 1.0
-offset_bottom = -131.0
-grow_horizontal = 2
-grow_vertical = 2
-
 [node name="WindowDialog" type="Panel" parent="." unique_id=844715670]
 visible = false
 texture_filter = 1
@@ -274,8 +264,91 @@ theme_override_styles/normal = SubResource("StyleBoxTexture_auskg")
 theme_override_styles/pressed = SubResource("StyleBoxTexture_0sxyj")
 theme_override_styles/hover = SubResource("StyleBoxTexture_jxju5")
 
+[node name="Notepad2" type="Panel" parent="." unique_id=1602833461]
+texture_filter = 1
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -564.0
+offset_top = -394.0
+offset_right = 573.5
+offset_bottom = 293.5
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxTexture_1vivr")
+script = ExtResource("13_utm18")
+
+[node name="NotepadTitle" type="Panel" parent="Notepad2" unique_id=59344512]
+layout_mode = 0
+offset_left = 118.5
+offset_top = -16.5
+offset_right = 937.5
+offset_bottom = 70.5
+theme_override_styles/panel = SubResource("StyleBoxEmpty_ql4es")
+
+[node name="Label" type="Label" parent="Notepad2/NotepadTitle" unique_id=899627924]
+layout_mode = 0
+offset_left = 313.5
+offset_top = 6.5
+offset_right = 633.0
+offset_bottom = 76.5
+theme_override_fonts/font = ExtResource("2_5udwm")
+theme_override_font_sizes/font_size = 80
+text = "Notepad++"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="CloseButton" type="Button" parent="Notepad2/NotepadTitle" unique_id=1698604256]
+texture_filter = 1
+layout_mode = 0
+offset_left = 928.0
+offset_top = 5.0
+offset_right = 997.0
+offset_bottom = 83.0
+theme_override_fonts/font = ExtResource("2_5udwm")
+theme_override_font_sizes/font_size = 80
+theme_override_styles/normal = SubResource("StyleBoxTexture_auskg")
+theme_override_styles/pressed = SubResource("StyleBoxTexture_0sxyj")
+theme_override_styles/hover = SubResource("StyleBoxTexture_jxju5")
+
+[node name="RichTextLabel" type="RichTextLabel" parent="Notepad2" unique_id=357607898]
+layout_mode = 0
+offset_left = 71.0
+offset_top = 125.0
+offset_right = 963.0
+offset_bottom = 572.0
+theme_override_font_sizes/normal_font_size = 50
+theme_override_font_sizes/bold_font_size = 25
+text = "Word Display "
+
+[node name="Stats Label" type="Label" parent="Notepad2" unique_id=1080630735]
+layout_mode = 0
+offset_left = 601.0
+offset_top = 90.0
+offset_right = 1118.0
+offset_bottom = 138.0
+text = "Time: 30 WPM: 0 Acc: 100%"
+
 [node name="ColorRect2" type="ColorRect" parent="." unique_id=1797555366]
 material = SubResource("ShaderMaterial_8vrlf")
 layout_mode = 0
 offset_right = 1924.0
 offset_bottom = 1077.0
+mouse_filter = 2
+
+[node name="ScanLines" type="ColorRect" parent="." unique_id=1968879553]
+material = SubResource("8")
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 1.0
+offset_top = 2.0
+offset_right = 1.0
+offset_bottom = -131.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2

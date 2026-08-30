@@ -15,8 +15,10 @@
 [ext_resource type="Shader" uid="uid://c6qhkhar3xobg" path="res://Scripts/edge_detection.gdshader" id="7_hnr4c"]
 [ext_resource type="Texture2D" uid="uid://ciyhrfo3ktu1c" path="res://assets/windows.png" id="7_r3ooc"]
 [ext_resource type="Shader" uid="uid://blxi3tfpewclm" path="res://Scripts/Computer.gdshader" id="8_bpvhh"]
+[ext_resource type="Script" uid="uid://cgmgswxwycere" path="res://computer_transition.gd" id="9_5lia8"]
 [ext_resource type="Script" uid="uid://cgure35pg5rek" path="res://Scripts/static_body_3d.gd" id="9_garkl"]
 [ext_resource type="PackedScene" uid="uid://ceky6qpeonkyd" path="res://assets/blindsOpened.glb" id="9_muwe1"]
+[ext_resource type="PackedScene" uid="uid://bs3qohxmybk7q" path="res://WindowsDesktop/Desktop.tscn" id="10_5lia8"]
 [ext_resource type="PackedScene" uid="uid://djha1nxtih6h3" path="res://assets/blindsClosed.glb" id="10_garkl"]
 [ext_resource type="Script" uid="uid://bjuft8qkilucf" path="res://Scripts/door.gd" id="12_h4fbr"]
 [ext_resource type="PackedScene" uid="uid://clyu56rrwntd2" path="res://assets/bilboard.glb" id="15_o5ftv"]
@@ -45,6 +47,9 @@ albedo_color = Color(1, 1, 1, 0)
 [sub_resource type="QuadMesh" id="QuadMesh_v5gy4"]
 lightmap_size_hint = Vector2i(3, 3)
 size = Vector2(0.388, 0.276)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_muwe1"]
+size = Vector3(0.08319092, 0.3747139, 0.4425373)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_d0hwy"]
 size = Vector3(3.384468, 1.7263184, 1)
@@ -206,7 +211,7 @@ area_attenuation = -0.904
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, -1.110223e-16, 1, 1.4901161e-08, 0, 0.31826973)
 collision_layer = 2
 script = ExtResource("4_g5nle")
-lights = [NodePath("../SpotLight3D"), NodePath("../AreaLight3D")]
+lights = [NodePath("../SpotLight3D"), null]
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="SubViewportContainer/SubViewport/wall_lamp/Area3D" unique_id=1475012275]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, -3.330669e-16, 1, 0.00091458857, 0.03065741, -0.09841335)
@@ -234,7 +239,7 @@ area_attenuation = -4.873
 [node name="Area3D" type="Area3D" parent="SubViewportContainer/SubViewport/OfficeAssets_free" unique_id=1541577694 node_paths=PackedStringArray("lights")]
 collision_layer = 4
 script = ExtResource("5_gyk08")
-lights = [NodePath("../LampLight"), NodePath("../AreaLight3D")]
+lights = [NodePath("../LampLight"), null]
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="SubViewportContainer/SubViewport/OfficeAssets_free/Area3D" unique_id=1755598275]
 transform = Transform3D(1, 0, -3.5527137e-15, 0, 1, 0, 3.5527137e-15, 0, 1, 0.29414552, 1.4353473, 1.4273034)
@@ -255,6 +260,15 @@ area_range = 6.513
 area_attenuation = -1.698
 area_normalize_energy = false
 area_size = Vector2(0.3, 4.8)
+
+[node name="Computer2" type="Area3D" parent="SubViewportContainer/SubViewport/OfficeAssets_free" unique_id=383840388]
+transform = Transform3D(1, 0, -3.5527137e-15, 0, 1, 0, 3.5527137e-15, 0, 1, -0.12150985, 1.0552012, 0)
+script = ExtResource("9_5lia8")
+desktop_scene = ExtResource("10_5lia8")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="SubViewportContainer/SubViewport/OfficeAssets_free/Computer2" unique_id=230402999]
+transform = Transform3D(0.9799247, 0, -0.19936794, 0, 1, 0, 0.19936794, 0, 0.9799247, 0.42918855, 0.14781904, 0.5675705)
+shape = SubResource("BoxShape3D_muwe1")
 
 [node name="StaticBody3D" type="StaticBody3D" parent="SubViewportContainer/SubViewport" unique_id=744718775 node_paths=PackedStringArray("open_mesh", "closed_mesh")]
 transform = Transform3D(-1.0053619e-06, 0, 23, 0, 35, 0, -23, 0, -1.0053619e-06, -67.34046, 22, 37.235493)
@@ -303,7 +317,7 @@ shape = SubResource("BoxShape3D_1vivr")
 libraries/ = SubResource("AnimationLibrary_garkl")
 
 [node name="Camera3D" type="Camera3D" parent="SubViewportContainer/SubViewport" unique_id=1960914920]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.9874725, 54.503563, 73.03577)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.987, 54.504, 73.036)
 fov = 80.0
 script = ExtResource("6_1v8qo")
 
