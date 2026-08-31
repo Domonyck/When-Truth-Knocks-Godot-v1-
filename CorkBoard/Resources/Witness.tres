@@ -1,0 +1,10 @@
+[gd_resource type="Resource" script_class="Evidence" format=3 uid="uid://bu2g35ly83hyr"]
+
+[ext_resource type="Script" uid="uid://dapxewct54t01" path="res://CorkBoard/CorkBoardScripts/evidence.gd" id="1_upkuo"]
+
+[resource]
+script = ExtResource("1_upkuo")
+id = "Naz"
+category = "Naz"
+display_text = "test"
+metadata/_custom_type_script = "uid://dapxewct54t01"

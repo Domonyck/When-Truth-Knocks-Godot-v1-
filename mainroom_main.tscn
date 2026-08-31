@@ -23,9 +23,6 @@
 [ext_resource type="Script" uid="uid://bjuft8qkilucf" path="res://Scripts/door.gd" id="12_h4fbr"]
 [ext_resource type="PackedScene" uid="uid://clyu56rrwntd2" path="res://assets/bilboard.glb" id="15_o5ftv"]
 [ext_resource type="PackedScene" uid="uid://n4js8nvhuj4j" path="res://assets/street.glb" id="16_o5ftv"]
-[ext_resource type="Shader" uid="uid://csl0dj0kglv7v" path="res://overlay.gdshader" id="19_vprmq"]
-[ext_resource type="Script" uid="uid://c80y3d1f7p2bc" path="res://CorkBoard/CorkBoardScripts/billboard.gd" id="20_vprmq"]
-[ext_resource type="PackedScene" uid="uid://bfkbuwj2dh1dh" path="res://CorkBoard/CorkBoard.tscn" id="21_myiym"]
 
 [sub_resource type="SphereShape3D" id="SphereShape3D_g5nle"]
 radius = 8.944255
@@ -155,9 +152,6 @@ fog_depth_begin = 5.0
 fog_depth_end = 15.0
 volumetric_fog_density = 0.0165
 volumetric_fog_albedo = Color(0.09884685, 0.14581767, 0.19554113, 1)
-
-[sub_resource type="BoxShape3D" id="BoxShape3D_5lia8"]
-size = Vector3(0.001, 0.05753994, 0.08353712)
 
 [node name="Node2D" type="Node2D" unique_id=117264161]
 
@@ -328,6 +322,7 @@ fov = 80.0
 script = ExtResource("6_1v8qo")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="SubViewportContainer/SubViewport/Camera3D" unique_id=1804123908]
+visible = false
 extra_cull_margin = 16384.0
 mesh = SubResource("QuadMesh_1v8qo")
 surface_material_override/0 = SubResource("ShaderMaterial_hnr4c")
@@ -346,22 +341,10 @@ light_color = Color(0.76132476, 0.8897189, 1, 1)
 light_energy = 0.175
 shadow_enabled = true
 
-[node name="bilboard" parent="SubViewportContainer/SubViewport" unique_id=1869380168 instance=ExtResource("15_o5ftv")]
-transform = Transform3D(-4.1525826e-05, 0, -950.0001, -5.750918e-06, 950.0001, 2.5138062e-13, 950.0001, 5.750918e-06, -4.1525826e-05, 182.4318, -107.436775, -60.308662)
-
-[node name="Marker3D" type="Marker3D" parent="SubViewportContainer/SubViewport/bilboard" unique_id=2073067052]
-transform = Transform3D(1, 3.1086245e-15, -3.1974423e-14, -3.1086245e-15, 1, 2.3822802e-22, 3.1974423e-14, -5.293956e-23, 1, 0.044147477, 0.17591092, 0.1163137)
-
-[node name="Area3D" type="Area3D" parent="SubViewportContainer/SubViewport/bilboard" unique_id=2025186509 node_paths=PackedStringArray("zoom_target")]
-script = ExtResource("20_vprmq")
-billboard_scene = ExtResource("21_myiym")
-zoom_target = NodePath("../Marker3D")
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="SubViewportContainer/SubViewport/bilboard/Area3D" unique_id=254802364]
-transform = Transform3D(0.0097036585, -5.994442e-09, -0.999953, -5.9945604e-09, 1, -6.05309e-09, 0.999953, 6.0533147e-09, 0.0097036585, 0.05307382, 0.17538685, 0.09345899)
-shape = SubResource("BoxShape3D_5lia8")
-
 [node name="OtherAssets" type="Node3D" parent="SubViewportContainer/SubViewport" unique_id=876547624]
+
+[node name="bilboard" parent="SubViewportContainer/SubViewport/OtherAssets" unique_id=1869380168 instance=ExtResource("15_o5ftv")]
+transform = Transform3D(-4.1525826e-05, 0, -950.0001, -5.750918e-06, 950.0001, 2.5138062e-13, 950.0001, 5.750918e-06, -4.1525826e-05, 182.4318, -107.436775, -60.308662)
 
 [node name="street" parent="SubViewportContainer/SubViewport/OtherAssets" unique_id=1612482527 instance=ExtResource("16_o5ftv")]
 transform = Transform3D(-1.7484556e-08, 0, -0.4, 0, 0.4, 0, 0.4, 0, -1.7484556e-08, 508.34998, -8.85819, -948.8139)

@@ -1,0 +1,81 @@
+[gd_scene format=3 uid="uid://bfkbuwj2dh1dh"]
+
+[ext_resource type="Texture2D" uid="uid://defokkt5brqs8" path="res://CorkBoard/CorkBoard.png" id="1_1snel"]
+[ext_resource type="Script" uid="uid://dourb33ewxee7" path="res://CorkBoard/CorkBoardScripts/cork_board.gd" id="1_bo57p"]
+[ext_resource type="Script" uid="uid://d1rs54sfvwbqk" path="res://CorkBoard/CorkBoardScripts/caseslots.gd" id="2_x7ac8"]
+[ext_resource type="Script" uid="uid://cn015dyvmllin" path="res://CorkBoard/CorkBoardScripts/card_1.gd" id="3_dlae8"]
+[ext_resource type="Script" uid="uid://dapxewct54t01" path="res://CorkBoard/CorkBoardScripts/evidence.gd" id="4_dlae8"]
+
+[sub_resource type="Resource" id="Resource_bo57p"]
+script = ExtResource("4_dlae8")
+id = "ev_1"
+category = "Locaton"
+display_text = "Tite"
+metadata/_custom_type_script = "uid://dapxewct54t01"
+
+[node name="Control" type="Control" unique_id=1724939009]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 1921.0
+offset_bottom = 1079.0
+script = ExtResource("1_bo57p")
+
+[node name="TextureRect" type="TextureRect" parent="." unique_id=1505522296]
+texture_filter = 1
+layout_mode = 0
+offset_left = -30.0
+offset_top = 2.0
+offset_right = 1947.205
+offset_bottom = 1081.0
+texture = ExtResource("1_1snel")
+
+[node name="CaseContainer" type="VBoxContainer" parent="." unique_id=413046863]
+layout_mode = 0
+offset_left = 83.0
+offset_top = 96.0
+offset_right = 885.0
+offset_bottom = 995.0
+
+[node name="LastSlotSeen" type="Panel" parent="CaseContainer" unique_id=785583450]
+custom_minimum_size = Vector2(0, 80)
+layout_mode = 2
+script = ExtResource("2_x7ac8")
+expected_category = "Location"
+
+[node name="Label" type="Label" parent="CaseContainer/LastSlotSeen" unique_id=890975689]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 22.0
+offset_top = 6.0
+offset_right = -235.0
+offset_bottom = -11.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_font_sizes/font_size = 40
+text = "Evidence #1"
+autowrap_mode = 2
+
+[node name="GridContainer" type="GridContainer" parent="." unique_id=1675228316]
+layout_mode = 0
+offset_left = 939.0
+offset_top = 80.0
+offset_right = 1881.0
+offset_bottom = 989.0
+
+[node name="Card1" type="Panel" parent="GridContainer" unique_id=1281591113]
+custom_minimum_size = Vector2(200, 100)
+layout_mode = 2
+script = ExtResource("3_dlae8")
+evidence_data = SubResource("Resource_bo57p")
+
+[node name="Label" type="Label" parent="GridContainer/Card1" unique_id=1831423788]
+layout_mode = 0
+offset_left = 2.0
+offset_top = 8.0
+offset_right = 631.0
+offset_bottom = 105.0
+theme_override_font_sizes/font_size = 36
+text = "Thing #1"
+autowrap_mode = 2
