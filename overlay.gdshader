@@ -1,7 +1,7 @@
 shader_type spatial;
-render_mode unshaded, fog_disabled;
-uniform sampler2D screen_texture : hint_screen_texture;
-uniform float pixel_size : hint_range(1.0, 20.0, 1.0);
+render_mode unshaded, depth_test_disabled;
+uniform sampler2D screen_texture : hint_screen_texture, filter_nearest;
+uniform float pixel_size : hint_range(1.0, 20.0, 1.0) = 4.0;
 
 void vertex() {
     POSITION = vec4(VERTEX.xy, 1.0, 1.0);
