@@ -1,5 +1,6 @@
 [gd_scene format=3 uid="uid://bidhay1q88cyu"]
 
+[ext_resource type="Script" uid="uid://bu1sar3lcm064" path="res://Scripts/lightmanager.gd" id="1_5xmfd"]
 [ext_resource type="PackedScene" uid="uid://cicypmtndshsm" path="res://assets/persian_carpet.glb" id="1_a78iu"]
 [ext_resource type="PackedScene" uid="uid://ds8qhbocxa2ii" path="res://assets/door.glb" id="1_abmy8"]
 [ext_resource type="PackedScene" uid="uid://cqmn18xn636es" path="res://assets/potted_plant_mediterranean_med_leaf_low_poly.glb" id="1_i67a4"]
@@ -24,6 +25,8 @@
 [ext_resource type="PackedScene" uid="uid://n4js8nvhuj4j" path="res://assets/street.glb" id="16_o5ftv"]
 [ext_resource type="Shader" uid="uid://csl0dj0kglv7v" path="res://overlay.gdshader" id="19_vprmq"]
 [ext_resource type="Script" uid="uid://yf3tow0ml2f2" path="res://Scripts/Billboard.gd" id="20_vprmq"]
+[ext_resource type="Texture2D" uid="uid://dsocdi5kk48hb" path="res://assets/student2.png" id="25_myiym"]
+[ext_resource type="Texture2D" uid="uid://c2kqmnrnt1xjm" path="res://assets/student1.png" id="26_d6p8o"]
 
 [sub_resource type="SphereShape3D" id="SphereShape3D_g5nle"]
 radius = 8.944255
@@ -43,10 +46,10 @@ material = SubResource("StandardMaterial3D_5lia8")
 size = Vector2(0.388, 0.276)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_muwe1"]
-size = Vector3(0.08319092, 0.3747139, 0.4425373)
+size = Vector3(0.08319092, 0.3747139, 0.43204546)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_d0hwy"]
-size = Vector3(3.384468, 1.7263184, 1)
+size = Vector3(2.6229725, 1.5628662, 1)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_1vivr"]
 size = Vector3(41.89514, 208.83926, 95.39064)
@@ -125,7 +128,6 @@ shader_parameter/lineHighlight = 0.2
 shader_parameter/lineShadow = 0.55
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_cpeaq"]
-render_priority = 1
 shader = ExtResource("19_vprmq")
 shader_parameter/pixel_size = 2.0
 
@@ -133,6 +135,10 @@ shader_parameter/pixel_size = 2.0
 material = SubResource("ShaderMaterial_cpeaq")
 flip_faces = true
 size = Vector2(2, 2)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_1vivr"]
+shader = ExtResource("19_vprmq")
+shader_parameter/pixel_size = 2.0
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_sal5q"]
 size = Vector3(0.09591675, 0.059753418, 0.009155273)
@@ -160,7 +166,13 @@ fog_depth_end = 15.0
 volumetric_fog_density = 0.0165
 volumetric_fog_albedo = Color(0.09884685, 0.14581767, 0.19554113, 1)
 
-[node name="Node2D" type="Node2D" unique_id=117264161]
+[node name="Node2D" type="Node2D" unique_id=117264161 node_paths=PackedStringArray("ceiling_fan_area", "wall_lamp_area", "office_assets_area", "mesh_instance_2", "computer2")]
+script = ExtResource("1_5xmfd")
+ceiling_fan_area = NodePath("SubViewportContainer/SubViewport/ceilingFan/Area3D")
+wall_lamp_area = NodePath("SubViewportContainer/SubViewport/wall_lamp/Area3D")
+office_assets_area = NodePath("SubViewportContainer/SubViewport/OfficeAssets_free/Area3D")
+mesh_instance_2 = NodePath("SubViewportContainer/SubViewport/OfficeAssets_free/MeshInstance3D2")
+computer2 = NodePath("SubViewportContainer/SubViewport/OfficeAssets_free/Computer2")
 
 [node name="SubViewportContainer" type="SubViewportContainer" parent="." unique_id=1300685362]
 anchors_preset = 15
@@ -253,7 +265,7 @@ transform = Transform3D(1, 0, -3.5527137e-15, 0, 1, 0, 3.5527137e-15, 0, 1, 0.29
 shape = SubResource("SphereShape3D_v5gy4")
 
 [node name="MeshInstance3D2" type="MeshInstance3D" parent="SubViewportContainer/SubViewport/OfficeAssets_free" unique_id=1554393159]
-transform = Transform3D(0.27060556, -0.000263336, 0.9626902, -0.0052359556, 0.99998474, 0.0017453282, -0.96267605, -0.0055128993, 0.27060005, 0.26167542, 1.1809999, 0.54899997)
+transform = Transform3D(0.25017807, 0.012159347, 0.9681236, -0.008191462, 0.99991196, -0.0104418, -0.9681651, -0.0053180363, 0.25025567, 0.2601301, 1.1809999, 0.5489996)
 mesh = SubResource("QuadMesh_v5gy4")
 
 [node name="ComputerLight" type="AreaLight3D" parent="SubViewportContainer/SubViewport/OfficeAssets_free/MeshInstance3D2" unique_id=223051972]
@@ -273,7 +285,7 @@ desktop_scene = ExtResource("10_5lia8")
 zoom_target = NodePath("Marker3D")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="SubViewportContainer/SubViewport/OfficeAssets_free/Computer2" unique_id=230402999]
-transform = Transform3D(0.9799247, 0, -0.19936794, 0, 1, 0, 0.19936794, 0, 0.9799247, 0.42918855, 0.14781904, 0.5675705)
+transform = Transform3D(0.9799247, 0, -0.19936794, 0, 1, 0, 0.19936794, 0, 0.9799247, 0.4239887, 0.14781904, 0.59312797)
 shape = SubResource("BoxShape3D_muwe1")
 
 [node name="Marker3D" type="Marker3D" parent="SubViewportContainer/SubViewport/OfficeAssets_free/Computer2" unique_id=2085428728]
@@ -286,7 +298,7 @@ open_mesh = NodePath("blindsOpened")
 closed_mesh = NodePath("blindsClosed")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="SubViewportContainer/SubViewport/StaticBody3D" unique_id=1044882816]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.5099016, 1.4707642, -0.25691223)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.2482208, 1.3890381, -0.25691223)
 shape = SubResource("BoxShape3D_d0hwy")
 
 [node name="blindsClosed" parent="SubViewportContainer/SubViewport/StaticBody3D" unique_id=1620251978 instance=ExtResource("10_garkl")]
@@ -337,6 +349,7 @@ mesh = SubResource("QuadMesh_1v8qo")
 surface_material_override/0 = SubResource("ShaderMaterial_hnr4c")
 
 [node name="MeshInstance3dscreen" type="MeshInstance3D" parent="SubViewportContainer/SubViewport/Camera3D" unique_id=307845774]
+visible = false
 extra_cull_margin = 16384.0
 mesh = SubResource("QuadMesh_d0hwy")
 
@@ -344,6 +357,17 @@ mesh = SubResource("QuadMesh_d0hwy")
 target_position = Vector3(0, 0, -200)
 collide_with_areas = true
 collide_with_bodies = false
+
+[node name="CanvasLayer" type="CanvasLayer" parent="SubViewportContainer/SubViewport/Camera3D" unique_id=1125952233]
+
+[node name="ColorRect" type="ColorRect" parent="SubViewportContainer/SubViewport/Camera3D/CanvasLayer" unique_id=1695416500]
+material = SubResource("ShaderMaterial_1vivr")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
 
 [node name="bilboard" parent="SubViewportContainer/SubViewport" unique_id=1869380168 instance=ExtResource("15_o5ftv")]
 transform = Transform3D(-4.1525826e-05, 0, -950.0001, -5.750918e-06, 950.0001, 2.5138062e-13, 950.0001, 5.750918e-06, -4.1525826e-05, 182.4318, -107.43678, -60.308662)
@@ -405,5 +429,21 @@ light_indirect_energy = 3.196
 light_volumetric_fog_energy = 2.255
 omni_range = 1205.4
 omni_attenuation = -0.588
+
+[node name="Characters" type="Node3D" parent="SubViewportContainer/SubViewport" unique_id=1305229521]
+
+[node name="Sprite3D" type="Sprite3D" parent="SubViewportContainer/SubViewport/Characters" unique_id=1515566829]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.7708883, 53.139454, 11.872822)
+top_level = true
+pixel_size = 0.027116
+shaded = true
+texture = ExtResource("25_myiym")
+
+[node name="Sprite3D2" type="Sprite3D" parent="SubViewportContainer/SubViewport/Characters" unique_id=1286641275]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.3450756, 58.395252, 10.651829)
+visible = false
+pixel_size = 0.035116
+shaded = true
+texture = ExtResource("26_d6p8o")
 
 [connection signal="input_event" from="SubViewportContainer/SubViewport/StaticBody3D" to="SubViewportContainer/SubViewport/StaticBody3D" method="_on_input_event"]
