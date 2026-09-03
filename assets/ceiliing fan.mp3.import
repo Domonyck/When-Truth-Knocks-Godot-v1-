@@ -1,0 +1,19 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+uid="uid://dn34jsb4f15q0"
+path="res://.godot/imported/ceiliing fan.mp3-4b5d2e77ea718f436012a9fd193d28bc.mp3str"
+
+[deps]
+
+source_file="res://assets/ceiliing fan.mp3"
+dest_files=["res://.godot/imported/ceiliing fan.mp3-4b5d2e77ea718f436012a9fd193d28bc.mp3str"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4
