@@ -1,0 +1,86 @@
+[gd_scene format=3 uid="uid://cfac2xsd14bs7"]
+
+[ext_resource type="Script" uid="uid://wd23dio42stj" path="res://global.gd" id="1_xwsa7"]
+[ext_resource type="FontFile" uid="uid://dh3sljjjsyr82" path="res://WindowsDesktop/Battlenet.ttf" id="2_cbrvg"]
+[ext_resource type="Shader" uid="uid://jbxwogyfya2a" path="res://Scripts/PauseMenu.gdshader" id="3_f5lju"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_1vivr"]
+shader = ExtResource("3_f5lju")
+shader_parameter/blur_amount = 5.0
+
+[node name="PauseMenu" type="CanvasLayer" unique_id=1388320112]
+process_mode = 3
+layer = 10
+script = ExtResource("1_xwsa7")
+
+[node name="Control" type="Control" parent="." unique_id=1916842550]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="ColorRect" type="ColorRect" parent="Control" unique_id=358274653]
+material = SubResource("ShaderMaterial_1vivr")
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_right = 1890.0
+offset_bottom = 1040.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0, 0, 0, 0.5764706)
+
+[node name="Label" type="Label" parent="Control" unique_id=1943360853]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = 814.0
+offset_top = 391.0
+offset_right = 1444.0
+offset_bottom = 680.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_fonts/font = ExtResource("2_cbrvg")
+theme_override_font_sizes/font_size = 100
+text = "PAUSED"
+
+[node name="ResumeButton" type="Button" parent="Control" unique_id=1272857763]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = 841.0
+offset_top = 514.0
+offset_right = 1028.0
+offset_bottom = 584.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_fonts/font = ExtResource("2_cbrvg")
+theme_override_font_sizes/font_size = 70
+text = "RESUME"
+flat = true
+
+[node name="QuitButton" type="Button" parent="Control" unique_id=660004327]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = 842.0
+offset_top = 598.0
+offset_right = 1028.0
+offset_bottom = 672.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_fonts/font = ExtResource("2_cbrvg")
+theme_override_font_sizes/font_size = 74
+text = "QUIT"
+flat = true

@@ -1,0 +1,224 @@
+[gd_scene format=3 uid="uid://c64o1r5r8k606"]
+
+[ext_resource type="Shader" uid="uid://bgr78qxy1b0du" path="res://remove black.gdshader" id="1_fgk7k"]
+[ext_resource type="Texture2D" uid="uid://bk1buc0galrpq" path="res://textures/8.png" id="4_m8vxo"]
+[ext_resource type="Texture2D" uid="uid://bym6qtnfsnw15" path="res://textures/10.png" id="6_yngg5"]
+[ext_resource type="Texture2D" uid="uid://jy8fwe4skyyp" path="res://textures/21.png" id="7_s146n"]
+[ext_resource type="Texture2D" uid="uid://cvat5jiectrn1" path="res://textures/22.png" id="8_0jsmq"]
+[ext_resource type="Texture2D" uid="uid://dm3oal3glgi5i" path="res://textures/430.png" id="10_5punh"]
+[ext_resource type="Script" uid="uid://vivnkai8ytx1" path="res://Scripts/divided static.gd" id="12_c6htr"]
+[ext_resource type="Texture2D" uid="uid://egaqeovbfii0" path="res://textures/435.png" id="12_le5n5"]
+[ext_resource type="Shader" uid="uid://bah8qluyewrvm" path="res://Scripts/TitleScreenStatic.gdshader" id="13_8skst"]
+[ext_resource type="Texture2D" uid="uid://ddlbmuqce7byq" path="res://textures/436.png" id="13_yubun"]
+[ext_resource type="Script" uid="uid://c857vs4yejvo8" path="res://Scripts/startquitgui.gd" id="14_fgk7k"]
+[ext_resource type="FontFile" uid="uid://dtjueab4s4hcg" path="res://WindowsDesktop/Battlenet2.ttf" id="14_iury2"]
+[ext_resource type="Texture2D" uid="uid://dmc6pq8o7cyu6" path="res://textures/437.png" id="14_p5s4k"]
+[ext_resource type="Script" uid="uid://djqcfbaimww6f" path="res://Scripts/menu button.gd" id="15_fgk7k"]
+[ext_resource type="Texture2D" uid="uid://d35p28k26gy15" path="res://textures/438.png" id="15_saqug"]
+[ext_resource type="Texture2D" uid="uid://4geo1pd65nf0" path="res://textures/439.png" id="16_4y71n"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_v5gy4"]
+shader = ExtResource("1_fgk7k")
+shader_parameter/threshold = 0.6
+shader_parameter/alpha = 0.2
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_1vivr"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("4_m8vxo")
+}, {
+"duration": 1.0,
+"texture": ExtResource("6_yngg5")
+}, {
+"duration": 1.0,
+"texture": ExtResource("7_s146n")
+}, {
+"duration": 1.0,
+"texture": ExtResource("8_0jsmq")
+}, {
+"duration": 1.0,
+"texture": ExtResource("10_5punh")
+}, {
+"duration": 1.0,
+"texture": ExtResource("12_le5n5")
+}, {
+"duration": 1.0,
+"texture": ExtResource("13_yubun")
+}, {
+"duration": 1.0,
+"texture": ExtResource("14_p5s4k")
+}, {
+"duration": 1.0,
+"texture": ExtResource("15_saqug")
+}, {
+"duration": 1.0,
+"texture": ExtResource("16_4y71n")
+}],
+"loop": 1,
+"name": &"default",
+"speed": 8.0
+}]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_1vivr"]
+shader = ExtResource("13_8skst")
+shader_parameter/overlay = true
+shader_parameter/scanlines_opacity = 0.0
+shader_parameter/scanlines_width = 0.5
+shader_parameter/grille_opacity = 0.0
+shader_parameter/resolution = Vector2(1920, 1080)
+shader_parameter/pixelate = true
+shader_parameter/roll = true
+shader_parameter/roll_speed = 8.0
+shader_parameter/roll_size = 15.0
+shader_parameter/roll_variation = 1.8
+shader_parameter/distort_intensity = 0.05
+shader_parameter/noise_opacity = 0.1590000075525
+shader_parameter/noise_speed = 5.0
+shader_parameter/static_noise_intensity = 0.194000009215
+shader_parameter/aberration = 0.03
+shader_parameter/brightness = 1.4
+shader_parameter/discolor = true
+shader_parameter/warp_amount = 0.0
+shader_parameter/clip_warp = false
+shader_parameter/vignette_intensity = 0.4
+shader_parameter/vignette_opacity = 0.66400003154
+
+[sub_resource type="Gradient" id="Gradient_v5gy4"]
+offsets = PackedFloat32Array(0, 0.02631579)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_1vivr"]
+gradient = SubResource("Gradient_v5gy4")
+fill_from = Vector2(0, 1)
+
+[sub_resource type="Animation" id="Animation_s4ikd"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(972.5, -91)]
+}
+
+[sub_resource type="Animation" id="Animation_7invk"]
+resource_name = "scan"
+length = 20.0
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 20),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Vector2(972.5, -91), Vector2(972.5, 1138)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_m8vxo"]
+_data = {
+&"RESET": SubResource("Animation_s4ikd"),
+&"scan": SubResource("Animation_7invk")
+}
+
+[node name="Node2D" type="Node2D" unique_id=1928681451]
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=1333254584]
+visible = false
+material = SubResource("ShaderMaterial_v5gy4")
+position = Vector2(960.44446, 543)
+scale = Vector2(1.4944445, 1.4944445)
+sprite_frames = SubResource("SpriteFrames_1vivr")
+autoplay = "default"
+script = ExtResource("12_c6htr")
+
+[node name="rest" type="Timer" parent="AnimatedSprite2D" unique_id=1551613989]
+one_shot = true
+
+[node name="twitch" type="Timer" parent="AnimatedSprite2D" unique_id=1144688071]
+
+[node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=1565734561]
+layer = -128
+
+[node name="ColorRect" type="ColorRect" parent="CanvasLayer" unique_id=1506196790]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 0.7411765)
+
+[node name="ColorRect2" type="ColorRect" parent="CanvasLayer" unique_id=1556762610]
+material = SubResource("ShaderMaterial_1vivr")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="scan line" type="Sprite2D" parent="." unique_id=1365065499]
+modulate = Color(1, 1, 1, 0.11764706)
+position = Vector2(972.5, -91)
+scale = Vector2(32.890625, 1)
+texture = SubResource("GradientTexture2D_1vivr")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="scan line" unique_id=1546658138]
+libraries/ = SubResource("AnimationLibrary_m8vxo")
+autoplay = &"scan"
+
+[node name="GUI" type="CanvasLayer" parent="." unique_id=69568522]
+script = ExtResource("14_fgk7k")
+
+[node name="Label" type="Label" parent="GUI" unique_id=2068396178]
+texture_filter = 1
+offset_left = 155.0
+offset_top = 44.0
+offset_right = 681.0
+offset_bottom = 575.0
+theme_override_fonts/font = ExtResource("14_iury2")
+theme_override_font_sizes/font_size = 200
+text = "when
+   truth
+knocks"
+
+[node name="Quit" type="Button" parent="GUI" unique_id=1051044133]
+texture_filter = 1
+offset_left = 299.0
+offset_top = 754.0
+offset_right = 438.0
+offset_bottom = 867.0
+theme_override_fonts/font = ExtResource("14_iury2")
+theme_override_font_sizes/font_size = 100
+text = "Quit"
+flat = true
+script = ExtResource("15_fgk7k")
+
+[node name="Start" type="Button" parent="GUI" unique_id=1413307751]
+texture_filter = 1
+offset_left = 299.0
+offset_top = 637.0
+offset_right = 482.0
+offset_bottom = 746.0
+theme_override_fonts/font = ExtResource("14_iury2")
+theme_override_font_sizes/font_size = 100
+text = "Start"
+flat = true
+script = ExtResource("15_fgk7k")
+
+[node name="Arrow" type="Label" parent="GUI" unique_id=2133262412]
+texture_filter = 1
+offset_left = 187.0
+offset_top = 642.0
+offset_right = 276.0
+offset_bottom = 730.0
+theme_override_fonts/font = ExtResource("14_iury2")
+theme_override_font_sizes/font_size = 100
+text = ">>"

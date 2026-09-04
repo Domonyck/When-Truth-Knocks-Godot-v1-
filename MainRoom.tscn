@@ -174,6 +174,7 @@ volumetric_fog_density = 0.0165
 volumetric_fog_albedo = Color(0.09884685, 0.14581767, 0.19554113, 1)
 
 [node name="Node2D" type="Node2D" unique_id=117264161 node_paths=PackedStringArray("ceiling_fan_area", "wall_lamp_area", "office_assets_area", "mesh_instance_2", "computer2")]
+process_mode = 1
 script = ExtResource("1_5xmfd")
 ceiling_fan_area = NodePath("SubViewportContainer/SubViewport/ceilingFan/Area3D")
 wall_lamp_area = NodePath("SubViewportContainer/SubViewport/wall_lamp/Area3D")
@@ -192,6 +193,7 @@ grow_horizontal = 2
 grow_vertical = 2
 
 [node name="SubViewport" type="SubViewport" parent="SubViewportContainer" unique_id=1982693907]
+process_mode = 1
 handle_input_locally = false
 physics_object_picking = true
 physics_object_picking_sort = true
@@ -315,10 +317,10 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.2482208, 1.3890381, -0.2569
 shape = SubResource("BoxShape3D_d0hwy")
 
 [node name="blindsClosed" parent="SubViewportContainer/SubViewport/StaticBody3D" unique_id=1620251978 instance=ExtResource("10_garkl")]
+visible = false
 
 [node name="blindsOpened" parent="SubViewportContainer/SubViewport/StaticBody3D" unique_id=1794706222 instance=ExtResource("9_muwe1")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.601774, 0, -4.7683716e-07)
-visible = false
 
 [node name="SpotLight3D" type="SpotLight3D" parent="SubViewportContainer/SubViewport/StaticBody3D" unique_id=1964491833]
 transform = Transform3D(-0.042335097, 0.0067589874, 0.0072398256, 0.005052301, 0.027903358, 0.0034933428, -0.0062441393, 0.0064564073, -0.04254039, 2.9343076, 1.5404227, -7.857197)

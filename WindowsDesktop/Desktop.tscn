@@ -104,6 +104,7 @@ shader = SubResource("7")
 shader_parameter/SCREEN_HEIGHT = 240.0
 
 [node name="Desktop" type="Control" unique_id=735576688]
+process_mode = 1
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0

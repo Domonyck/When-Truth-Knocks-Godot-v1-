@@ -15,7 +15,7 @@ extends Node2D
 func _ready() -> void:
 	randomize()
 	# Ensure light manager continues running while game is paused in desktop scene
-	process_mode = Node.PROCESS_MODE_ALWAYS
+	process_mode = Node.PROCESS_MODE_PAUSABLE
 	_update_power_state()
 
 func _process(_delta: float) -> void:
