@@ -1,5 +1,5 @@
 extends Node
-# Autoload this as "Story" (Project Settings > Autoload).
+# Autoload this as "StoryData" (Project Settings > Autoload).
 #
 # Scope note: this file only covers the STORY DATA + TYPING GAME half of
 # the loop below. The door-knock/NPC-appearance/bulletin-puzzle parts are
@@ -33,6 +33,8 @@ class CaseData:
 	var solved: bool = false     # true once the manuscript has been typed
 	var progress_word_index: int = 0    # how many words are confirmed done
 	var progress_typed_text: String = ""   # partial characters of the current word
+	var progress_total_typed: int = 0      # running accuracy tally, so it survives reopening the notepad
+	var progress_correct_chars: int = 0
 
 var cases: Dictionary = {}          # id -> CaseData
 var order: Array[String] = [INTRO_ID, "case1", "case2", "case3"]   # article assembly order
@@ -112,12 +114,16 @@ func is_unlocked(case_id: String) -> bool:
 ## --- TYPING GAME HOOK -------------------------------------------------------
 ## Called by noteTypingGame.gd on every keystroke/word so progress survives
 ## the notepad window being force-closed (e.g. lightmanager.gd cutting
-## power and calling computer2.force_shutdown_desktop()).
-func save_progress(case_id: String, word_index: int, partial_text: String = "") -> void:
+## power and calling computer2.force_shutdown_desktop()). total_typed and
+## correct_chars are saved too, so the accuracy tally can't be reset just
+## by closing and reopening the notepad.
+func save_progress(case_id: String, word_index: int, partial_text: String, total_typed: int, correct_chars: int) -> void:
 	if not cases.has(case_id):
 		return
 	cases[case_id].progress_word_index = word_index
 	cases[case_id].progress_typed_text = partial_text
+	cases[case_id].progress_total_typed = total_typed
+	cases[case_id].progress_correct_chars = correct_chars
 
 ## Called by noteTypingGame.gd when (re)opening a manuscript, to resume
 ## exactly where the player left off.
@@ -131,13 +137,32 @@ func get_progress_typed_text(case_id: String) -> String:
 		return ""
 	return cases[case_id].progress_typed_text
 
+func get_progress_total_typed(case_id: String) -> int:
+	if not cases.has(case_id):
+		return 0
+	return cases[case_id].progress_total_typed
+
+func get_progress_correct_chars(case_id: String) -> int:
+	if not cases.has(case_id):
+		return 0
+	return cases[case_id].progress_correct_chars
+
+## Wipes saved progress for a case (used when accuracy drops too low and
+## the manuscript has to be restarted from scratch).
+func reset_progress(case_id: String) -> void:
+	if not cases.has(case_id):
+		return
+	cases[case_id].progress_word_index = 0
+	cases[case_id].progress_typed_text = ""
+	cases[case_id].progress_total_typed = 0
+	cases[case_id].progress_correct_chars = 0
+
 ## Called by noteTypingGame.gd once the manuscript has been fully typed.
 func mark_case_solved(case_id: String) -> void:
 	if not cases.has(case_id) or cases[case_id].solved:
 		return
 	cases[case_id].solved = true
-	cases[case_id].progress_word_index = 0
-	cases[case_id].progress_typed_text = ""
+	reset_progress(case_id)
 	case_completed.emit(case_id)
 
 func get_manuscript_text(case_id: String) -> String:

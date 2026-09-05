@@ -1,5 +1,5 @@
 extends Control
-# Requires the "Story" autoload (see story_data.gd) to be registered in
+# Requires the "StoryData" autoload (see story_data.gd) to be registered in
 # Project Settings > Autoload before this will work.
 #
 # Scope note: this is only the typing step of the loop. Whoever builds the
@@ -7,10 +7,15 @@ extends Control
 # once that case's puzzle is solved.
 
 signal manuscript_typed(case_id: String)
+signal manuscript_failed(case_id: String)
 
 @onready var close_button: Button = $NotepadTitle/CloseButton
 @onready var words_display: RichTextLabel = $RichTextLabel
 @onready var stats_label: Label = $"Stats Label"
+
+## If accuracy drops below this while typing, the manuscript resets and
+## has to be typed from the beginning. Tune from the Inspector.
+@export var min_accuracy_percent: float = 40.0
 
 var case_id: String = ""
 var words: Array[String] = []
@@ -47,13 +52,13 @@ func start_manuscript(id: String) -> void:
 		return
 	case_id = id
 	finished = false
-	correct_chars = 0
-	total_typed = 0
 	words.clear()
 	for word in StoryData.get_manuscript_text(id).split(" ", false):
 		words.append(word)
 	current_word_index = clamp(StoryData.get_progress_word_index(id), 0, words.size())
 	typed_text = StoryData.get_progress_typed_text(id)
+	total_typed = StoryData.get_progress_total_typed(id)
+	correct_chars = StoryData.get_progress_correct_chars(id)
 	_render_words()
 	_update_stats()
 	show()
@@ -89,6 +94,11 @@ func _submit_word() -> void:
 	correct_chars += _count_correct(target, typed_text)
 	current_word_index += 1
 	typed_text = ""
+
+	if _current_accuracy() < min_accuracy_percent:
+		_fail_and_reset()
+		return
+
 	if current_word_index >= words.size():
 		_finish_manuscript()
 	else:
@@ -96,11 +106,28 @@ func _submit_word() -> void:
 		_save_progress()
 	_update_stats()
 
+func _current_accuracy() -> float:
+	if total_typed == 0:
+		return 100.0
+	return 100.0 * correct_chars / total_typed
+
+## Accuracy dropped below the threshold: wipe progress on this manuscript
+## (both locally and in Story) and make the player start it over.
+func _fail_and_reset() -> void:
+	current_word_index = 0
+	typed_text = ""
+	correct_chars = 0
+	total_typed = 0
+	StoryData.reset_progress(case_id)
+	stats_label.text = "Accuracy dropped below %d%%. Start the manuscript over." % int(min_accuracy_percent)
+	_render_words()
+	manuscript_failed.emit(case_id)
+
 ## Persist progress into Story (the autoload) so it survives this node
 ## being hidden or force-closed by another system.
 func _save_progress() -> void:
 	if case_id != "":
-		StoryData.save_progress(case_id, current_word_index, typed_text)
+		StoryData.save_progress(case_id, current_word_index, typed_text, total_typed, correct_chars)
 
 func _count_correct(target: String, typed: String) -> int:
 	var n: int = min(target.length(), typed.length())
@@ -136,7 +163,7 @@ func _colorize_current(word: String) -> String:
 	return out
 
 func _update_stats() -> void:
-	var accuracy := 100 if total_typed == 0 else int(100.0 * correct_chars / max(total_typed, 1))
+	var accuracy := int(_current_accuracy())
 	stats_label.text = "Progress: %d / %d words   Accuracy: %d%%" % [current_word_index, words.size(), accuracy]
 
 func _finish_manuscript() -> void:
