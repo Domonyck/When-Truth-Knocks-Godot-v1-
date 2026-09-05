@@ -11,5 +11,5 @@ func _on_gui_input(event: InputEvent) -> void:
 			_open_window()
 
 func _open_window() -> void:
-	monkeytype_window.show()
-	monkeytype_window.move_to_front() 
+	monkeytype_window.start_manuscript("intro")
+	monkeytype_window.move_to_front()

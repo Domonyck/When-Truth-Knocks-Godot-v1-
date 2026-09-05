@@ -12,11 +12,12 @@ config_version=5
 
 config/name="When the door knocks"
 run/main_scene="uid://bidhay1q88cyu"
-config/features=PackedStringArray("4.7", "Forward Plus")
+config/features=PackedStringArray("4.6", "Forward Plus")
 config/icon="res://icon.svg"
 
 [autoload]
 
+StoryData="*uid://cwrvc16ggestd"
 PauseMenu="*uid://cfac2xsd14bs7"
 
 [display]
