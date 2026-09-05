@@ -5,13 +5,13 @@ extends Control
 # Scope note: this is only the typing step of the loop. Whoever builds the
 # bulletin puzzle just needs to call notepad.start_manuscript(case_id)
 # once that case's puzzle is solved.
- 
+
 signal manuscript_typed(case_id: String)
- 
+
 @onready var close_button: Button = $NotepadTitle/CloseButton
 @onready var words_display: RichTextLabel = $RichTextLabel
 @onready var stats_label: Label = $"Stats Label"
- 
+
 var case_id: String = ""
 var words: Array[String] = []
 var current_word_index := 0
@@ -19,14 +19,25 @@ var typed_text := ""
 var correct_chars := 0
 var total_typed := 0
 var finished := false
- 
+
 func _ready() -> void:
 	close_button.pressed.connect(_on_close_pressed)
 	words_display.bbcode_enabled = true
 	hide()
- 
+
+## Extra safety net: whatever forces this window closed (close button,
+## force_shutdown_desktop(), or anything else just setting .visible =
+## false directly) triggers one last save, in case it happens between
+## keystrokes.
+func _notification(what: int) -> void:
+	if what == NOTIFICATION_VISIBILITY_CHANGED and not visible and not finished:
+		_save_progress()
+
 ## Call this once the bulletin board puzzle for this case has been solved:
 ##   notepad.start_manuscript("case1")
+## If the player was interrupted mid-typing (e.g. power cut and the
+## desktop got force-closed), this resumes from where they left off
+## instead of restarting the manuscript.
 func start_manuscript(id: String) -> void:
 	if not StoryData.cases.has(id):
 		push_warning("No case with id '%s' in Story data." % id)
@@ -36,20 +47,20 @@ func start_manuscript(id: String) -> void:
 		return
 	case_id = id
 	finished = false
-	current_word_index = 0
-	typed_text = ""
 	correct_chars = 0
 	total_typed = 0
 	words.clear()
 	for word in StoryData.get_manuscript_text(id).split(" ", false):
 		words.append(word)
+	current_word_index = clamp(StoryData.get_progress_word_index(id), 0, words.size())
+	typed_text = StoryData.get_progress_typed_text(id)
 	_render_words()
 	_update_stats()
 	show()
- 
+
 func _on_close_pressed() -> void:
 	hide()
- 
+
 func _unhandled_key_input(event: InputEvent) -> void:
 	if not visible or finished:
 		return
@@ -62,12 +73,14 @@ func _unhandled_key_input(event: InputEvent) -> void:
 	if event.keycode == KEY_BACKSPACE:
 		typed_text = typed_text.substr(0, max(0, typed_text.length() - 1))
 		_render_words()
+		_save_progress()
 		return
 	var ch := OS.get_keycode_string(event.unicode) if event.unicode != 0 else ""
 	if event.unicode != 0 and ch.length() == 1:
 		typed_text += ch
 		_render_words()
- 
+		_save_progress()
+
 func _submit_word() -> void:
 	if words.is_empty() or current_word_index >= words.size():
 		return
@@ -80,8 +93,15 @@ func _submit_word() -> void:
 		_finish_manuscript()
 	else:
 		_render_words()
+		_save_progress()
 	_update_stats()
- 
+
+## Persist progress into Story (the autoload) so it survives this node
+## being hidden or force-closed by another system.
+func _save_progress() -> void:
+	if case_id != "":
+		StoryData.save_progress(case_id, current_word_index, typed_text)
+
 func _count_correct(target: String, typed: String) -> int:
 	var n: int = min(target.length(), typed.length())
 	var c := 0
@@ -89,7 +109,7 @@ func _count_correct(target: String, typed: String) -> int:
 		if target[i] == typed[i]:
 			c += 1
 	return c
- 
+
 func _render_words() -> void:
 	var bbcode := ""
 	for i in words.size():
@@ -101,7 +121,7 @@ func _render_words() -> void:
 		else:
 			bbcode += w + " "
 	words_display.text = bbcode
- 
+
 func _colorize_current(word: String) -> String:
 	var out := ""
 	for i in word.length():
@@ -114,15 +134,14 @@ func _colorize_current(word: String) -> String:
 	if typed_text.length() > word.length():
 		out += "[color=red]%s[/color]" % typed_text.substr(word.length())
 	return out
- 
+
 func _update_stats() -> void:
 	var accuracy := 100 if total_typed == 0 else int(100.0 * correct_chars / max(total_typed, 1))
 	stats_label.text = "Progress: %d / %d words   Accuracy: %d%%" % [current_word_index, words.size(), accuracy]
- 
+
 func _finish_manuscript() -> void:
 	finished = true
 	StoryData.mark_case_solved(case_id)
 	stats_label.text += "   [Manuscript filed]"
 	_render_words()
 	manuscript_typed.emit(case_id)
- 
