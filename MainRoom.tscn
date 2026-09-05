@@ -17,16 +17,18 @@
 [ext_resource type="Texture2D" uid="uid://ciyhrfo3ktu1c" path="res://assets/windows.png" id="7_r3ooc"]
 [ext_resource type="Script" uid="uid://cgmgswxwycere" path="res://computer_transition.gd" id="9_5lia8"]
 [ext_resource type="Script" uid="uid://cgure35pg5rek" path="res://Scripts/static_body_3d.gd" id="9_garkl"]
-[ext_resource type="PackedScene" uid="uid://ceky6qpeonkyd" path="res://assets/blindsOpened.glb" id="9_muwe1"]
 [ext_resource type="PackedScene" uid="uid://bs3qohxmybk7q" path="res://WindowsDesktop/Desktop.tscn" id="10_5lia8"]
-[ext_resource type="PackedScene" uid="uid://djha1nxtih6h3" path="res://assets/blindsClosed.glb" id="10_garkl"]
 [ext_resource type="Script" uid="uid://bjuft8qkilucf" path="res://Scripts/door.gd" id="12_h4fbr"]
+[ext_resource type="PackedScene" uid="uid://brkihj1golhjg" path="res://assets/ClosedBlinds.glb" id="13_dhe4g"]
+[ext_resource type="PackedScene" uid="uid://ige4w8vl76eq" path="res://assets/OpenBlinds.glb" id="14_8jd83"]
+[ext_resource type="PackedScene" uid="uid://btgir8ari1brq" path="res://assets/NewRoom.glb" id="15_dhe4g"]
 [ext_resource type="PackedScene" uid="uid://clyu56rrwntd2" path="res://assets/bilboard.glb" id="15_o5ftv"]
 [ext_resource type="PackedScene" uid="uid://n4js8nvhuj4j" path="res://assets/street.glb" id="16_o5ftv"]
 [ext_resource type="Shader" uid="uid://csl0dj0kglv7v" path="res://overlay.gdshader" id="19_vprmq"]
 [ext_resource type="Script" uid="uid://yf3tow0ml2f2" path="res://Scripts/Billboard.gd" id="20_vprmq"]
 [ext_resource type="Texture2D" uid="uid://dsocdi5kk48hb" path="res://assets/student2.png" id="25_myiym"]
 [ext_resource type="Texture2D" uid="uid://c2kqmnrnt1xjm" path="res://assets/student1.png" id="26_d6p8o"]
+[ext_resource type="PackedScene" uid="uid://caosyg6gnod10" path="res://assets/Dominic.glb" id="26_h1hmd"]
 
 [sub_resource type="SphereShape3D" id="SphereShape3D_g5nle"]
 radius = 8.944255
@@ -173,6 +175,12 @@ fog_depth_end = 15.0
 volumetric_fog_density = 0.0165
 volumetric_fog_albedo = Color(0.09884685, 0.14581767, 0.19554113, 1)
 
+[sub_resource type="PlaneMesh" id="PlaneMesh_ky0sj"]
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_cpeaq"]
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_d0hwy"]
+
 [node name="Node2D" type="Node2D" unique_id=117264161 node_paths=PackedStringArray("ceiling_fan_area", "wall_lamp_area", "office_assets_area", "mesh_instance_2", "computer2")]
 process_mode = 1
 script = ExtResource("1_5xmfd")
@@ -200,6 +208,10 @@ physics_object_picking_sort = true
 physics_object_picking_first_only = true
 size = Vector2i(1920, 1080)
 render_target_update_mode = 4
+
+[node name="NewRoom" parent="SubViewportContainer/SubViewport" unique_id=1646321474 instance=ExtResource("15_dhe4g")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.004, 0.117, 0)
+cast_shadow = 2
 
 [node name="ceilingFan" parent="SubViewportContainer/SubViewport" unique_id=1386564586 instance=ExtResource("1_shaa1")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.694628, 112.96598, -26.152098)
@@ -309,35 +321,42 @@ transform = Transform3D(0.19080895, 0, 0.98162717, 0, 1, 0, -0.98162717, 0, 0.19
 [node name="StaticBody3D" type="StaticBody3D" parent="SubViewportContainer/SubViewport" unique_id=744718775 node_paths=PackedStringArray("open_mesh", "closed_mesh")]
 transform = Transform3D(-1.0053619e-06, 0, 23, 0, 35, 0, -23, 0, -1.0053619e-06, -67.34046, 22, 37.235493)
 script = ExtResource("9_garkl")
-open_mesh = NodePath("blindsOpened")
-closed_mesh = NodePath("blindsClosed")
+open_mesh = NodePath("OpenBlinds")
+closed_mesh = NodePath("ClosedBlinds")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="SubViewportContainer/SubViewport/StaticBody3D" unique_id=1044882816]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.2482208, 1.3890381, -0.25691223)
+transform = Transform3D(1.15082, 0, 0, 0, 1, 0, 0, 0, 1, 1.6000627, 1.3890381, -0.25691223)
 shape = SubResource("BoxShape3D_d0hwy")
 
-[node name="blindsClosed" parent="SubViewportContainer/SubViewport/StaticBody3D" unique_id=1620251978 instance=ExtResource("10_garkl")]
+[node name="ClosedBlinds" parent="SubViewportContainer/SubViewport/StaticBody3D" unique_id=30077265 instance=ExtResource("13_dhe4g")]
 visible = false
 
-[node name="blindsOpened" parent="SubViewportContainer/SubViewport/StaticBody3D" unique_id=1794706222 instance=ExtResource("9_muwe1")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.601774, 0, -4.7683716e-07)
-
-[node name="SpotLight3D" type="SpotLight3D" parent="SubViewportContainer/SubViewport/StaticBody3D" unique_id=1964491833]
-transform = Transform3D(-0.042335097, 0.0067589874, 0.0072398256, 0.005052301, 0.027903358, 0.0034933428, -0.0062441393, 0.0064564073, -0.04254039, 2.9343076, 1.5404227, -7.857197)
-light_color = Color(0.007843138, 0.2, 0.38039216, 1)
-spot_range = 191.513
-spot_attenuation = -0.28
-spot_angle = 28.88
+[node name="OpenBlinds" parent="SubViewportContainer/SubViewport/StaticBody3D" unique_id=1482228545 instance=ExtResource("14_8jd83")]
 
 [node name="SpotLight3D2" type="SpotLight3D" parent="SubViewportContainer/SubViewport/StaticBody3D" unique_id=431082759]
-transform = Transform3D(-0.043371223, 0.003002096, 0.000532565, 0.0020032781, 0.02814883, 0.0044673015, -5.5293425e-05, 0.006818672, -0.042940214, 1.0125996, 1.9035571, -6.514703)
+transform = Transform3D(-0.043475363, -0.00048290074, -0.00013683591, -0.00032749682, 0.028217588, 0.0044706785, 5.9579994e-05, 0.0068043214, -0.042942483, 1.4989319, 1.7719202, -6.514703)
 light_color = Color(0.0081017045, 0.19818735, 0.3819381, 1)
-spot_range = 191.513
-spot_attenuation = -0.28
-spot_angle = 28.88
+shadow_enabled = true
+shadow_blur = 10.0
+spot_range = 416.824
+spot_attenuation = -0.32
+spot_angle = 14.7
+spot_angle_attenuation = 1.3195076
+
+[node name="SpotLight3D3" type="SpotLight3D" parent="SubViewportContainer/SubViewport/StaticBody3D" unique_id=894500378]
+transform = Transform3D(0.0104012, 0.0067238347, -0.0416769, -0.0003274964, 0.02821759, 0.004470679, 0.042212866, -0.0011497983, 0.010349458, -1.9215801, 1.7719202, -1.3010561)
+light_color = Color(0.0081017045, 0.19818735, 0.3819381, 1)
+light_energy = 2.231
+shadow_enabled = true
+shadow_blur = 10.0
+spot_range = 4096.0
+spot_attenuation = -0.32
+spot_angle = 14.7
+spot_angle_attenuation = 1.3195076
 
 [node name="oldRoom" parent="SubViewportContainer/SubViewport" unique_id=1685391351 instance=ExtResource("2_abmy8")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0040893555, 0.11688995, -0.012580872)
+visible = false
 
 [node name="door" parent="SubViewportContainer/SubViewport" unique_id=22472216 instance=ExtResource("1_abmy8")]
 transform = Transform3D(-9.438777e-09, 0, 0.62468654, 0, 0.47113836, 0, -0.21593405, 0, -2.7305916e-08, 9.17397, 50.464397, -96.50599)
@@ -395,7 +414,6 @@ transform = Transform3D(1, 3.1086245e-15, -2.842171e-14, -3.1086245e-15, 1, 2.11
 
 [node name="Area3D" type="Area3D" parent="SubViewportContainer/SubViewport/bilboard" unique_id=575198305 node_paths=PackedStringArray("focus_target")]
 script = ExtResource("20_vprmq")
-billboard_ui_scene = ExtResource("10_5lia8")
 focus_target = NodePath("../Marker3D")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="SubViewportContainer/SubViewport/bilboard/Area3D" unique_id=12669469]
@@ -405,8 +423,9 @@ shape = SubResource("BoxShape3D_sal5q")
 [node name="WorldEnvironment" type="WorldEnvironment" parent="SubViewportContainer/SubViewport" unique_id=1739561079]
 environment = SubResource("Environment_1vivr")
 
-[node name="DirectionalLight3D" type="DirectionalLight3D" parent="SubViewportContainer/SubViewport" unique_id=382455948]
-transform = Transform3D(-0.6414909, 0.108675785, -0.7593938, -0.7566488, 0.07344728, 0.64968306, 0.12638023, 0.9913603, 0.035113778, -630.02515, 572.2554, 0)
+[node name="SUN and MOON" type="DirectionalLight3D" parent="SubViewportContainer/SubViewport" unique_id=382455948]
+transform = Transform3D(-0.64149094, 0.10867581, -0.7593938, -0.75664884, 0.0734473, 0.64968306, 0.12638025, 0.9913603, 0.035113636, -588.4307, 171.26257, 0)
+visible = false
 light_color = Color(0.76132476, 0.8897189, 1, 1)
 light_energy = 0.175
 shadow_enabled = true
@@ -450,6 +469,9 @@ omni_attenuation = -0.588
 
 [node name="Characters" type="Node3D" parent="SubViewportContainer/SubViewport" unique_id=1305229521]
 
+[node name="Dominic" parent="SubViewportContainer/SubViewport/Characters" unique_id=1517903016 instance=ExtResource("26_h1hmd")]
+transform = Transform3D(-1.6677215, 0, 24.944311, 0, 25, 0, -24.944311, 0, -1.6677215, -117.89461, 63.241997, 0)
+
 [node name="Sprite3D" type="Sprite3D" parent="SubViewportContainer/SubViewport/Characters" unique_id=1515566829]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.7708883, 53.139454, 11.872822)
 top_level = true
@@ -464,5 +486,28 @@ visible = false
 pixel_size = 0.035116
 shaded = true
 texture = ExtResource("26_d6p8o")
+
+[node name="Dominic2" parent="SubViewportContainer/SubViewport/Characters" unique_id=325927048 instance=ExtResource("26_h1hmd")]
+transform = Transform3D(45, 0, 0, 0, 45, 0, 0, 0, 45, 8.674362, 54.27936, -137.17285)
+
+[node name="SpotLight3D" type="SpotLight3D" parent="SubViewportContainer/SubViewport" unique_id=1608131212]
+transform = Transform3D(1, 0, 0, 0, 0.34238198, -0.93956083, 0, 0.93956083, 0.34238198, 0, 0, -115.351875)
+spot_range = 92.29
+spot_attenuation = -1.27
+spot_angle = 17.17
+
+[node name="wall" type="MeshInstance3D" parent="SubViewportContainer/SubViewport" unique_id=1521967772]
+transform = Transform3D(1.6829218, -1.0545527, 0, 59.95157, 0.02960272, 0, 0, 0, -33.122143, -79.77169, 55.768982, -60.968353)
+cast_shadow = 2
+mesh = SubResource("PlaneMesh_ky0sj")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="SubViewportContainer" unique_id=45400018]
+transform = Transform3D(-0.22739315, -1.0145181, 0, 80.13144, -0.0028788894, 0, 0, 0, 96.73991, -79.32529, 81.88432, -42.266556)
+visible = false
+mesh = SubResource("PlaneMesh_cpeaq")
+
+[node name="roof" type="MeshInstance3D" parent="SubViewportContainer" unique_id=1164471898]
+transform = Transform3D(90.23177, 0, 0, 0, 1.6345725, 0, 0, 0, 98.07208, 15.738525, 114.24826, -5.508507)
+mesh = SubResource("PlaneMesh_d0hwy")
 
 [connection signal="input_event" from="SubViewportContainer/SubViewport/StaticBody3D" to="SubViewportContainer/SubViewport/StaticBody3D" method="_on_input_event"]

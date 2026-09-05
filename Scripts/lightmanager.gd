@@ -10,25 +10,28 @@ extends Node2D
 @export var computer2: Area3D
 
 @export_group("Light Cutout Settings")
-@export var cutout_chance_per_frame: float = 0.001 
+@export var cutout_chance_per_second: float = 0.02 
+@export var in_computer_multiplier: float = 3.5
 
 func _ready() -> void:
 	randomize()
-	# Ensure light manager continues running while game is paused in desktop scene
-	process_mode = Node.PROCESS_MODE_PAUSABLE
+	process_mode = Node.PROCESS_MODE_ALWAYS
 	_update_power_state()
 
-func _process(_delta: float) -> void:
-	_process_random_cutout()
-	# Continuously evaluate power state so turning lights back on updates immediately
+func _process(delta: float) -> void:
+	_process_random_cutout(delta)
 	_update_power_state()
 
-func _process_random_cutout() -> void:
+func _process_random_cutout(delta: float) -> void:
 	var areas = [ceiling_fan_area, wall_lamp_area, office_assets_area]
+	
+	var current_chance = cutout_chance_per_second
+	if is_instance_valid(computer2) and computer2.is_desktop_open:
+		current_chance *= in_computer_multiplier
 	
 	for area in areas:
 		if is_area_light_on(area):
-			if randf() < cutout_chance_per_frame:
+			if randf() < (current_chance * delta):
 				_turn_off_area_lights(area)
 
 func _turn_off_area_lights(area: Area3D) -> void:
@@ -44,7 +47,6 @@ func _turn_off_area_lights(area: Area3D) -> void:
 		if child is Light3D:
 			child.visible = false
 
-# Call this helper function from your light switch/repair mechanics to turn an area's lights back on
 func turn_on_area_lights(area: Area3D) -> void:
 	if area == null:
 		return
@@ -78,11 +80,9 @@ func _update_power_state() -> void:
 	var wall_on = is_area_light_on(wall_lamp_area)
 	var office_on = is_area_light_on(office_assets_area)
 
-	# Power is active if AT LEAST ONE area light is turned on
 	var has_power = ceiling_on or wall_on or office_on
 
 	if has_power:
-		# INSTANTLY restore computer screen and interaction capability
 		if is_instance_valid(mesh_instance_2) and not mesh_instance_2.visible:
 			mesh_instance_2.visible = true
 
@@ -93,7 +93,6 @@ func _update_power_state() -> void:
 				if (child is CollisionShape3D or child is CollisionPolygon3D) and child.disabled:
 					child.disabled = false
 	else:
-		# TOTAL BLACKOUT: Turn off computer screen and boot player out of desktop overlay
 		if is_instance_valid(mesh_instance_2) and mesh_instance_2.visible:
 			mesh_instance_2.visible = false
 

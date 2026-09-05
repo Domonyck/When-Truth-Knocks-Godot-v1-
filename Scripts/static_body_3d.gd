@@ -3,7 +3,7 @@ extends StaticBody3D
 @export var open_mesh: Node3D
 @export var closed_mesh: Node3D
 
-var is_open: bool = false
+var is_open: bool = true
 var reopen_timer: Timer
 
 func _ready() -> void:
@@ -13,7 +13,9 @@ func _ready() -> void:
 	reopen_timer.wait_time = 7.0
 	reopen_timer.timeout.connect(_on_reopen_timer_timeout)
 	add_child(reopen_timer)
-
+	open_mesh.visible = is_open
+	closed_mesh.visible = !is_open
+	
 func interact() -> void:
 	toggle_blinds()
 
