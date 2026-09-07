@@ -1,8 +1,9 @@
 [gd_scene format=3 uid="uid://bhi8ufwuqsots"]
 
+[ext_resource type="Script" uid="uid://cs03o7rb47pgs" path="res://BullBoard/Bulletin_Board.gd" id="1_poxbo"]
+
 [node name="Control" type="Control" unique_id=657436377]
 process_mode = 1
-visible = false
 modulate = Color(1, 1, 1, 0)
 layout_mode = 3
 anchors_preset = 15
@@ -10,3 +11,4 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+script = ExtResource("1_poxbo")

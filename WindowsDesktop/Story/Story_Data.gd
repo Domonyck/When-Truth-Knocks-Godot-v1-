@@ -8,7 +8,7 @@ extends Node
 #   Door knocks -> NPC shows up -> shares 1 of 3 possible testimonies
 #     -> [OUT OF SCOPE] if true: unlock that case's bulletin level
 #     -> [OUT OF SCOPE] if false: try again (re-knock, re-draw)
-#     -> [OUT OF SCOPE] bulletin board puzzle
+#     -> [OUT OF SCOPE] bulletin board hidden-object puzzle
 #     -> on puzzle success: Monkeytype game types that case's manuscript
 #
 # It's all ONE article, assembled in order. "intro" is just the first
@@ -18,6 +18,8 @@ extends Node
 
 signal case_unlocked(case_id: String)
 signal case_completed(case_id: String)
+signal evidence_found(case_id: String, item_id: String)
+signal puzzle_solved(case_id: String)
 
 const INTRO_ID := "intro"
 
@@ -30,6 +32,13 @@ class CaseData:
 	var testimonies: Array[Testimony] = []   # exactly 3, order shuffled ([] for intro)
 	var manuscript_text: String = ""
 	var unlocked: bool = false   # true once the true testimony has been heard
+
+	# --- hidden object puzzle (bulletin board) ---
+	var evidence_items: Array[String] = []   # exactly 5 correct item ids ([] for intro)
+	var found_items: Array[String] = []      # subset of evidence_items found so far, persists across attempts
+	var puzzle_solved: bool = false          # true once all 5 evidence_items have been found
+
+	# --- typing game (Monkeytype) ---
 	var solved: bool = false     # true once the manuscript has been typed
 	var progress_word_index: int = 0    # how many words are confirmed done
 	var progress_typed_text: String = ""   # partial characters of the current word
@@ -47,7 +56,7 @@ func _ready() -> void:
 func new_game() -> void:
 	cases.clear()
 
-	_build_case(INTRO_ID, [],
+	_build_case(INTRO_ID, [], [],
 		"Three weeks in this city and the cases were still routine work: unpaid invoices, wandering house cats, husbands who forgot their own anniversaries. Then a forum post caught my eye late one night, an anonymous thread about a missing child, buried under dead links and paranoid warnings. I saved it before I could think twice. By morning, someone already had my number."
 	)
 	cases[INTRO_ID].unlocked = true   # no interview needed for this one
@@ -56,18 +65,21 @@ func new_game() -> void:
 		[_t("She's been quiet and distant lately, and strangers have picked her up from school more than once.", true),
 		 _t("A stranger in a white van must have taken her from the corner store.", false),
 		 _t("I heard she ran off with someone older she met online.", false)],
+		["school_photo", "torn_diary_page", "phone_messages", "hall_pass_log", "class_schedule"],
 		"The missing child had grown withdrawn in her final weeks, reportedly seen leaving with unfamiliar adults on more than one occasion."
 	)
 	_build_case("case2",
 		[_t("The family suddenly had money despite being unemployed, and strange visitors came at odd hours.", true),
 		 _t("Somebody was owed money and probably took her to settle it.", false),
 		 _t("Nobody made her do anything, she chose to leave on her own.", false)],
+		["cash_envelope", "unpaid_utility_bill", "pawn_shop_receipt", "burner_phone", "visitor_log"],
 		"Financial records and witness accounts suggest the household's sudden improvement in finances coincided with unexplained late-night visitors the family refused to discuss."
 	)
 	_build_case("case3",
 		[_t("Her own parents arranged the visits through a local bugaw, calling it a favor for a family friend.", true),
 		 _t("I swear I did not know what was really happening.", false),
 		 _t("I am a victim in this too, you have to believe me.", false)],
+		["contact_card", "hotel_receipt", "childs_id_card", "handwritten_note", "recorded_voicemail"],
 		"Sources allege the child's own parents arranged the visits through a local procurer, exchanging access to their child for money under the guise of a favor for a family friend."
 	)
 
@@ -77,11 +89,12 @@ func _t(text: String, is_true: bool) -> Testimony:
 	t.is_true = is_true
 	return t
 
-func _build_case(id: String, testimonies: Array[Testimony], manuscript_text: String) -> void:
+func _build_case(id: String, testimonies: Array[Testimony], evidence_items: Array[String], manuscript_text: String) -> void:
 	testimonies.shuffle()
 	var c := CaseData.new()
 	c.id = id
 	c.testimonies = testimonies
+	c.evidence_items = evidence_items
 	c.manuscript_text = manuscript_text
 	cases[id] = c
 
@@ -104,11 +117,65 @@ func mark_case_unlocked(case_id: String) -> void:
 	case_unlocked.emit(case_id)
 # ---------------------------------------------------------------------------
 
-## --- BULLETIN BOARD HOOK ---------------------------------------------------
-## Call once the puzzle for an unlocked case is solved, right before
-## handing off to the Monkeytype game (notepad.start_manuscript(case_id)).
+## --- BULLETIN BOARD HOOK (hidden object puzzle) -----------------------------
+## Call once the true testimony for a case has been heard, right before
+## letting the player open that case's hidden-object scene.
 func is_unlocked(case_id: String) -> bool:
 	return cases.has(case_id) and cases[case_id].unlocked
+
+## The 5 correct item ids for this case. The hidden-object scene's clickable
+## nodes should be named to match these exactly — anything else clickable in
+## that scene is a decoy (wrong click = time penalty, no story significance).
+func get_evidence_items(case_id: String) -> Array[String]:
+	if not cases.has(case_id):
+		return []
+	return cases[case_id].evidence_items.duplicate()
+
+## Items already found for this case, kept across board close/reopen and
+## across a failed (timed-out) attempt, so a bad run doesn't wipe items the
+## player already legitimately found.
+func get_found_items(case_id: String) -> Array[String]:
+	if not cases.has(case_id):
+		return []
+	return cases[case_id].found_items.duplicate()
+
+func is_item_found(case_id: String, item_id: String) -> bool:
+	return cases.has(case_id) and item_id in cases[case_id].found_items
+
+## Call when the player clicks a correct evidence item. Returns true if this
+## was the 5th and final item, i.e. the puzzle is now solved.
+func mark_item_found(case_id: String, item_id: String) -> bool:
+	if not cases.has(case_id):
+		return false
+	var c: CaseData = cases[case_id]
+	if item_id in c.found_items:
+		return c.puzzle_solved
+	if item_id not in c.evidence_items:
+		push_warning("mark_item_found: '%s' is not a listed evidence item for '%s'." % [item_id, case_id])
+		return c.puzzle_solved
+	c.found_items.append(item_id)
+	evidence_found.emit(case_id, item_id)
+	if c.found_items.size() >= c.evidence_items.size():
+		mark_puzzle_solved(case_id)
+	return c.puzzle_solved
+
+func is_puzzle_solved(case_id: String) -> bool:
+	return cases.has(case_id) and cases[case_id].puzzle_solved
+
+func mark_puzzle_solved(case_id: String) -> void:
+	if not cases.has(case_id) or cases[case_id].puzzle_solved:
+		return
+	cases[case_id].puzzle_solved = true
+	puzzle_solved.emit(case_id)
+
+## Optional: wipes found-item progress for a case. Not called automatically
+## on a timed-out attempt (see bulletin_board.gd) — found items persist by
+## default so a failed run isn't a total loss. Wire this in if you'd rather
+## a timeout clear everything instead.
+func reset_puzzle_progress(case_id: String) -> void:
+	if not cases.has(case_id):
+		return
+	cases[case_id].found_items.clear()
 # ---------------------------------------------------------------------------
 
 ## --- TYPING GAME HOOK -------------------------------------------------------

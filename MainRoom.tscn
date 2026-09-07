@@ -251,7 +251,7 @@ area_attenuation = -0.904
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, -1.110223e-16, 1, 1.4901161e-08, 0, 0.31826973)
 collision_layer = 2
 script = ExtResource("4_g5nle")
-lights = [NodePath("../SpotLight3D"), null]
+lights = [NodePath("../SpotLight3D"), NodePath("../AreaLight3D")]
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="SubViewportContainer/SubViewport/wall_lamp/Area3D" unique_id=1475012275]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, -3.330669e-16, 1, 0.00091458857, 0.03065741, -0.09841335)
@@ -285,7 +285,7 @@ area_attenuation = -4.873
 [node name="Area3D" type="Area3D" parent="SubViewportContainer/SubViewport/OfficeAssets_free" unique_id=1541577694 node_paths=PackedStringArray("lights")]
 collision_layer = 4
 script = ExtResource("5_gyk08")
-lights = [NodePath("../LampLight"), null]
+lights = [NodePath("../LampLight"), NodePath("../AreaLight3D")]
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="SubViewportContainer/SubViewport/OfficeAssets_free/Area3D" unique_id=1755598275]
 transform = Transform3D(1, 0, -3.5527137e-15, 0, 1, 0, 3.5527137e-15, 0, 1, 0.29414552, 1.4353473, 1.4273034)

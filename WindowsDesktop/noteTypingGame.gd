@@ -50,6 +50,9 @@ func start_manuscript(id: String) -> void:
 	if not StoryData.is_unlocked(id):
 		push_warning("Case '%s' has not been unlocked (true testimony not yet heard)." % id)
 		return
+	if not StoryData.is_puzzle_solved(id):
+		push_warning("Case '%s' bulletin puzzle not solved yet." % id)
+		return
 	case_id = id
 	finished = false
 	words.clear()
