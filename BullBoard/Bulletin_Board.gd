@@ -68,11 +68,12 @@ var time_remaining: float = 0.0
 var active := false   # false while board closed, already solved, or timed out
 
 func _ready() -> void:
-	for obj in clickable_objects.get_children():
-		if obj.has_signal("pressed"):
+	for child in clickable_objects.get_children():
+		if child is Control and child.has_signal("pressed"):
+			var obj: Control = child
 			obj.pressed.connect(_on_object_pressed.bind(obj))
 		else:
-			push_warning("BulletinBoard: '%s' has no 'pressed' signal — use Button/TextureButton." % obj.name)
+			push_warning("BulletinBoard: '%s' has no 'pressed' signal — use Button/TextureButton." % child.name)
 	hide()
 
 func _process(delta: float) -> void:

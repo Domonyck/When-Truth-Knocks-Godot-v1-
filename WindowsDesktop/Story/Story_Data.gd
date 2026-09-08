@@ -96,6 +96,10 @@ func _build_case(id: String, testimonies: Array[Testimony], evidence_items: Arra
 	c.testimonies = testimonies
 	c.evidence_items = evidence_items
 	c.manuscript_text = manuscript_text
+	# A case with no evidence items (e.g. "intro") has no bulletin puzzle to
+	# solve, so treat it as already solved — otherwise mark_item_found()
+	# never fires for it and the notepad stays permanently locked.
+	c.puzzle_solved = evidence_items.is_empty()
 	cases[id] = c
 
 ## --- DOOR/NPC HOOK ---------------------------------------------------------
