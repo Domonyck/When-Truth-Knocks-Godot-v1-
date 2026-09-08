@@ -2,6 +2,7 @@ extends StaticBody3D
 
 @export var open_mesh: Node3D
 @export var closed_mesh: Node3D
+@onready var freesound_community_tear_paper_103161: AudioStreamPlayer = $FreesoundCommunityTearPaper103161
 
 var is_open: bool = true
 var reopen_timer: Timer
@@ -35,8 +36,10 @@ func toggle_blinds() -> void:
 	else:
 		# Blinds were manually opened -> stop timer if running
 		reopen_timer.stop()
-
+	freesound_community_tear_paper_103161.play()
+	
 func _on_reopen_timer_timeout() -> void:
 	# Timer finished: reopen the blinds if still closed
 	if not is_open:
 		toggle_blinds()
+	freesound_community_tear_paper_103161.play()

@@ -2,6 +2,7 @@ extends Area3D
 
 @export var lights: Array[Node3D]
 @onready var audio_player: AudioStreamPlayer3D = get_node_or_null("AudioStreamPlayer3D")
+@onready var wallamp: AudioStreamPlayer = $Wallamp
 
 func _ready() -> void:
 	input_ray_pickable = true
@@ -23,3 +24,5 @@ func interact() -> void:
 	for light in lights:
 		if is_instance_valid(light) and "visible" in light:
 			light.visible = not light.visible
+	
+	wallamp.play()

@@ -3,6 +3,7 @@ extends Area3D
 @export var desktop_scene: PackedScene
 @export var zoom_target: Node3D 
 @export var zoom_duration: float = 1.0 
+@onready var entercomputer: AudioStreamPlayer = $Entercomputer
 
 var is_transitioning := false
 var is_desktop_open := false 
@@ -26,6 +27,7 @@ func interact() -> void:
 		return
 
 	is_transitioning = true
+	entercomputer.play()
 	camera.set_process(false)
 	camera.set_process_input(false)
 	original_camera_transform = camera.global_transform

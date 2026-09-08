@@ -4,6 +4,7 @@ extends Node2D
 @export var ceiling_fan_area: Area3D
 @export var wall_lamp_area: Area3D
 @export var office_assets_area: Area3D
+@onready var night_ambience_29548: AudioStreamPlayer = $NightAmbience29548
 
 @export_group("Target Dependencies")
 @export var mesh_instance_2: MeshInstance3D
@@ -17,6 +18,7 @@ func _ready() -> void:
 	randomize()
 	process_mode = Node.PROCESS_MODE_ALWAYS
 	_update_power_state()
+	night_ambience_29548.play()
 
 func _process(delta: float) -> void:
 	_process_random_cutout(delta)
