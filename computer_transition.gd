@@ -4,6 +4,8 @@ extends Area3D
 @export var zoom_target: Node3D 
 @export var zoom_duration: float = 1.0 
 @onready var entercomputer: AudioStreamPlayer = $Entercomputer
+@onready var electric_power_station_static_noise_buzz_52891_audio_trimmer_com_: AudioStreamPlayer = $"ElectricPowerStationStaticNoiseBuzz52891[audioTrimmer_com]"
+@onready var keyboard_393908: AudioStreamPlayer = $Keyboard393908
 
 var is_transitioning := false
 var is_desktop_open := false 
@@ -43,6 +45,8 @@ func interact() -> void:
 		force_shutdown_desktop()
 		return
 
+	electric_power_station_static_noise_buzz_52891_audio_trimmer_com_.play()
+
 	get_tree().paused = true
 	
 	active_desktop_overlay = desktop_scene.instantiate()
@@ -64,6 +68,7 @@ func force_shutdown_desktop() -> void:
 
 	is_transitioning = true
 	is_desktop_open = false
+	electric_power_station_static_noise_buzz_52891_audio_trimmer_com_.stop()
 
 	if is_instance_valid(active_desktop_overlay):
 		if active_desktop_overlay.tree_exited.is_connected(zoom_out_camera):
@@ -95,6 +100,7 @@ func zoom_out_camera() -> void:
 		
 	is_transitioning = true
 	is_desktop_open = false
+	electric_power_station_static_noise_buzz_52891_audio_trimmer_com_.stop()
 	
 	get_tree().paused = false
 	

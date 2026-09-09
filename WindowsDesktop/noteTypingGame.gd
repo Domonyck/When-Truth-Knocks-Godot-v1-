@@ -12,6 +12,9 @@ signal manuscript_failed(case_id: String)
 @onready var close_button: Button = $NotepadTitle/CloseButton
 @onready var words_display: RichTextLabel = $RichTextLabel
 @onready var stats_label: Label = $"Stats Label"
+@onready var keyboard_393908: AudioStreamPlayer = $Keyboard393908
+@onready var space_bar_press_slightly_loud_94422: AudioStreamPlayer = $SpaceBarPressSlightlyLoud94422
+@onready var mouse: AudioStreamPlayer = $Mouse
 
 ## If accuracy drops below this while typing, the manuscript resets and
 ## has to be typed from the beginning. Tune from the Inspector.
@@ -28,8 +31,8 @@ var finished := false
 func _ready() -> void:
 	close_button.pressed.connect(_on_close_pressed)
 	words_display.bbcode_enabled = true
+	space_bar_press_slightly_loud_94422.pitch_scale = 2.0
 	hide()
-
 ## Extra safety net: whatever forces this window closed (close button,
 ## force_shutdown_desktop(), or anything else just setting .visible =
 ## false directly) triggers one last save, in case it happens between
@@ -67,6 +70,7 @@ func start_manuscript(id: String) -> void:
 	show()
 
 func _on_close_pressed() -> void:
+	mouse.play()
 	hide()
 
 func _unhandled_key_input(event: InputEvent) -> void:
@@ -75,16 +79,19 @@ func _unhandled_key_input(event: InputEvent) -> void:
 	if not (event is InputEventKey and event.pressed):
 		return
 	if event.keycode == KEY_SPACE:
+		space_bar_press_slightly_loud_94422.play()
 		_submit_word()
 		get_viewport().set_input_as_handled()
 		return
 	if event.keycode == KEY_BACKSPACE:
+		keyboard_393908.play()
 		typed_text = typed_text.substr(0, max(0, typed_text.length() - 1))
 		_render_words()
 		_save_progress()
 		return
 	var ch := OS.get_keycode_string(event.unicode) if event.unicode != 0 else ""
 	if event.unicode != 0 and ch.length() == 1:
+		keyboard_393908.play()
 		typed_text += ch
 		_render_words()
 		_save_progress()

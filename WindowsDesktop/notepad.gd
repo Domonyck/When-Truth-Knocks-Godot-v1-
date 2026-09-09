@@ -1,5 +1,6 @@
 extends TextureButton
 @onready var monkeytype_window: Control = $"../Notepad2"
+@onready var mouse: AudioStreamPlayer = $Mouse # adjust path to match your scene
 
 func _ready() -> void:
 	monkeytype_window.hide()
@@ -7,6 +8,7 @@ func _ready() -> void:
 
 func _on_gui_input(event: InputEvent) -> void:
 	if event is InputEventMouseButton and event.pressed:
+		mouse.play()
 		if event.double_click:
 			_open_window()
 

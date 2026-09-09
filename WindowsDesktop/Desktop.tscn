@@ -2,6 +2,7 @@
 
 [ext_resource type="Texture2D" uid="uid://c5wl32yu8exsg" path="res://WindowsDesktop/PatchRegular.png" id="1"]
 [ext_resource type="Texture2D" uid="uid://bbyns3lwtfaux" path="res://WindowsDesktop/PatchInverted.png" id="2"]
+[ext_resource type="AudioStream" uid="uid://8icygiv1jl4x" path="res://assets/Sounds/mouse.mp3" id="2_5p434"]
 [ext_resource type="FontFile" uid="uid://dh3sljjjsyr82" path="res://WindowsDesktop/Battlenet.ttf" id="2_5udwm"]
 [ext_resource type="Texture2D" uid="uid://dtmlduh024pcc" path="res://WindowsDesktop/wallpaperflare.com_wallpaper.jpg" id="2_pwha1"]
 [ext_resource type="Texture2D" uid="uid://bo5wjykv7x6m1" path="res://WindowsDesktop/Flag.png" id="3"]
@@ -14,6 +15,8 @@
 [ext_resource type="Script" uid="uid://bq04howwaxtq1" path="res://WindowsDesktop/Desktop.gd" id="8"]
 [ext_resource type="Shader" uid="uid://b36d4lhtok4yi" path="res://WindowsDesktop/Desktop2D.gdshader" id="12_4upda"]
 [ext_resource type="Script" uid="uid://baveadn6se0a4" path="res://WindowsDesktop/noteTypingGame.gd" id="13_utm18"]
+[ext_resource type="AudioStream" uid="uid://d2tymg77aktjx" path="res://assets/Sounds/keyboard-393908.mp3" id="14_ig6x2"]
+[ext_resource type="AudioStream" uid="uid://3ult647ohixu" path="res://assets/Sounds/space-bar-press-slightly-loud-94422.mp3" id="15_5p434"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_1vivr"]
 bg_color = Color(0.7179641, 0.7179642, 0.7179641, 1)
@@ -113,6 +116,9 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("8")
 
+[node name="Mouse" type="AudioStreamPlayer" parent="." unique_id=1035369669]
+stream = ExtResource("2_5p434")
+
 [node name="ColorRect" type="TextureRect" parent="." unique_id=1778084006]
 layout_mode = 1
 anchors_preset = 15
@@ -138,6 +144,9 @@ ignore_texture_size = true
 stretch_mode = 0
 script = ExtResource("4_7al4d")
 
+[node name="Mouse" type="AudioStreamPlayer" parent="NotepadApp" unique_id=405182251]
+stream = ExtResource("2_5p434")
+
 [node name="Panel" type="Panel" parent="." unique_id=1053473271]
 layout_mode = 1
 anchors_preset = 12
@@ -159,7 +168,7 @@ grow_horizontal = 2
 grow_vertical = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_tt8ow")
 
-[node name="Button" type="Button" parent="Panel" unique_id=282410808]
+[node name="Start" type="Button" parent="Panel" unique_id=282410808]
 texture_filter = 1
 layout_mode = 1
 anchors_preset = 9
@@ -280,6 +289,17 @@ grow_horizontal = 2
 grow_vertical = 2
 theme_override_styles/panel = SubResource("StyleBoxTexture_1vivr")
 script = ExtResource("13_utm18")
+
+[node name="Keyboard393908" type="AudioStreamPlayer" parent="Notepad2" unique_id=659458377]
+stream = ExtResource("14_ig6x2")
+volume_db = -10.0
+
+[node name="SpaceBarPressSlightlyLoud94422" type="AudioStreamPlayer" parent="Notepad2" unique_id=1765217185]
+stream = ExtResource("15_5p434")
+volume_db = 6.0
+
+[node name="Mouse" type="AudioStreamPlayer" parent="Notepad2" unique_id=1944157696]
+stream = ExtResource("2_5p434")
 
 [node name="NotepadTitle" type="Panel" parent="Notepad2" unique_id=59344512]
 layout_mode = 0
