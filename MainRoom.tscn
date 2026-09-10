@@ -42,6 +42,11 @@
 [ext_resource type="Texture2D" uid="uid://c2kqmnrnt1xjm" path="res://assets/student1.png" id="26_d6p8o"]
 [ext_resource type="PackedScene" uid="uid://caosyg6gnod10" path="res://assets/Dominic.glb" id="26_h1hmd"]
 [ext_resource type="AudioStream" uid="uid://dvxu71mqv62c1" path="res://assets/Sounds/open-and-close-creaking-doorwav-36256.mp3" id="27_heanb"]
+[ext_resource type="Script" uid="uid://dirbwrm1q6d27" path="res://Scripts/anomaly.gd" id="41_lu33c"]
+[ext_resource type="AudioStream" uid="uid://b27yckoneobn1" path="res://assets/floraphonic-glass-knock-1-189096.mp3" id="42_ay1s4"]
+[ext_resource type="AudioStream" uid="uid://cxpye561s1ena" path="res://assets/freesound_community-walking-through-grass-80308.mp3" id="42_m8q3t"]
+[ext_resource type="AudioStream" uid="uid://cnf17tvt44grb" path="res://assets/floraphonic-glass-knock-12-189878.mp3" id="43_vrtfv"]
+[ext_resource type="AudioStream" uid="uid://bpfgqqfcwji32" path="res://assets/freesound_community-running-on-grass-with-wet-feet-7030.mp3" id="44_b11i1"]
 
 [sub_resource type="GDScript" id="GDScript_tnmiv"]
 
@@ -230,7 +235,7 @@ size = Vector3(0.08319092, 0.3747139, 0.43204546)
 size = Vector3(2.6229725, 1.5628662, 1)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_1vivr"]
-size = Vector3(41.89514, 208.83926, 95.39064)
+size = Vector3(9.372101, 208.83926, 95.39064)
 
 [sub_resource type="Animation" id="Animation_o5ftv"]
 length = 0.001
@@ -343,6 +348,69 @@ fog_depth_begin = 5.0
 fog_depth_end = 15.0
 volumetric_fog_density = 0.0165
 volumetric_fog_albedo = Color(0.09884685, 0.14581767, 0.19554113, 1)
+
+[sub_resource type="Animation" id="Animation_m8q3t"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(-117.89461, 63.241997, 74.67573)]
+}
+
+[sub_resource type="Animation" id="Animation_5nfvb"]
+resource_name = "fast_tap"
+
+[sub_resource type="Animation" id="Animation_dllnc"]
+resource_name = "fast_walk"
+length = 2.3333333
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0.06, 2.3333333),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Vector3(-117.89461, 63.241997, 74.67573), Vector3(-117.89461, 63.241997, -51.198677)]
+}
+
+[sub_resource type="Animation" id="Animation_cin8a"]
+resource_name = "normal_tap"
+length = 3.2666667
+
+[sub_resource type="Animation" id="Animation_vtemr"]
+resource_name = "normal_walk"
+length = 11.633333
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 3.0666666, 6.03, 10.333333),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"update": 0,
+"values": [Vector3(-117.89461, 63.241997, 74.67573), Vector3(-117.89461, 63.241997, -1.0970383), Vector3(-117.89461, 63.241997, -47.407948), Vector3(-117.89461, 63.241997, 42.867073)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_c8856"]
+_data = {
+&"RESET": SubResource("Animation_m8q3t"),
+&"fast_tap": SubResource("Animation_5nfvb"),
+&"fast_walk": SubResource("Animation_dllnc"),
+&"normal_tap": SubResource("Animation_cin8a"),
+&"normal_walk": SubResource("Animation_vtemr")
+}
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_cpeaq"]
 
@@ -569,7 +637,7 @@ spot_angle_attenuation = 1.3195076
 [node name="SpotLight3D3" type="SpotLight3D" parent="SubViewportContainer/SubViewport/StaticBody3D" unique_id=894500378]
 transform = Transform3D(0.0104012, 0.0067238347, -0.0416769, -0.0003274964, 0.02821759, 0.004470679, 0.042212866, -0.0011497983, 0.010349458, -1.9215801, 1.7719202, -1.3010561)
 light_color = Color(0.0081017045, 0.19818735, 0.3819381, 1)
-light_energy = 2.231
+light_energy = 0.19
 shadow_enabled = true
 shadow_blur = 10.0
 spot_range = 4096.0
@@ -588,7 +656,7 @@ transform = Transform3D(-9.438777e-09, 0, 0.62468654, 0, 0.47113836, 0, -0.21593
 script = ExtResource("12_h4fbr")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="SubViewportContainer/SubViewport/door/Area3D" unique_id=1197394498]
-transform = Transform3D(1, 0, -8.100187e-13, 0, 0.9999811, 0, -1.7763568e-15, 0, 1, -9.364136, 0.085235596, -0.08973026)
+transform = Transform3D(1, 0, -8.100187e-13, 0, 0.9999723, 0, -1.7763568e-15, 0, 1, -0.29919434, 0.085235596, -0.08973026)
 shape = SubResource("BoxShape3D_1vivr")
 
 [node name="OpenAndCloseCreakingDoorwav36256" type="AudioStreamPlayer" parent="SubViewportContainer/SubViewport/door/Area3D" unique_id=1946086265]
@@ -693,7 +761,27 @@ omni_attenuation = -0.588
 [node name="Characters" type="Node3D" parent="SubViewportContainer/SubViewport" unique_id=1305229521]
 
 [node name="Dominic" parent="SubViewportContainer/SubViewport/Characters" unique_id=1517903016 instance=ExtResource("26_h1hmd")]
-transform = Transform3D(-1.6677215, 0, 24.944311, 0, 25, 0, -24.944311, 0, -1.6677215, -117.89461, 63.241997, 0)
+transform = Transform3D(-1.6677215, 0, 24.944311, 0, 25, 0, -24.944311, 0, -1.6677215, -117.89461, 63.241997, 74.67573)
+script = ExtResource("41_lu33c")
+
+[node name="FloraphonicGlassKnock1189096" type="AudioStreamPlayer" parent="SubViewportContainer/SubViewport/Characters/Dominic" unique_id=1875564046]
+stream = ExtResource("42_ay1s4")
+volume_db = 0.925
+
+[node name="FloraphonicGlassKnock12189878" type="AudioStreamPlayer" parent="SubViewportContainer/SubViewport/Characters/Dominic" unique_id=1728548862]
+stream = ExtResource("43_vrtfv")
+volume_db = 4.028
+
+[node name="FreesoundCommunityRunningOnGrassWithWetFeet7030" type="AudioStreamPlayer" parent="SubViewportContainer/SubViewport/Characters/Dominic" unique_id=1097153749]
+stream = ExtResource("44_b11i1")
+volume_db = 0.732
+
+[node name="FreesoundCommunityWalkingThroughGrass80308" type="AudioStreamPlayer" parent="SubViewportContainer/SubViewport/Characters/Dominic" unique_id=1888457472]
+stream = ExtResource("42_m8q3t")
+volume_db = 0.611
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="SubViewportContainer/SubViewport/Characters/Dominic" unique_id=1772651714]
+libraries/ = SubResource("AnimationLibrary_c8856")
 
 [node name="Sprite3D" type="Sprite3D" parent="SubViewportContainer/SubViewport/Characters" unique_id=1515566829]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.7708883, 53.139454, 11.872822)

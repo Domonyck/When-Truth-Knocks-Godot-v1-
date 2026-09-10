@@ -18,7 +18,7 @@ signal manuscript_failed(case_id: String)
 
 ## If accuracy drops below this while typing, the manuscript resets and
 ## has to be typed from the beginning. Tune from the Inspector.
-@export var min_accuracy_percent: float = 40.0
+@export var min_accuracy_percent: float = 80.0
 
 var case_id: String = ""
 var words: Array[String] = []
@@ -89,8 +89,9 @@ func _unhandled_key_input(event: InputEvent) -> void:
 		_render_words()
 		_save_progress()
 		return
-	var ch := OS.get_keycode_string(event.unicode) if event.unicode != 0 else ""
-	if event.unicode != 0 and ch.length() == 1:
+	
+	if event.unicode >= 32 and event.unicode != 127:
+		var ch := String.chr(event.unicode)
 		keyboard_393908.play()
 		typed_text += ch
 		_render_words()

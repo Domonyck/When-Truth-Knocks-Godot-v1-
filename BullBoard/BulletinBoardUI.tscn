@@ -1,10 +1,10 @@
 [gd_scene format=3 uid="uid://bhi8ufwuqsots"]
 
 [ext_resource type="Script" uid="uid://cs03o7rb47pgs" path="res://BullBoard/Bulletin_Board.gd" id="1_poxbo"]
+[ext_resource type="Texture2D" uid="uid://r25bniqc5kel" path="res://BullBoard/Gemini_Generated_Image_66qy5e66qy5e66qy.jpg" id="2_u5ayl"]
 
 [node name="Control" type="Control" unique_id=657436377]
 process_mode = 1
-modulate = Color(1, 1, 1, 0)
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -20,4 +20,4 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-metadata/_edit_use_anchors_ = true
+texture = ExtResource("2_u5ayl")
