@@ -19,6 +19,7 @@ config/icon="res://icon.svg"
 
 StoryData="*uid://cwrvc16ggestd"
 PauseMenu="*uid://cfac2xsd14bs7"
+dominic="*uid://btbau7xgd07fp"
 
 [display]
 

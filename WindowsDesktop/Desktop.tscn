@@ -274,6 +274,7 @@ theme_override_styles/pressed = SubResource("StyleBoxTexture_0sxyj")
 theme_override_styles/hover = SubResource("StyleBoxTexture_jxju5")
 
 [node name="Notepad2" type="Panel" parent="." unique_id=1602833461]
+self_modulate = Color(0.6847319, 0.6847319, 0.6847319, 1)
 texture_filter = 1
 layout_mode = 1
 anchors_preset = 8
@@ -289,6 +290,7 @@ grow_horizontal = 2
 grow_vertical = 2
 theme_override_styles/panel = SubResource("StyleBoxTexture_1vivr")
 script = ExtResource("13_utm18")
+min_accuracy_percent = 60.0
 
 [node name="Keyboard393908" type="AudioStreamPlayer" parent="Notepad2" unique_id=659458377]
 stream = ExtResource("14_ig6x2")
@@ -343,6 +345,7 @@ offset_bottom = 675.0
 theme_override_fonts/normal_font = ExtResource("2_5udwm")
 theme_override_font_sizes/normal_font_size = 50
 theme_override_font_sizes/bold_font_size = 25
+bbcode_enabled = true
 text = "Word Display "
 
 [node name="Stats Label" type="Label" parent="Notepad2" unique_id=1080630735]

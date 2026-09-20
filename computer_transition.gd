@@ -15,7 +15,7 @@ var camera: Camera3D
 var active_desktop_overlay: Node 
 
 func _ready() -> void:
-	process_mode = Node.PROCESS_MODE_ALWAYS
+	process_mode = Node.PROCESS_MODE_PAUSABLE
 
 func interact() -> void:
 	if not is_powered or is_transitioning or is_desktop_open:
@@ -50,6 +50,7 @@ func interact() -> void:
 	get_tree().paused = true
 	
 	active_desktop_overlay = desktop_scene.instantiate()
+	active_desktop_overlay.add_to_group("desktop_overlay")
 	active_desktop_overlay.process_mode = Node.PROCESS_MODE_ALWAYS
 	active_desktop_overlay.tree_exited.connect(zoom_out_camera)
 	

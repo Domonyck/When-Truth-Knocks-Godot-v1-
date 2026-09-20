@@ -42,11 +42,7 @@
 [ext_resource type="Texture2D" uid="uid://c2kqmnrnt1xjm" path="res://assets/student1.png" id="26_d6p8o"]
 [ext_resource type="PackedScene" uid="uid://caosyg6gnod10" path="res://assets/Dominic.glb" id="26_h1hmd"]
 [ext_resource type="AudioStream" uid="uid://dvxu71mqv62c1" path="res://assets/Sounds/open-and-close-creaking-doorwav-36256.mp3" id="27_heanb"]
-[ext_resource type="Script" uid="uid://dirbwrm1q6d27" path="res://Scripts/anomaly.gd" id="41_lu33c"]
-[ext_resource type="AudioStream" uid="uid://b27yckoneobn1" path="res://assets/floraphonic-glass-knock-1-189096.mp3" id="42_ay1s4"]
-[ext_resource type="AudioStream" uid="uid://cxpye561s1ena" path="res://assets/freesound_community-walking-through-grass-80308.mp3" id="42_m8q3t"]
-[ext_resource type="AudioStream" uid="uid://cnf17tvt44grb" path="res://assets/floraphonic-glass-knock-12-189878.mp3" id="43_vrtfv"]
-[ext_resource type="AudioStream" uid="uid://bpfgqqfcwji32" path="res://assets/freesound_community-running-on-grass-with-wet-feet-7030.mp3" id="44_b11i1"]
+[ext_resource type="Script" uid="uid://qugjp41bjlxm" path="res://Scripts/dominic3droom.gd" id="41_ay1s4"]
 
 [sub_resource type="GDScript" id="GDScript_tnmiv"]
 
@@ -762,28 +758,12 @@ omni_attenuation = -0.588
 
 [node name="Dominic" parent="SubViewportContainer/SubViewport/Characters" unique_id=1517903016 instance=ExtResource("26_h1hmd")]
 transform = Transform3D(-1.6677215, 0, 24.944311, 0, 25, 0, -24.944311, 0, -1.6677215, -117.89461, 63.241997, 74.67573)
-script = ExtResource("41_lu33c")
-
-[node name="FloraphonicGlassKnock1189096" type="AudioStreamPlayer" parent="SubViewportContainer/SubViewport/Characters/Dominic" unique_id=1875564046]
-stream = ExtResource("42_ay1s4")
-volume_db = 0.925
-
-[node name="FloraphonicGlassKnock12189878" type="AudioStreamPlayer" parent="SubViewportContainer/SubViewport/Characters/Dominic" unique_id=1728548862]
-stream = ExtResource("43_vrtfv")
-volume_db = 4.028
-
-[node name="FreesoundCommunityRunningOnGrassWithWetFeet7030" type="AudioStreamPlayer" parent="SubViewportContainer/SubViewport/Characters/Dominic" unique_id=1097153749]
-stream = ExtResource("44_b11i1")
-volume_db = 0.732
-
-[node name="FreesoundCommunityWalkingThroughGrass80308" type="AudioStreamPlayer" parent="SubViewportContainer/SubViewport/Characters/Dominic" unique_id=1888457472]
-stream = ExtResource("42_m8q3t")
-volume_db = 0.611
+script = ExtResource("41_ay1s4")
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="SubViewportContainer/SubViewport/Characters/Dominic" unique_id=1772651714]
 libraries/ = SubResource("AnimationLibrary_c8856")
 
-[node name="Sprite3D" type="Sprite3D" parent="SubViewportContainer/SubViewport/Characters" unique_id=1515566829]
+[node name="Teacher" type="Sprite3D" parent="SubViewportContainer/SubViewport/Characters" unique_id=1515566829]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.7708883, 53.139454, 11.872822)
 top_level = true
 visible = false
@@ -791,12 +771,30 @@ pixel_size = 0.027116
 shaded = true
 texture = ExtResource("25_myiym")
 
-[node name="Sprite3D2" type="Sprite3D" parent="SubViewportContainer/SubViewport/Characters" unique_id=1286641275]
+[node name="Classmate3" type="Sprite3D" parent="SubViewportContainer/SubViewport/Characters" unique_id=1286641275]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.3450756, 58.395252, 10.651829)
 visible = false
 pixel_size = 0.035116
 shaded = true
 texture = ExtResource("26_d6p8o")
+
+[node name="Mother" type="Sprite3D" parent="SubViewportContainer/SubViewport/Characters" unique_id=503762292]
+visible = false
+
+[node name="Marites" type="Sprite3D" parent="SubViewportContainer/SubViewport/Characters" unique_id=1920042992]
+visible = false
+
+[node name="Classmate2" type="Sprite3D" parent="SubViewportContainer/SubViewport/Characters" unique_id=1986889941]
+visible = false
+
+[node name="Classmate1" type="Sprite3D" parent="SubViewportContainer/SubViewport/Characters" unique_id=1536249557]
+visible = false
+
+[node name="Father" type="Sprite3D" parent="SubViewportContainer/SubViewport/Characters" unique_id=558162790]
+visible = false
+
+[node name="Basurero" type="Sprite3D" parent="SubViewportContainer/SubViewport/Characters" unique_id=833841980]
+visible = false
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="SubViewportContainer" unique_id=45400018]
 transform = Transform3D(-0.22739315, -1.0145181, 0, 80.13144, -0.0028788894, 0, 0, 0, 96.73991, -79.32529, 81.88432, -42.266556)

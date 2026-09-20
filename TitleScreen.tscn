@@ -14,6 +14,7 @@
 [ext_resource type="FontFile" uid="uid://dtjueab4s4hcg" path="res://WindowsDesktop/Battlenet2.ttf" id="14_iury2"]
 [ext_resource type="Texture2D" uid="uid://dmc6pq8o7cyu6" path="res://textures/437.png" id="14_p5s4k"]
 [ext_resource type="Script" uid="uid://djqcfbaimww6f" path="res://Scripts/menu button.gd" id="15_fgk7k"]
+[ext_resource type="AudioStream" uid="uid://clmxt23wo8mh2" path="res://assets/freesound_community-spooky-music-box-radio-broadcast-32650.mp3" id="15_s4ikd"]
 [ext_resource type="Texture2D" uid="uid://d35p28k26gy15" path="res://textures/438.png" id="15_saqug"]
 [ext_resource type="Texture2D" uid="uid://4geo1pd65nf0" path="res://textures/439.png" id="16_4y71n"]
 
@@ -176,6 +177,11 @@ autoplay = &"scan"
 
 [node name="GUI" type="CanvasLayer" parent="." unique_id=69568522]
 script = ExtResource("14_fgk7k")
+
+[node name="FreesoundCommunitySpookyMusicBoxRadioBroadcast32650" type="AudioStreamPlayer" parent="GUI" unique_id=312977043]
+stream = ExtResource("15_s4ikd")
+autoplay = true
+parameters/looping = true
 
 [node name="Label" type="Label" parent="GUI" unique_id=2068396178]
 texture_filter = 1
