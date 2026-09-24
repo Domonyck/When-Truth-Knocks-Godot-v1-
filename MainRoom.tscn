@@ -43,6 +43,7 @@
 [ext_resource type="PackedScene" uid="uid://caosyg6gnod10" path="res://assets/Dominic.glb" id="26_h1hmd"]
 [ext_resource type="AudioStream" uid="uid://dvxu71mqv62c1" path="res://assets/Sounds/open-and-close-creaking-doorwav-36256.mp3" id="27_heanb"]
 [ext_resource type="AudioStream" uid="uid://6pkdujohhpca" path="res://assets/Sounds/knocking-on-door-46237.mp3" id="31_m8q3t"]
+[ext_resource type="PackedScene" uid="uid://bhi8ufwuqsots" path="res://BullBoard/BulletinBoardUI.tscn" id="37_cin8a"]
 [ext_resource type="Script" uid="uid://qugjp41bjlxm" path="res://Scripts/dominic3droom.gd" id="41_ay1s4"]
 [ext_resource type="Texture2D" uid="uid://riqv5fjhsqss" path="res://assets/2dbafbe5-0e54-4a8f-8f60-c24da3b1ece0.png" id="45_dllnc"]
 [ext_resource type="Script" uid="uid://ce522xt3x8gkx" path="res://Scripts/GameManager.gd" id="45_vtemr"]
@@ -737,6 +738,7 @@ transform = Transform3D(1, 3.1086245e-15, -1.1723955e-13, -3.1086245e-15, 1, 1.0
 
 [node name="Area3D" type="Area3D" parent="SubViewportContainer/SubViewport/bilboard" unique_id=575198305 node_paths=PackedStringArray("focus_target")]
 script = ExtResource("20_vprmq")
+bulletinboard_scene = ExtResource("37_cin8a")
 focus_target = NodePath("../Marker3D")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="SubViewportContainer/SubViewport/bilboard/Area3D" unique_id=12669469]
@@ -818,43 +820,51 @@ texture = ExtResource("25_myiym")
 
 [node name="Classmate3" type="Sprite3D" parent="SubViewportContainer/Characters" unique_id=1286641275]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.3450756, 56.962513, -123.89665)
+visible = false
 pixel_size = 0.035116
 shaded = true
 texture = ExtResource("26_d6p8o")
 
 [node name="Mother" type="Sprite3D" parent="SubViewportContainer/Characters" unique_id=503762292]
 transform = Transform3D(1.3592942, 0, 0, 0, 1.2329232, 0, 0, 0, 1, 3.3450756, 48.478527, -123.89665)
+visible = false
 pixel_size = 0.035116
+shaded = true
 texture = ExtResource("45_dllnc")
 
 [node name="Marites" type="Sprite3D" parent="SubViewportContainer/Characters" unique_id=1920042992]
-transform = Transform3D(1.2343942, 0, 0, 0, 1.4687998, 0, 0, 0, 1, 3.3450756, 49.688686, -123.89665)
+transform = Transform3D(1.5115607, 0, 0, 0, 1.4687998, 0, 0, 0, 1, 7.5321407, 47.93487, -123.89665)
 visible = false
 pixel_size = 0.035116
+shaded = true
 texture = ExtResource("46_vrtfv")
 
 [node name="Classmate2" type="Sprite3D" parent="SubViewportContainer/Characters" unique_id=1986889941]
-transform = Transform3D(1.2819227, 0, 0, 0, 1.3044897, 0, 0, 0, 1, 3.3450756, 45.958195, -123.89665)
+transform = Transform3D(1.2819227, 0, 0, 0, 1.3044897, 0, 0, 0, 1, 8.578749, 43.828747, -123.89665)
 visible = false
 pixel_size = 0.035116
+shaded = true
 texture = ExtResource("47_cin8a")
 
 [node name="Classmate1" type="Sprite3D" parent="SubViewportContainer/Characters" unique_id=1536249557]
-transform = Transform3D(1.1074486, 0, 0, 0, 1.2311436, 0, 0, 0, 1, 3.3450756, 51.717304, -123.89665)
+transform = Transform3D(1.1074486, 0, 0, 0, 1.2311436, 0, 0, 0, 1, 9.191778, 45.529156, -123.89665)
 visible = false
 pixel_size = 0.035116
+shaded = true
 texture = ExtResource("48_i755a")
 
 [node name="Father" type="Sprite3D" parent="SubViewportContainer/Characters" unique_id=558162790]
-transform = Transform3D(1.6275684, 0, 0, 0, 1.7608384, 0, 0, 0, 1, 3.3450756, 50.25275, -123.89665)
+transform = Transform3D(1.6275684, 0, 0, 0, 1.7608384, 0, 0, 0, 1, 3.3450756, 41.897533, -123.89665)
 visible = false
 pixel_size = 0.035116
+shaded = true
 texture = ExtResource("49_bk1hi")
 
 [node name="Basurero" type="Sprite3D" parent="SubViewportContainer/Characters" unique_id=833841980]
-transform = Transform3D(2.6311831, 0, 0, 0, 2.8632848, 0, 0, 0, 1, 3.3450756, 51.244854, -123.89665)
+transform = Transform3D(2.6311831, 0, 0, 0, 2.8632848, 0, 0, 0, 1, 7.819124, 44.879177, -123.89665)
 visible = false
 pixel_size = 0.027116
+shaded = true
 texture = ExtResource("50_x0cb2")
 
 [node name="GameManager" type="Node" parent="." unique_id=518015656 node_paths=PackedStringArray("characters_parent")]

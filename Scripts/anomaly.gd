@@ -65,8 +65,8 @@ func _schedule_next_event() -> void:
 	var max_delay: float
 
 	if total_minutes < 3.0:
-		min_delay = 10.0
-		max_delay = 20.0
+		min_delay = 30.0
+		max_delay = 60.0
 	elif total_minutes < 6.0:
 		min_delay = 20.0
 		max_delay = 40.0
