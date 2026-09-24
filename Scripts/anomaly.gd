@@ -10,10 +10,17 @@ var cooldown_timer: float = 0.0
 
 # Variable to hold the local 3D animation player when in a 3D level
 var room_anim_player: AnimationPlayer = null 
+signal blinds_timer_expired
 
+var blinds_timer: Timer
 func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
 	_schedule_next_event()
+	blinds_timer = Timer.new()
+	blinds_timer.one_shot = true
+	blinds_timer.process_mode = Node.PROCESS_MODE_ALWAYS # Ticks during 2D overlays
+	blinds_timer.timeout.connect(_on_blinds_timer_timeout)
+	add_child(blinds_timer)
 # anomaly_4.gd (dominic autoload)
 
 # Add this function to clear all active state
@@ -23,10 +30,19 @@ func stop_all_audio() -> void:
 	if sound_3 and sound_3.playing: sound_3.stop()
 	if sound_4 and sound_4.playing: sound_4.stop()
 
+func start_blinds_timer(duration: float = 7.0) -> void:
+	blinds_timer.start(duration)
+
+func stop_blinds_timer() -> void:
+	blinds_timer.stop()
+
+func _on_blinds_timer_timeout() -> void:
+	blinds_timer_expired.emit()
 # Fully reset state when returning to the title screen
 func reset_state() -> void:
 	stop_all_audio()
-	
+	if blinds_timer:
+		blinds_timer.stop()
 	elapsed_time = 0.0
 	cooldown_timer = 0.0
 	room_anim_player = null
@@ -49,8 +65,8 @@ func _schedule_next_event() -> void:
 	var max_delay: float
 
 	if total_minutes < 3.0:
-		min_delay = 60.0
-		max_delay = 80.0
+		min_delay = 10.0
+		max_delay = 20.0
 	elif total_minutes < 6.0:
 		min_delay = 20.0
 		max_delay = 40.0

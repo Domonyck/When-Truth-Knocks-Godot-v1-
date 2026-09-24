@@ -5,18 +5,20 @@ extends StaticBody3D
 @onready var freesound_community_tear_paper_103161: AudioStreamPlayer = $FreesoundCommunityTearPaper103161
 
 var is_open: bool = true
-var reopen_timer: Timer
 
 func _ready() -> void:
-	# Create a dedicated Timer node script-side to prevent silent failures
-	reopen_timer = Timer.new()
-	reopen_timer.one_shot = true
-	reopen_timer.wait_time = 7.0
-	reopen_timer.timeout.connect(_on_reopen_timer_timeout)
-	add_child(reopen_timer)
 	open_mesh.visible = is_open
 	closed_mesh.visible = !is_open
 	
+	# Connect to the persistent timer signal on the Autoload
+	if dominic:
+		dominic.blinds_timer_expired.connect(_on_reopen_timer_timeout)
+
+func _exit_tree() -> void:
+	# Disconnect signal when leaving the 3D level scene to prevent memory leaks
+	if dominic and dominic.blinds_timer_expired.is_connected(_on_reopen_timer_timeout):
+		dominic.blinds_timer_expired.disconnect(_on_reopen_timer_timeout)
+
 func interact() -> void:
 	toggle_blinds()
 
@@ -31,15 +33,20 @@ func toggle_blinds() -> void:
 	closed_mesh.visible = !is_open
 	
 	if not is_open:
-		# Blinds were closed -> start/restart the 7-second timer
-		reopen_timer.start(7.0)
+		# Blinds were closed -> Start persistent 7-second timer on Autoload
+		if dominic:
+			dominic.start_blinds_timer(7.0)
 	else:
-		# Blinds were manually opened -> stop timer if running
-		reopen_timer.stop()
+		# Blinds manually opened -> Cancel timer on Autoload
+		if dominic:
+			dominic.stop_blinds_timer()
+
 	freesound_community_tear_paper_103161.play()
-	
+
 func _on_reopen_timer_timeout() -> void:
-	# Timer finished: reopen the blinds if still closed
+	# Signal received from Autoload: automatically reopen if closed
 	if not is_open:
-		toggle_blinds()
-	freesound_community_tear_paper_103161.play()
+		is_open = true
+		open_mesh.visible = true
+		closed_mesh.visible = false
+		freesound_community_tear_paper_103161.play()

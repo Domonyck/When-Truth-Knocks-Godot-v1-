@@ -8,9 +8,6 @@ var is_billboard_open := false
 var original_camera_transform: Transform3D 
 var camera: Camera3D
 
-func _ready() -> void:
-	process_mode = Node.PROCESS_MODE_ALWAYS
-
 func interact() -> void:
 	if is_transitioning or is_billboard_open:
 		return
@@ -22,6 +19,9 @@ func interact() -> void:
 	is_transitioning = true
 	camera.set_process(false)
 	camera.set_process_input(false)
+	
+	# Optional: Disable player character movement here (e.g., player.set_physics_process(false))
+	
 	original_camera_transform = camera.global_transform
 
 	var tween = create_tween()
@@ -31,12 +31,11 @@ func interact() -> void:
 
 	await tween.finished
 
-	get_tree().paused = true
+	# REMOVED: get_tree().paused = true
 	is_billboard_open = true
 	is_transitioning = false
 
 func _input(event: InputEvent) -> void:
-	# If we are looking at the billboard and press Esc/Back, call the unfocus function directly
 	if is_billboard_open and not is_transitioning and event.is_action_pressed("ui_cancel"):
 		unfocus_camera()
 
@@ -47,8 +46,7 @@ func unfocus_camera() -> void:
 	is_transitioning = true
 	is_billboard_open = false
 	
-	# Unpause first so the camera tween can run
-	get_tree().paused = false
+	# REMOVED: get_tree().paused = false
 	
 	var tween = create_tween()
 	tween.set_trans(Tween.TRANS_QUAD) 
@@ -59,5 +57,7 @@ func unfocus_camera() -> void:
 	
 	camera.set_process(true)
 	camera.set_process_input(true)
+	
+	# Optional: Re-enable player movement here (e.g., player.set_physics_process(true))
 	
 	is_transitioning = false
