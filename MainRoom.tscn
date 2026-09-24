@@ -42,7 +42,15 @@
 [ext_resource type="Texture2D" uid="uid://c2kqmnrnt1xjm" path="res://assets/student1.png" id="26_d6p8o"]
 [ext_resource type="PackedScene" uid="uid://caosyg6gnod10" path="res://assets/Dominic.glb" id="26_h1hmd"]
 [ext_resource type="AudioStream" uid="uid://dvxu71mqv62c1" path="res://assets/Sounds/open-and-close-creaking-doorwav-36256.mp3" id="27_heanb"]
+[ext_resource type="AudioStream" uid="uid://6pkdujohhpca" path="res://assets/Sounds/knocking-on-door-46237.mp3" id="31_m8q3t"]
 [ext_resource type="Script" uid="uid://qugjp41bjlxm" path="res://Scripts/dominic3droom.gd" id="41_ay1s4"]
+[ext_resource type="Texture2D" uid="uid://riqv5fjhsqss" path="res://assets/2dbafbe5-0e54-4a8f-8f60-c24da3b1ece0.png" id="45_dllnc"]
+[ext_resource type="Script" uid="uid://ce522xt3x8gkx" path="res://Scripts/GameManager.gd" id="45_vtemr"]
+[ext_resource type="Texture2D" uid="uid://8xi1lpkfbbh1" path="res://assets/12024981e-40f1-45bd-afcb-772b99b0af43_-_Edited.png" id="46_vrtfv"]
+[ext_resource type="Texture2D" uid="uid://fk0eahacxxd2" path="res://assets/42557be4-f45a-43fb-9115-172ccde45d32.png" id="47_cin8a"]
+[ext_resource type="Texture2D" uid="uid://cv7yiodyn3h2x" path="res://assets/ee2fac68-c4d8-4dfb-9573-683746b3e5fb.png" id="48_i755a"]
+[ext_resource type="Texture2D" uid="uid://6nphy7uii1nt" path="res://assets/3f557fa0-2949-44d6-9ff8-a38b64456806.png" id="49_bk1hi"]
+[ext_resource type="Texture2D" uid="uid://dfgdyfnq1b6cp" path="res://assets/1b898725-a95d-4ecd-a6ed-1ee5ecd8494b.png" id="50_x0cb2"]
 
 [sub_resource type="GDScript" id="GDScript_tnmiv"]
 
@@ -231,7 +239,7 @@ size = Vector3(0.08319092, 0.3747139, 0.43204546)
 size = Vector3(2.6229725, 1.5628662, 1)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_1vivr"]
-size = Vector3(9.372101, 208.83926, 95.39064)
+size = Vector3(9.372101, 232.14267, 128.69183)
 
 [sub_resource type="Animation" id="Animation_o5ftv"]
 length = 0.001
@@ -345,6 +353,10 @@ fog_depth_end = 15.0
 volumetric_fog_density = 0.0165
 volumetric_fog_albedo = Color(0.09884685, 0.14581767, 0.19554113, 1)
 
+[sub_resource type="PlaneMesh" id="PlaneMesh_cpeaq"]
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_d0hwy"]
+
 [sub_resource type="Animation" id="Animation_m8q3t"]
 length = 0.001
 tracks/0/type = "value"
@@ -431,10 +443,6 @@ _data = {
 &"normal_tap": SubResource("Animation_cin8a"),
 &"normal_walk": SubResource("Animation_vtemr")
 }
-
-[sub_resource type="PlaneMesh" id="PlaneMesh_cpeaq"]
-
-[sub_resource type="PlaneMesh" id="PlaneMesh_d0hwy"]
 
 [node name="Node2D" type="Node2D" unique_id=117264161 node_paths=PackedStringArray("ceiling_fan_area", "wall_lamp_area", "office_assets_area", "mesh_instance_2", "computer2")]
 process_mode = 1
@@ -677,11 +685,14 @@ transform = Transform3D(-9.438777e-09, 0, 0.62468654, 0, 0.47113836, 0, -0.21593
 script = ExtResource("12_h4fbr")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="SubViewportContainer/SubViewport/door/Area3D" unique_id=1197394498]
-transform = Transform3D(1, 0, -8.100187e-13, 0, 0.9999723, 0, -1.7763568e-15, 0, 1, -0.29919434, 0.085235596, -0.08973026)
+transform = Transform3D(1, 0, -8.100187e-13, 0, 0.9999625, 0, -1.7763568e-15, 0, 1, -0.29919434, 3.911728, -1.0256138)
 shape = SubResource("BoxShape3D_1vivr")
 
 [node name="OpenAndCloseCreakingDoorwav36256" type="AudioStreamPlayer" parent="SubViewportContainer/SubViewport/door/Area3D" unique_id=1946086265]
 stream = ExtResource("27_heanb")
+
+[node name="KnockingOnDoor46237" type="AudioStreamPlayer" parent="SubViewportContainer/SubViewport/door/Area3D" unique_id=1669240618]
+stream = ExtResource("31_m8q3t")
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="SubViewportContainer/SubViewport/door" unique_id=942226544]
 libraries/ = SubResource("AnimationLibrary_garkl")
@@ -779,48 +790,6 @@ light_volumetric_fog_energy = 2.255
 omni_range = 1205.4
 omni_attenuation = -0.588
 
-[node name="Characters" type="Node3D" parent="SubViewportContainer/SubViewport" unique_id=1305229521]
-
-[node name="Dominic" parent="SubViewportContainer/SubViewport/Characters" unique_id=1517903016 instance=ExtResource("26_h1hmd")]
-transform = Transform3D(-24.949554, 0, 1.5872678, 0, 25, 0, -1.5872678, 0, -24.949554, -117.89461, 63.241997, 74.67573)
-script = ExtResource("41_ay1s4")
-
-[node name="AnimationPlayer" type="AnimationPlayer" parent="SubViewportContainer/SubViewport/Characters/Dominic" unique_id=1772651714]
-libraries/ = SubResource("AnimationLibrary_c8856")
-
-[node name="Teacher" type="Sprite3D" parent="SubViewportContainer/SubViewport/Characters" unique_id=1515566829]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.7708883, 53.139454, 11.872822)
-top_level = true
-visible = false
-pixel_size = 0.027116
-shaded = true
-texture = ExtResource("25_myiym")
-
-[node name="Classmate3" type="Sprite3D" parent="SubViewportContainer/SubViewport/Characters" unique_id=1286641275]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.3450756, 58.395252, 10.651829)
-visible = false
-pixel_size = 0.035116
-shaded = true
-texture = ExtResource("26_d6p8o")
-
-[node name="Mother" type="Sprite3D" parent="SubViewportContainer/SubViewport/Characters" unique_id=503762292]
-visible = false
-
-[node name="Marites" type="Sprite3D" parent="SubViewportContainer/SubViewport/Characters" unique_id=1920042992]
-visible = false
-
-[node name="Classmate2" type="Sprite3D" parent="SubViewportContainer/SubViewport/Characters" unique_id=1986889941]
-visible = false
-
-[node name="Classmate1" type="Sprite3D" parent="SubViewportContainer/SubViewport/Characters" unique_id=1536249557]
-visible = false
-
-[node name="Father" type="Sprite3D" parent="SubViewportContainer/SubViewport/Characters" unique_id=558162790]
-visible = false
-
-[node name="Basurero" type="Sprite3D" parent="SubViewportContainer/SubViewport/Characters" unique_id=833841980]
-visible = false
-
 [node name="MeshInstance3D" type="MeshInstance3D" parent="SubViewportContainer" unique_id=45400018]
 transform = Transform3D(-0.22739315, -1.0145181, 0, 80.13144, -0.0028788894, 0, 0, 0, 96.73991, -79.32529, 81.88432, -42.266556)
 visible = false
@@ -829,5 +798,70 @@ mesh = SubResource("PlaneMesh_cpeaq")
 [node name="roof" type="MeshInstance3D" parent="SubViewportContainer" unique_id=1164471898]
 transform = Transform3D(90.23177, 0, 0, 0, 1.6345725, 0, 0, 0, 98.07208, 15.738525, 114.24826, -5.508507)
 mesh = SubResource("PlaneMesh_d0hwy")
+
+[node name="Dominic" parent="SubViewportContainer" unique_id=1517903016 instance=ExtResource("26_h1hmd")]
+transform = Transform3D(-24.949554, 0, 1.5872678, 0, 25, 0, -1.5872678, 0, -24.949554, -117.89461, 63.241997, 74.67573)
+script = ExtResource("41_ay1s4")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="SubViewportContainer/Dominic" unique_id=1772651714]
+libraries/ = SubResource("AnimationLibrary_c8856")
+
+[node name="Characters" type="Node3D" parent="SubViewportContainer" unique_id=1305229521]
+
+[node name="Teacher" type="Sprite3D" parent="SubViewportContainer/Characters" unique_id=1515566829]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.3450756, 56.962513, -123.89665)
+top_level = true
+visible = false
+pixel_size = 0.027116
+shaded = true
+texture = ExtResource("25_myiym")
+
+[node name="Classmate3" type="Sprite3D" parent="SubViewportContainer/Characters" unique_id=1286641275]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.3450756, 56.962513, -123.89665)
+pixel_size = 0.035116
+shaded = true
+texture = ExtResource("26_d6p8o")
+
+[node name="Mother" type="Sprite3D" parent="SubViewportContainer/Characters" unique_id=503762292]
+transform = Transform3D(1.3592942, 0, 0, 0, 1.2329232, 0, 0, 0, 1, 3.3450756, 48.478527, -123.89665)
+pixel_size = 0.035116
+texture = ExtResource("45_dllnc")
+
+[node name="Marites" type="Sprite3D" parent="SubViewportContainer/Characters" unique_id=1920042992]
+transform = Transform3D(1.2343942, 0, 0, 0, 1.4687998, 0, 0, 0, 1, 3.3450756, 49.688686, -123.89665)
+visible = false
+pixel_size = 0.035116
+texture = ExtResource("46_vrtfv")
+
+[node name="Classmate2" type="Sprite3D" parent="SubViewportContainer/Characters" unique_id=1986889941]
+transform = Transform3D(1.2819227, 0, 0, 0, 1.3044897, 0, 0, 0, 1, 3.3450756, 45.958195, -123.89665)
+visible = false
+pixel_size = 0.035116
+texture = ExtResource("47_cin8a")
+
+[node name="Classmate1" type="Sprite3D" parent="SubViewportContainer/Characters" unique_id=1536249557]
+transform = Transform3D(1.1074486, 0, 0, 0, 1.2311436, 0, 0, 0, 1, 3.3450756, 51.717304, -123.89665)
+visible = false
+pixel_size = 0.035116
+texture = ExtResource("48_i755a")
+
+[node name="Father" type="Sprite3D" parent="SubViewportContainer/Characters" unique_id=558162790]
+transform = Transform3D(1.6275684, 0, 0, 0, 1.7608384, 0, 0, 0, 1, 3.3450756, 50.25275, -123.89665)
+visible = false
+pixel_size = 0.035116
+texture = ExtResource("49_bk1hi")
+
+[node name="Basurero" type="Sprite3D" parent="SubViewportContainer/Characters" unique_id=833841980]
+transform = Transform3D(2.6311831, 0, 0, 0, 2.8632848, 0, 0, 0, 1, 3.3450756, 51.244854, -123.89665)
+visible = false
+pixel_size = 0.027116
+texture = ExtResource("50_x0cb2")
+
+[node name="GameManager" type="Node" parent="." unique_id=518015656 node_paths=PackedStringArray("characters_parent")]
+script = ExtResource("45_vtemr")
+characters_parent = NodePath("../SubViewportContainer/Characters")
+
+[node name="WitnessTarget" type="Marker3D" parent="." unique_id=401049037]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.3450756, 56.962513, 10.651829)
 
 [connection signal="input_event" from="SubViewportContainer/SubViewport/StaticBody3D" to="SubViewportContainer/SubViewport/StaticBody3D" method="_on_input_event"]
