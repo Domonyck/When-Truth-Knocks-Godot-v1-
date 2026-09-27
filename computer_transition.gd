@@ -96,8 +96,14 @@ func force_shutdown_desktop() -> void:
 	is_transitioning = false
 
 func zoom_out_camera() -> void:
+	if get_tree() == null or not is_inside_tree():
+		return
+		
 	if not is_desktop_open: 
 		return 
+		
+	if camera == null or not camera.is_inside_tree():
+		return
 		
 	is_transitioning = true
 	is_desktop_open = false
@@ -112,7 +118,8 @@ func zoom_out_camera() -> void:
 	
 	await tween.finished
 	
-	camera.set_process(true)
-	camera.set_process_input(true)
+	if is_instance_valid(camera):
+		camera.set_process(true)
+		camera.set_process_input(true)
 	
 	is_transitioning = false

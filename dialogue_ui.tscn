@@ -1,0 +1,84 @@
+[gd_scene format=3 uid="uid://cpsn4onkag8hc"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_e0sfr"]
+bg_color = Color(0.36282945, 0.36282948, 0.36282933, 1)
+
+[node name="DialogueUI" type="CanvasLayer" unique_id=780605922]
+
+[node name="Control" type="Control" parent="." unique_id=2025151139]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="LeftBox" type="Panel" parent="Control" unique_id=619250786]
+layout_mode = 1
+anchors_preset = 4
+anchor_top = 0.5
+anchor_bottom = 0.5
+offset_left = 70.0
+offset_top = -303.99994
+offset_right = 880.0
+offset_bottom = 104.0
+grow_vertical = 2
+scale = Vector2(0.8299192, 0.7437083)
+theme_override_styles/panel = SubResource("StyleBoxFlat_e0sfr")
+
+[node name="NameLabel" type="RichTextLabel" parent="Control/LeftBox" unique_id=1903085066]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="BottomBox" type="Panel" parent="Control" unique_id=2132682180]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.06562499
+anchor_top = 0.73425955
+anchor_right = 1.065625
+anchor_bottom = 0.7342593
+offset_left = 1.0
+offset_top = 29.999939
+offset_right = -18.999878
+offset_bottom = 220.00018
+grow_horizontal = 2
+grow_vertical = 0
+scale = Vector2(0.88000005, 1)
+theme_override_styles/panel = SubResource("StyleBoxFlat_e0sfr")
+
+[node name="DialogueLabel" type="RichTextLabel" parent="Control/BottomBox" unique_id=325395561]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="RightBox" type="Panel" parent="Control" unique_id=801018804]
+layout_mode = 1
+anchors_preset = 6
+anchor_left = 1.0
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_left = -741.9999
+offset_top = -304.0
+offset_right = 68.00037
+offset_bottom = 104.0
+grow_horizontal = 0
+grow_vertical = 2
+scale = Vector2(0.83, 0.744)
+theme_override_styles/panel = SubResource("StyleBoxFlat_e0sfr")
+
+[node name="CloseButton" type="Button" parent="Control/RightBox" unique_id=764921111]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "End Interview"
