@@ -6,7 +6,8 @@ extends Node
 @export var dialogue_ui: CanvasLayer 
 @export var name_label: RichTextLabel 
 @export var dialogue_label: RichTextLabel 
-@export var close_button: Button
+@export var Accept: Button
+@export var Decline: Button
 @export var fade_in_duration: float = 1.5
 @export var characters_parent: Node3D 
 
@@ -17,8 +18,11 @@ var active_witness: Node3D = null
 var initial_transforms: Dictionary = {}
 
 func _ready() -> void:
-	if close_button:
-		close_button.pressed.connect(_on_close_button_pressed)
+	if Accept:
+		Accept.pressed.connect(_on_close_button_pressed)
+
+	if Decline:
+		Decline.pressed.connect(_on_close_button_pressed)
 
 	if characters_parent:
 		witnesses = characters_parent.get_children()
@@ -30,6 +34,25 @@ func _ready() -> void:
 		
 	if door:
 		door.visitor_revealed.connect(_on_visitor_revealed)
+
+func _process(delta: float) -> void:
+	if active_witness and name_label and name_label.visible:
+		var camera = get_viewport().get_camera_3d()
+		if camera:
+			# Use the character's exact global position (their center/origin point)
+			var target_pos = active_witness.global_position
+			
+			if not camera.is_position_behind(target_pos):
+				# Get the 2D screen coordinates of the character's center
+				var screen_pos = camera.unproject_position(target_pos)
+				
+				# Position the label centered horizontally, and move it UP by a fixed amount of pixels (e.g., 180 pixels)
+				# Adjust the '180' value up or down depending on how tall your sprites are!
+				var vertical_pixel_offset = 180.0
+				name_label.global_position = Vector2(
+					screen_pos.x - (name_label.size.x / 2),
+					screen_pos.y - vertical_pixel_offset
+				)
 
 func _on_visitor_revealed() -> void:
 	# If the pool is empty AND the room is empty, do nothing
@@ -128,19 +151,36 @@ func _on_fade_finished() -> void:
 			# Send the Name to the Left Box
 			if name_label:
 				name_label.text = "[center][b]" + StoryData.get_witness_display_name(witness_id) + "[/b][/center]"
+				name_label.visible = true
 			
-			# Send the Testimony to the Bottom Box
+			# Send the Testimony to the Bottom Box and Type it out
 			if dialogue_label:
 				dialogue_label.text = testimony.text
+				dialogue_label.visible_characters = 0 # Hide text initially
+				
+				# Hide buttons before typing starts
+				if Accept: Accept.visible = false
+				if Decline: Decline.visible = false
+				
+				# Calculate typing duration (0.03 seconds per character)
+				var text_length = testimony.text.length()
+				var typing_duration = text_length * 0.01 
+				
+				# Animate the text appearing
+				var type_tween = create_tween()
+				type_tween.tween_property(dialogue_label, "visible_characters", text_length, typing_duration)
+				
+				# Show the buttons once typing is finished
+				type_tween.finished.connect(func():
+					if Accept: Accept.visible = true
+					if Decline: Decline.visible = true
+				)
 			
 			# Process the true/false logic to advance the game state
 			if testimony.is_true:
 				var unlocked_case = StoryData.accept_true_testimony()
 				if unlocked_case != "":
 					print("PROGRESS: True testimony accepted! Unlocked case: ", unlocked_case)
-		else:
-			if dialogue_label:
-				dialogue_label.text = "..."
 
 	# FADE IN THE UI BOXES
 	if dialogue_ui:
@@ -152,8 +192,20 @@ func _on_fade_finished() -> void:
 				ui_root.modulate.a = 0.0 # Start invisible
 				var tween = create_tween()
 				tween.tween_property(ui_root, "modulate:a", 1.0, 0.5) # Fade to fully visible over 0.5s
-
+				var cam = get_tree().get_first_node_in_group("player_camera")
+				if cam and cam.has_method("lock_on_target"):
+					cam.lock_on_target(active_witness)
+					
 func _on_close_button_pressed() -> void:
+	# --- NEW: Hide name tag and unlock camera immediately ---
+	if name_label:
+		name_label.visible = false
+		
+	var cam = get_tree().get_first_node_in_group("player_camera")
+	if cam and cam.has_method("unlock_camera"):
+		cam.unlock_camera()
+	# --------------------------------------------------------
+
 	# 1. FADE OUT THE UI BOXES FIRST
 	if dialogue_ui:
 		if dialogue_ui.get_child_count() > 0:

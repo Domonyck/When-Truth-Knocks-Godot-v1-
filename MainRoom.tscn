@@ -53,6 +53,7 @@
 [ext_resource type="Texture2D" uid="uid://cv7yiodyn3h2x" path="res://assets/ee2fac68-c4d8-4dfb-9573-683746b3e5fb.png" id="48_i755a"]
 [ext_resource type="Texture2D" uid="uid://6nphy7uii1nt" path="res://assets/3f557fa0-2949-44d6-9ff8-a38b64456806.png" id="49_bk1hi"]
 [ext_resource type="Texture2D" uid="uid://dfgdyfnq1b6cp" path="res://assets/1b898725-a95d-4ecd-a6ed-1ee5ecd8494b.png" id="50_x0cb2"]
+[ext_resource type="PackedScene" uid="uid://c1nwvwcqhwxwy" path="res://assets/katrina_0930145730_texture.glb" id="54_bk1hi"]
 
 [sub_resource type="GDScript" id="GDScript_tnmiv"]
 
@@ -700,7 +701,7 @@ stream = ExtResource("31_m8q3t")
 libraries/ = SubResource("AnimationLibrary_garkl")
 
 [node name="Camera3D" type="Camera3D" parent="SubViewportContainer/SubViewport" unique_id=1960914920]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.987, 54.504, 73.036)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.987, 54.504, 73.03601)
 fov = 80.0
 script = ExtResource("6_1v8qo")
 
@@ -812,20 +813,21 @@ libraries/ = SubResource("AnimationLibrary_c8856")
 [node name="Characters" type="Node3D" parent="SubViewportContainer" unique_id=1305229521]
 
 [node name="Teacher" type="Sprite3D" parent="SubViewportContainer/Characters" unique_id=1515566829]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.3450756, 56.962513, -123.89665)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.3450756, 59.49117, -123.89665)
 top_level = true
+visible = false
 pixel_size = 0.027116
 shaded = true
 texture = ExtResource("25_myiym")
 
 [node name="Classmate3" type="Sprite3D" parent="SubViewportContainer/Characters" unique_id=1286641275]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.3450756, 61.96616, -123.89665)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.3450756, 69.90226, -123.89665)
 pixel_size = 0.035116
 shaded = true
 texture = ExtResource("26_d6p8o")
 
 [node name="Mother" type="Sprite3D" parent="SubViewportContainer/Characters" unique_id=503762292]
-transform = Transform3D(1.1969842, 0, 0, 0, 1.1289835, 0, 0, 0, 1, 3.3450756, 53.14681, -123.89665)
+transform = Transform3D(1.1969842, 0, 0, 0, 1.1289835, 0, 0, 0, 1, 3.3450756, 54.06216, -123.89665)
 visible = false
 pixel_size = 0.035116
 shaded = true
@@ -839,7 +841,7 @@ shaded = true
 texture = ExtResource("46_vrtfv")
 
 [node name="Classmate2" type="Sprite3D" parent="SubViewportContainer/Characters" unique_id=1986889941]
-transform = Transform3D(1.416706, 0, 0, 0, 1.472177, 0, 0, 0, 1, 3.5942059, 51.07022, -123.89665)
+transform = Transform3D(1.416706, 0, 0, 0, 1.472177, 0, 0, 0, 1, 3.5942059, 45.36145, -123.89665)
 visible = false
 pixel_size = 0.035116
 shaded = true
@@ -866,12 +868,13 @@ pixel_size = 0.027116
 shaded = true
 texture = ExtResource("50_x0cb2")
 
-[node name="GameManager" type="Node" parent="." unique_id=518015656 node_paths=PackedStringArray("dialogue_ui", "name_label", "dialogue_label", "close_button", "characters_parent")]
+[node name="GameManager" type="Node" parent="." unique_id=518015656 node_paths=PackedStringArray("dialogue_ui", "name_label", "dialogue_label", "Accept", "Decline", "characters_parent")]
 script = ExtResource("45_vtemr")
 dialogue_ui = NodePath("../DialogueUI")
-name_label = NodePath("../DialogueUI/Control/LeftBox/NameLabel")
-dialogue_label = NodePath("../DialogueUI/Control/BottomBox/DialogueLabel")
-close_button = NodePath("../DialogueUI/Control/RightBox/CloseButton")
+name_label = NodePath("../DialogueUI/Control/NameLabel")
+dialogue_label = NodePath("../DialogueUI/Control/DialogueLabel")
+Accept = NodePath("../DialogueUI/Control/Accept")
+Decline = NodePath("../DialogueUI/Control/Decline")
 characters_parent = NodePath("../SubViewportContainer/Characters")
 
 [node name="WitnessTarget" type="Marker3D" parent="." unique_id=401049037]
@@ -880,6 +883,18 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.3450756, 56.962513, 10.6518
 [node name="DialogueUI" parent="." unique_id=780605922 instance=ExtResource("2_i755a")]
 visible = false
 
+[node name="katrina_0930145730_texture" parent="." unique_id=411335890 instance=ExtResource("54_bk1hi")]
+transform = Transform3D(50, 0, 0, 0, 50, 0, 0, 0, 50, 4.133541, 48.30636, -27.651114)
+visible = false
+
+[node name="SpotLight3D" type="SpotLight3D" parent="." unique_id=1504472176]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 62.360283, 68.774124)
+visible = false
+spot_range = 133.322
+spot_attenuation = 0.21
+spot_angle = 21.32
+
 [connection signal="input_event" from="SubViewportContainer/SubViewport/StaticBody3D" to="SubViewportContainer/SubViewport/StaticBody3D" method="_on_input_event"]
 
 [editable path="DialogueUI"]
+[editable path="katrina_0930145730_texture"]

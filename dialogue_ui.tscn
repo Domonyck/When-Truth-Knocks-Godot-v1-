@@ -1,5 +1,8 @@
 [gd_scene format=3 uid="uid://cpsn4onkag8hc"]
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_njptv"]
+bg_color = Color(0, 0, 0, 0.1254902)
+
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_e0sfr"]
 bg_color = Color(0.36282945, 0.36282948, 0.36282933, 1)
 
@@ -13,52 +16,64 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="LeftBox" type="Panel" parent="Control" unique_id=619250786]
-layout_mode = 1
-anchors_preset = 4
-anchor_top = 0.5
-anchor_bottom = 0.5
-offset_left = 70.0
-offset_top = -303.99994
-offset_right = 880.0
-offset_bottom = 104.0
-grow_vertical = 2
-scale = Vector2(0.8299192, 0.7437083)
-theme_override_styles/panel = SubResource("StyleBoxFlat_e0sfr")
-
-[node name="NameLabel" type="RichTextLabel" parent="Control/LeftBox" unique_id=1903085066]
+[node name="NameLabel" type="RichTextLabel" parent="Control" unique_id=1903085066]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
+offset_left = 767.0
+offset_top = 784.0
+offset_right = -910.0
+offset_bottom = -228.00006
 grow_horizontal = 2
 grow_vertical = 2
+scale = Vector2(1.6, 1.24)
+theme_override_font_sizes/normal_font_size = 22
+bbcode_enabled = true
 
-[node name="BottomBox" type="Panel" parent="Control" unique_id=2132682180]
+[node name="DialogueLabel" type="RichTextLabel" parent="Control" unique_id=325395561]
+custom_minimum_size = Vector2(800, 150)
 layout_mode = 1
-anchors_preset = -1
-anchor_left = 0.06562499
-anchor_top = 0.73425955
-anchor_right = 1.065625
-anchor_bottom = 0.7342593
-offset_left = 1.0
-offset_top = 29.999939
-offset_right = -18.999878
-offset_bottom = 220.00018
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -603.0
+offset_top = -253.0
+offset_right = 197.0
+offset_bottom = -103.0
 grow_horizontal = 2
 grow_vertical = 0
-scale = Vector2(0.88000005, 1)
-theme_override_styles/panel = SubResource("StyleBoxFlat_e0sfr")
+scale = Vector2(1.5199994, 1.3599988)
+theme_override_font_sizes/normal_font_size = 21
+theme_override_styles/normal = SubResource("StyleBoxFlat_njptv")
+bbcode_enabled = true
+fit_content = true
+scroll_active = false
 
-[node name="DialogueLabel" type="RichTextLabel" parent="Control/BottomBox" unique_id=325395561]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
+[node name="Accept" type="Button" parent="Control" unique_id=764921111]
+layout_mode = 0
+offset_left = 1200.0
+offset_top = 430.0
+offset_right = 1351.0
+offset_bottom = 461.0
+scale = Vector2(1.5199902, 1.52)
+text = "Accept Testimony"
+flat = true
+
+[node name="Decline" type="Button" parent="Control" unique_id=1844282039]
+layout_mode = 0
+offset_left = 1200.0
+offset_top = 480.0
+offset_right = 1351.0
+offset_bottom = 511.0
+scale = Vector2(1.5200049, 1.5199976)
+text = "Decline Testimony"
+flat = true
 
 [node name="RightBox" type="Panel" parent="Control" unique_id=801018804]
+visible = false
 layout_mode = 1
 anchors_preset = 6
 anchor_left = 1.0
@@ -71,14 +86,36 @@ offset_right = 68.00037
 offset_bottom = 104.0
 grow_horizontal = 0
 grow_vertical = 2
-scale = Vector2(0.83, 0.744)
+scale = Vector2(0.38999993, 0.1839988)
 theme_override_styles/panel = SubResource("StyleBoxFlat_e0sfr")
 
-[node name="CloseButton" type="Button" parent="Control/RightBox" unique_id=764921111]
+[node name="LeftBox" type="Panel" parent="Control" unique_id=619250786]
+visible = false
 layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
+anchors_preset = 4
+anchor_top = 0.5
+anchor_bottom = 0.5
+offset_left = 70.0
+offset_top = -303.99994
+offset_right = 880.0
+offset_bottom = 104.0
 grow_vertical = 2
-text = "End Interview"
+scale = Vector2(0.8299192, 0.7437083)
+theme_override_styles/panel = SubResource("StyleBoxFlat_e0sfr")
+
+[node name="BottomBox" type="Panel" parent="Control" unique_id=2132682180]
+visible = false
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.06562499
+anchor_top = 0.7342593
+anchor_right = 1.065625
+anchor_bottom = 0.7342593
+offset_left = 1.0000381
+offset_top = 43.99994
+offset_right = -18.999878
+offset_bottom = 234.00018
+grow_horizontal = 2
+grow_vertical = 0
+scale = Vector2(0.88000005, 0.79999876)
+theme_override_styles/panel = SubResource("StyleBoxFlat_e0sfr")
