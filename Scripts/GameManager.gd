@@ -7,7 +7,7 @@ extends Node
 @export var name_label: RichTextLabel 
 @export var dialogue_label: RichTextLabel 
 @export var close_button: Button
-@export var fade_in_duration: float = 0.5
+@export var fade_in_duration: float = 1.5
 @export var characters_parent: Node3D 
 
 var witnesses: Array[Node] = []
