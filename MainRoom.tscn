@@ -44,6 +44,8 @@
 [ext_resource type="PackedScene" uid="uid://caosyg6gnod10" path="res://assets/Dominic.glb" id="26_h1hmd"]
 [ext_resource type="AudioStream" uid="uid://dvxu71mqv62c1" path="res://assets/Sounds/open-and-close-creaking-doorwav-36256.mp3" id="27_heanb"]
 [ext_resource type="AudioStream" uid="uid://6pkdujohhpca" path="res://assets/Sounds/knocking-on-door-46237.mp3" id="31_m8q3t"]
+[ext_resource type="AudioStream" uid="uid://buhhxfgf1td87" path="res://assets/Sounds/door lock.mp3" id="33_tkh0n"]
+[ext_resource type="AudioStream" uid="uid://dgexixj4njd2q" path="res://assets/Sounds/door unlock.mp3" id="34_nwjiw"]
 [ext_resource type="PackedScene" uid="uid://bhi8ufwuqsots" path="res://BullBoard/BulletinBoardUI.tscn" id="37_cin8a"]
 [ext_resource type="Script" uid="uid://qugjp41bjlxm" path="res://Scripts/dominic3droom.gd" id="41_ay1s4"]
 [ext_resource type="Texture2D" uid="uid://riqv5fjhsqss" path="res://assets/2dbafbe5-0e54-4a8f-8f60-c24da3b1ece0.png" id="45_dllnc"]
@@ -704,6 +706,14 @@ libraries/ = SubResource("AnimationLibrary_garkl")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.987, 54.504, 73.03601)
 fov = 80.0
 script = ExtResource("6_1v8qo")
+
+[node name="DoorLock" type="AudioStreamPlayer" parent="SubViewportContainer/SubViewport/Camera3D" unique_id=862534730]
+stream = ExtResource("33_tkh0n")
+volume_db = 1.0
+
+[node name="DoorUnlock" type="AudioStreamPlayer" parent="SubViewportContainer/SubViewport/Camera3D" unique_id=1376259801]
+stream = ExtResource("34_nwjiw")
+volume_db = 10.0
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="SubViewportContainer/SubViewport/Camera3D" unique_id=1804123908]
 visible = false

@@ -46,8 +46,6 @@ func _process(delta: float) -> void:
 				# Get the 2D screen coordinates of the character's center
 				var screen_pos = camera.unproject_position(target_pos)
 				
-				# Position the label centered horizontally, and move it UP by a fixed amount of pixels (e.g., 180 pixels)
-				# Adjust the '180' value up or down depending on how tall your sprites are!
 				var vertical_pixel_offset = 180.0
 				name_label.global_position = Vector2(
 					screen_pos.x - (name_label.size.x / 2),
