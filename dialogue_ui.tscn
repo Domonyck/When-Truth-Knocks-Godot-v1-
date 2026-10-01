@@ -3,9 +3,6 @@
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_njptv"]
 bg_color = Color(0, 0, 0, 0.1254902)
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_e0sfr"]
-bg_color = Color(0.36282945, 0.36282948, 0.36282933, 1)
-
 [node name="DialogueUI" type="CanvasLayer" unique_id=780605922]
 
 [node name="Control" type="Control" parent="." unique_id=2025151139]
@@ -15,6 +12,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+mouse_filter = 2
 
 [node name="NameLabel" type="RichTextLabel" parent="Control" unique_id=1903085066]
 layout_mode = 1
@@ -52,6 +50,187 @@ bbcode_enabled = true
 fit_content = true
 scroll_active = false
 
+[node name="RichTextLabel" type="RichTextLabel" parent="Control" unique_id=1157162533]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -197.0
+offset_top = -265.0
+offset_right = -157.0
+offset_bottom = -225.0
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(10.458299, 4.7992067)
+
+[node name="RichTextLabel2" type="RichTextLabel" parent="Control" unique_id=477538133]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = 176.00012
+offset_top = -246.0
+offset_right = 216.00012
+offset_bottom = -206.0
+grow_horizontal = 2
+grow_vertical = 2
+rotation = 1.5617765
+scale = Vector2(10.458299, 4.7992067)
+
+[node name="RichTextLabel4" type="RichTextLabel" parent="Control" unique_id=1108244991]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = 473.0
+offset_top = -207.0
+offset_right = 513.0
+offset_bottom = -167.0
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(12.338296, 18.759209)
+
+[node name="RichTextLabel5" type="RichTextLabel" parent="Control" unique_id=1465439204]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = 221.0
+offset_top = -10.0
+offset_right = 261.0
+offset_bottom = 30.0
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(11.858298, 9.0392065)
+
+[node name="RichTextLabel6" type="RichTextLabel" parent="Control" unique_id=581258143]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = 627.0
+offset_top = -233.00003
+offset_right = 667.0
+offset_bottom = -193.00003
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(10.458299, 4.7992067)
+
+[node name="RichTextLabel3" type="RichTextLabel" parent="Control" unique_id=195838838]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -119.00006
+offset_top = 30.0
+offset_right = -79.00006
+offset_bottom = 70.0
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(9.9783, 6.959208)
+
+[node name="RichTextLabel8" type="RichTextLabel" parent="Control" unique_id=873308491]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -285.0
+offset_top = 94.99994
+offset_right = -245.0
+offset_bottom = 134.99994
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(10.458299, 4.7992067)
+
+[node name="RichTextLabel9" type="RichTextLabel" parent="Control" unique_id=879164035]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = 279.0
+offset_top = -548.0
+offset_right = 319.0
+offset_bottom = -508.0
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(10.498299, 10.919208)
+
+[node name="RichTextLabel10" type="RichTextLabel" parent="Control" unique_id=1942475753]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = 31.0
+offset_top = -249.0
+offset_right = 71.0
+offset_bottom = -209.0
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(5.1837587, 7.619253)
+
+[node name="RichTextLabel11" type="RichTextLabel" parent="Control" unique_id=432017818]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = 858.0
+offset_top = -543.0
+offset_right = 898.0
+offset_bottom = -502.99997
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(3.0582967, 23.799208)
+
+[node name="RichTextLabel12" type="RichTextLabel" parent="Control" unique_id=1568072626]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = 642.9999
+offset_top = -223.0
+offset_right = 682.9999
+offset_bottom = -183.0
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(10.458299, 1.319206)
+
+[node name="RichTextLabel13" type="RichTextLabel" parent="Control" unique_id=1875072301]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = 778.99976
+offset_top = -266.0
+offset_right = 818.99976
+offset_bottom = -226.0
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(10.458299, 1.319206)
+
 [node name="Accept" type="Button" parent="Control" unique_id=764921111]
 layout_mode = 0
 offset_left = 1200.0
@@ -71,51 +250,3 @@ offset_bottom = 511.0
 scale = Vector2(1.5200049, 1.5199976)
 text = "Decline Testimony"
 flat = true
-
-[node name="RightBox" type="Panel" parent="Control" unique_id=801018804]
-visible = false
-layout_mode = 1
-anchors_preset = 6
-anchor_left = 1.0
-anchor_top = 0.5
-anchor_right = 1.0
-anchor_bottom = 0.5
-offset_left = -741.9999
-offset_top = -304.0
-offset_right = 68.00037
-offset_bottom = 104.0
-grow_horizontal = 0
-grow_vertical = 2
-scale = Vector2(0.38999993, 0.1839988)
-theme_override_styles/panel = SubResource("StyleBoxFlat_e0sfr")
-
-[node name="LeftBox" type="Panel" parent="Control" unique_id=619250786]
-visible = false
-layout_mode = 1
-anchors_preset = 4
-anchor_top = 0.5
-anchor_bottom = 0.5
-offset_left = 70.0
-offset_top = -303.99994
-offset_right = 880.0
-offset_bottom = 104.0
-grow_vertical = 2
-scale = Vector2(0.8299192, 0.7437083)
-theme_override_styles/panel = SubResource("StyleBoxFlat_e0sfr")
-
-[node name="BottomBox" type="Panel" parent="Control" unique_id=2132682180]
-visible = false
-layout_mode = 1
-anchors_preset = -1
-anchor_left = 0.06562499
-anchor_top = 0.7342593
-anchor_right = 1.065625
-anchor_bottom = 0.7342593
-offset_left = 1.0000381
-offset_top = 43.99994
-offset_right = -18.999878
-offset_bottom = 234.00018
-grow_horizontal = 2
-grow_vertical = 0
-scale = Vector2(0.88000005, 0.79999876)
-theme_override_styles/panel = SubResource("StyleBoxFlat_e0sfr")

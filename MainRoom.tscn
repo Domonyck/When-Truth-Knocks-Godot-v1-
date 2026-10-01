@@ -333,7 +333,7 @@ shader = ExtResource("19_vprmq")
 shader_parameter/pixel_size = 2.0
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_sal5q"]
-size = Vector3(0.09591675, 0.059753418, 0.009155273)
+size = Vector3(0.023136668, 0.01160254, 0.001)
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_meq1q"]
 sky_top_color = Color(0.0011252849, 0.12802976, 0.30780676, 1)
@@ -754,7 +754,7 @@ bulletinboard_scene = ExtResource("37_cin8a")
 focus_target = NodePath("../Marker3D")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="SubViewportContainer/SubViewport/bilboard/Area3D" unique_id=12669469]
-transform = Transform3D(9.970684, 2.842171e-14, -4.519052e-12, -4.973799e-14, 6.199859, 4.1266386e-20, 4.5019988e-11, -2.1175824e-22, 0.9999996, 0.045278538, 0.17435618, 0.08559377)
+transform = Transform3D(9.970684, 3.1974423e-14, -4.519052e-12, -1.4033219e-11, 6.1998587, 1.0781141e-19, 1.1641532e-10, 2.0805247e-19, 0.9999996, 0.048079696, 0.17450446, 0.08151615)
 shape = SubResource("BoxShape3D_sal5q")
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="SubViewportContainer/SubViewport" unique_id=1739561079]
@@ -878,7 +878,7 @@ pixel_size = 0.027116
 shaded = true
 texture = ExtResource("50_x0cb2")
 
-[node name="GameManager" type="Node" parent="." unique_id=518015656 node_paths=PackedStringArray("dialogue_ui", "name_label", "dialogue_label", "Accept", "Decline", "characters_parent")]
+[node name="GameManager" type="Node" parent="." unique_id=518015656 node_paths=PackedStringArray("dialogue_ui", "name_label", "dialogue_label", "Accept", "Decline", "characters_parent", "clock_label")]
 script = ExtResource("45_vtemr")
 dialogue_ui = NodePath("../DialogueUI")
 name_label = NodePath("../DialogueUI/Control/NameLabel")
@@ -886,6 +886,7 @@ dialogue_label = NodePath("../DialogueUI/Control/DialogueLabel")
 Accept = NodePath("../DialogueUI/Control/Accept")
 Decline = NodePath("../DialogueUI/Control/Decline")
 characters_parent = NodePath("../SubViewportContainer/Characters")
+clock_label = NodePath("../ClockUI/TimeLabel")
 
 [node name="WitnessTarget" type="Marker3D" parent="." unique_id=401049037]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.3450756, 56.962513, 10.651829)
@@ -903,6 +904,17 @@ visible = false
 spot_range = 133.322
 spot_attenuation = 0.21
 spot_angle = 21.32
+
+[node name="ClockUI" type="CanvasLayer" parent="." unique_id=1297701799]
+
+[node name="TimeLabel" type="Label" parent="ClockUI" unique_id=299789421]
+offset_left = 71.0
+offset_top = 56.0
+offset_right = 322.0
+offset_bottom = 134.0
+theme_override_font_sizes/font_size = 57
+text = "12:00 AM"
+uppercase = true
 
 [connection signal="input_event" from="SubViewportContainer/SubViewport/StaticBody3D" to="SubViewportContainer/SubViewport/StaticBody3D" method="_on_input_event"]
 

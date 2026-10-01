@@ -57,6 +57,9 @@ func interact() -> void:
 	get_tree().root.add_child(active_desktop_overlay)
 	is_desktop_open = true
 	is_transitioning = false
+	
+	# --- HIDE CLOCK WHEN DESKTOP OPENS ---
+	get_tree().call_group("game_manager", "hide_time")
 
 func _input(event: InputEvent) -> void:
 	if is_desktop_open and not is_transitioning and event.is_action_pressed("ui_cancel"):
@@ -77,6 +80,9 @@ func force_shutdown_desktop() -> void:
 		active_desktop_overlay.queue_free()
 
 	get_tree().paused = false
+
+	# --- SHOW CLOCK WHEN SHUTTING DOWN ---
+	get_tree().call_group("game_manager", "show_time")
 
 	if camera == null:
 		camera = get_tree().get_first_node_in_group("player_camera") as Camera3D
@@ -110,6 +116,9 @@ func zoom_out_camera() -> void:
 	electric_power_station_static_noise_buzz_52891_audio_trimmer_com_.stop()
 	
 	get_tree().paused = false
+	
+	# --- SHOW CLOCK WHEN ZOOMING OUT ---
+	get_tree().call_group("game_manager", "show_time")
 	
 	var tween = create_tween()
 	tween.set_trans(Tween.TRANS_QUAD) 

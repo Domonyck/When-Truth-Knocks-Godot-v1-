@@ -11,6 +11,14 @@ extends Node
 @export var fade_in_duration: float = 1.5
 @export var characters_parent: Node3D 
 
+# --- TIME MANAGEMENT VARIABLES ---
+@export_group("Time Management")
+@export var clock_label: Label
+var real_time_passed: float = 0.0
+const REAL_SECONDS_PER_GAME_HOUR: float = 120.0 # 120 seconds = 2 real minutes
+var shift_ended: bool = false
+# ---------------------------------
+
 var witnesses: Array[Node] = []
 var active_witness: Node3D = null
 
@@ -18,6 +26,11 @@ var active_witness: Node3D = null
 var initial_transforms: Dictionary = {}
 
 func _ready() -> void:
+	add_to_group("game_manager") 
+	
+	if Accept:
+		Accept.pressed.connect(_on_close_button_pressed)
+		
 	if Accept:
 		Accept.pressed.connect(_on_close_button_pressed)
 
@@ -36,6 +49,7 @@ func _ready() -> void:
 		door.visitor_revealed.connect(_on_visitor_revealed)
 
 func _process(delta: float) -> void:
+	# 1. FLOATING NAME TAG LOGIC
 	if active_witness and name_label and name_label.visible:
 		var camera = get_viewport().get_camera_3d()
 		if camera:
@@ -51,6 +65,31 @@ func _process(delta: float) -> void:
 					screen_pos.x - (name_label.size.x / 2),
 					screen_pos.y - vertical_pixel_offset
 				)
+
+	# 2. TIME SHIFT LOGIC
+	if not shift_ended:
+		real_time_passed += delta
+		
+		# Calculate how many full hours have passed
+		var current_hour = int(real_time_passed / REAL_SECONDS_PER_GAME_HOUR)
+		
+		var display_hour = current_hour
+		if display_hour == 0:
+			display_hour = 12
+			
+		# Hardcode the ":00 AM" so it never shows minutes
+		if clock_label:
+			clock_label.text = str(display_hour) + ":00 AM"
+			
+		# Check for the 6:00 AM finish line
+		if current_hour >= 6:
+			shift_ended = true
+			_on_6_am_reached()
+
+func _on_6_am_reached() -> void:
+	print("6:00 AM REACHED! The shift is over.")
+	if clock_label:
+		clock_label.text = "6:00 AM"
 
 func _on_visitor_revealed() -> void:
 	# If the pool is empty AND the room is empty, do nothing
@@ -240,3 +279,12 @@ func _on_close_button_pressed() -> void:
 				elif door.has_method("close"):
 					door.close()
 		)
+		
+func hide_time() -> void:
+	if clock_label:
+		# Hides the CanvasLayer parent so the whole UI disappears cleanly
+		clock_label.get_parent().visible = false 
+
+func show_time() -> void:
+	if clock_label:
+		clock_label.get_parent().visible = true

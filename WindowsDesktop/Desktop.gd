@@ -29,5 +29,7 @@ func _close_desktop() -> void:
 		camera.set_process_input(true)
 	else:
 		print("no camera found in group 'player_camera' on close")
-
+	
+	get_tree().call_group("game_manager", "show_time")
+	
 	queue_free()

@@ -57,6 +57,9 @@ func interact() -> void:
 	is_billboard_open = true
 	is_transitioning = false
 
+	# --- HIDE CLOCK WHEN BULLETIN BOARD OPENS ---
+	get_tree().call_group("game_manager", "hide_time")
+
 ## Called automatically when the BulletinBoardUI overlay leaves the tree —
 ## either because the player pressed Esc inside it (see Bulletin_Board.gd's
 ## own _input, which is what actually catches Esc since that overlay is
@@ -70,6 +73,9 @@ func zoom_out_camera() -> void:
 	is_billboard_open = false
 
 	get_tree().paused = false
+
+	# --- SHOW CLOCK WHEN ZOOMING OUT ---
+	get_tree().call_group("game_manager", "show_time")
 
 	var tween = create_tween()
 	tween.set_pause_mode(Tween.TWEEN_PAUSE_PROCESS)
