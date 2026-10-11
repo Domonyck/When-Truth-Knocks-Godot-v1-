@@ -56,6 +56,11 @@
 [ext_resource type="Texture2D" uid="uid://6nphy7uii1nt" path="res://assets/3f557fa0-2949-44d6-9ff8-a38b64456806.png" id="49_bk1hi"]
 [ext_resource type="Texture2D" uid="uid://dfgdyfnq1b6cp" path="res://assets/1b898725-a95d-4ecd-a6ed-1ee5ecd8494b.png" id="50_x0cb2"]
 [ext_resource type="PackedScene" uid="uid://c1nwvwcqhwxwy" path="res://assets/katrina_0930145730_texture.glb" id="54_bk1hi"]
+[ext_resource type="Script" uid="uid://d3jqom0mxu1hi" path="res://Scripts/generator.gd" id="55_ske8v"]
+[ext_resource type="Script" uid="uid://3a46qebxw8hd" path="res://Scripts/skill_check.gd" id="55_xqgp3"]
+[ext_resource type="AudioStream" uid="uid://bd7q675kmunhr" path="res://assets/Sounds/powerdown.mp3" id="56_2syam"]
+[ext_resource type="FontFile" uid="uid://dob187nmmk24t" path="res://WindowsDesktop/digital-7.ttf" id="57_nwjiw"]
+[ext_resource type="PackedScene" uid="uid://cgoydnspmv6cc" path="res://assets/electrical_breaker_panel_box__lp_model.glb" id="58_16mnq"]
 
 [sub_resource type="GDScript" id="GDScript_tnmiv"]
 
@@ -686,8 +691,12 @@ visible = false
 [node name="door" parent="SubViewportContainer/SubViewport" unique_id=22472216 instance=ExtResource("1_abmy8")]
 transform = Transform3D(-9.438777e-09, 0, 0.62468654, 0, 0.47113836, 0, -0.21593405, 0, -2.7305916e-08, 9.17397, 50.464397, -96.50599)
 
-[node name="Area3D" type="Area3D" parent="SubViewportContainer/SubViewport/door" unique_id=1270961778]
+[node name="Area3D" type="Area3D" parent="SubViewportContainer/SubViewport/door" unique_id=1270961778 node_paths=PackedStringArray("go_to_breaker_button", "go_back_button", "breaker_marker", "breaker_look_target")]
 script = ExtResource("12_h4fbr")
+go_to_breaker_button = NodePath("../../../../CanvasLayer/go_to_breaker_button")
+go_back_button = NodePath("../../../../CanvasLayer/go_back_button")
+breaker_marker = NodePath("../../../Generator/CameraPoint")
+breaker_look_target = NodePath("../../../Generator/BreakerPoint")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="SubViewportContainer/SubViewport/door/Area3D" unique_id=1197394498]
 transform = Transform3D(1, 0, -8.100187e-13, 0, 0.9999625, 0, -1.7763568e-15, 0, 1, -0.29919434, 3.911728, -1.0256138)
@@ -832,6 +841,7 @@ texture = ExtResource("25_myiym")
 
 [node name="Classmate3" type="Sprite3D" parent="SubViewportContainer/Characters" unique_id=1286641275]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.3450756, 69.90226, -123.89665)
+visible = false
 pixel_size = 0.035116
 shaded = true
 texture = ExtResource("26_d6p8o")
@@ -878,6 +888,43 @@ pixel_size = 0.027116
 shaded = true
 texture = ExtResource("50_x0cb2")
 
+[node name="Generator" parent="SubViewportContainer" unique_id=564851263 node_paths=PackedStringArray("light_manager", "skill_check", "clock_nodes", "door") instance=ExtResource("58_16mnq")]
+transform = Transform3D(1.1236893, 0, 61.286404, 0, 60.70618, 0, -63.27975, 0, 1.0882925, 112.20854, -0.63100433, -55.709457)
+script = ExtResource("55_ske8v")
+light_manager = NodePath("../..")
+skill_check = NodePath("SkillCheckLayer/SkillCheck")
+clock_nodes = [NodePath("../../ClockUI"), NodePath("../../GameManager")]
+door = NodePath("../SubViewport/door/Area3D")
+
+[node name="Powerdown" type="AudioStreamPlayer" parent="SubViewportContainer/Generator" unique_id=394610695]
+stream = ExtResource("56_2syam")
+
+[node name="SpotLight3D" type="SpotLight3D" parent="SubViewportContainer/Generator" unique_id=478902083]
+transform = Transform3D(0.015542739, 0.00088149385, 0.002701969, -0.0018855251, 0.015279168, 0.005860417, -0.0022786001, -0.006029426, 0.014986852, 0.15694988, 1.2342271, 0.83251965)
+light_energy = 2.235
+spot_range = 67.644
+spot_attenuation = -0.13
+spot_angle = 20.55
+
+[node name="CameraPoint" type="Marker3D" parent="SubViewportContainer/Generator" unique_id=1551027413]
+transform = Transform3D(-0.9995167, 0, 0.03106489, 0, 0.99999946, 0, -0.031064896, 0, -0.9995168, -0.07018405, 1.0706627, 0.4087814)
+
+[node name="SkillCheckLayer" type="CanvasLayer" parent="SubViewportContainer/Generator" unique_id=1147626189]
+layer = 10
+
+[node name="SkillCheck" type="Control" parent="SubViewportContainer/Generator/SkillCheckLayer" unique_id=314372680]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+script = ExtResource("55_xqgp3")
+
+[node name="BreakerPoint" type="Marker3D" parent="SubViewportContainer/Generator" unique_id=1840159276]
+transform = Transform3D(0.9999998, 0, 1.8626451e-09, 0, 0.9999998, 0, 3.7252903e-09, 0, 0.9999998, -0.08453059, 0.97711384, 0.0015500784)
+
 [node name="GameManager" type="Node" parent="." unique_id=518015656 node_paths=PackedStringArray("dialogue_ui", "name_label", "dialogue_label", "Accept", "Decline", "characters_parent", "clock_label")]
 script = ExtResource("45_vtemr")
 dialogue_ui = NodePath("../DialogueUI")
@@ -894,6 +941,25 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.3450756, 56.962513, 10.6518
 [node name="DialogueUI" parent="." unique_id=780605922 instance=ExtResource("2_i755a")]
 visible = false
 
+[node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=1184684587]
+
+[node name="go_to_breaker_button" type="Button" parent="CanvasLayer" unique_id=1844629225]
+offset_left = 877.0
+offset_top = 494.0
+offset_right = 1101.0
+offset_bottom = 547.0
+size_flags_horizontal = 4
+theme_override_font_sizes/font_size = 22
+text = "Go to Breaker"
+
+[node name="go_back_button" type="Button" parent="CanvasLayer" unique_id=768009102]
+offset_left = 876.0
+offset_top = 561.0
+offset_right = 1101.0
+offset_bottom = 611.0
+theme_override_font_sizes/font_size = 22
+text = "Go Back"
+
 [node name="katrina_0930145730_texture" parent="." unique_id=411335890 instance=ExtResource("54_bk1hi")]
 transform = Transform3D(50, 0, 0, 0, 50, 0, 0, 0, 50, 4.133541, 48.30636, -27.651114)
 visible = false
@@ -908,11 +974,15 @@ spot_angle = 21.32
 [node name="ClockUI" type="CanvasLayer" parent="." unique_id=1297701799]
 
 [node name="TimeLabel" type="Label" parent="ClockUI" unique_id=299789421]
-offset_left = 71.0
-offset_top = 56.0
-offset_right = 322.0
-offset_bottom = 134.0
-theme_override_font_sizes/font_size = 57
+offset_left = 1648.0
+offset_top = 50.0
+offset_right = 1899.0
+offset_bottom = 128.0
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_shadow_color = Color(0.24115604, 0.24115604, 0.24115604, 0)
+theme_override_colors/font_outline_color = Color(0.057996348, 0.057996348, 0.05799634, 1)
+theme_override_fonts/font = ExtResource("57_nwjiw")
+theme_override_font_sizes/font_size = 75
 text = "12:00 AM"
 uppercase = true
 

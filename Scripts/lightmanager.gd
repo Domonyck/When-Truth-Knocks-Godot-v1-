@@ -13,7 +13,10 @@ extends Node2D
 @export_group("Light Cutout Settings")
 @export var cutout_chance_per_second: float = 0.02 
 @export var in_computer_multiplier: float = 3.5
+signal blackout_started
+signal power_restored
 
+var is_blackout := false
 func _ready() -> void:
 	randomize()
 	process_mode = Node.PROCESS_MODE_ALWAYS
@@ -35,7 +38,34 @@ func _process_random_cutout(delta: float) -> void:
 		if is_area_light_on(area):
 			if randf() < (current_chance * delta):
 				_turn_off_area_lights(area)
+func _unhandled_input(event: InputEvent) -> void:
+	# DEBUG: press B to force a blackout
+	if event is InputEventKey and event.pressed and not event.echo and event.keycode == KEY_B:
+		force_blackout()
 
+func force_blackout() -> void:
+	if is_blackout:
+		return
+	for area in [ceiling_fan_area, wall_lamp_area, office_assets_area]:
+		_turn_off_area_lights(area)
+	# _update_power_state() sees no lights on and emits blackout_started
+	_update_power_state()
+
+func _set_area_interactable(area: Area3D, enabled: bool) -> void:
+	if area == null:
+		return
+	area.input_ray_pickable = enabled
+	for child in area.get_children():
+		if child is CollisionShape3D or child is CollisionPolygon3D:
+			child.set_deferred("disabled", not enabled)
+
+func restore_power() -> void:
+	for area in [ceiling_fan_area, wall_lamp_area, office_assets_area]:
+		_set_area_interactable(area, true)
+		turn_on_area_lights(area)
+	is_blackout = false
+	power_restored.emit()
+	
 func _turn_off_area_lights(area: Area3D) -> void:
 	if area == null:
 		return
@@ -85,6 +115,7 @@ func _update_power_state() -> void:
 	var has_power = ceiling_on or wall_on or office_on
 
 	if has_power:
+		is_blackout = false
 		if is_instance_valid(mesh_instance_2) and not mesh_instance_2.visible:
 			mesh_instance_2.visible = true
 
@@ -95,6 +126,11 @@ func _update_power_state() -> void:
 				if (child is CollisionShape3D or child is CollisionPolygon3D) and child.disabled:
 					child.disabled = false
 	else:
+		if not is_blackout:  
+			is_blackout = true
+			for area in [ceiling_fan_area, wall_lamp_area, office_assets_area]:
+				_set_area_interactable(area, false)
+			blackout_started.emit()
 		if is_instance_valid(mesh_instance_2) and mesh_instance_2.visible:
 			mesh_instance_2.visible = false
 

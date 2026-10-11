@@ -43,6 +43,8 @@ func _on_quit_pressed() -> void:
 	if dominic:
 			dominic.set_process(false) # Disable _process loop
 			dominic.reset_state()
+	
+	StoryData.new_game()
 
 	# 4. Clean up active overlays if any exist
 	for node in get_tree().get_nodes_in_group("desktop_overlay"):

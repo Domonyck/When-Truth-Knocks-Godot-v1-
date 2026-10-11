@@ -55,10 +55,13 @@ func start_manuscript(id: String) -> void:
 	total_typed = StoryData.get_progress_total_typed(id)
 	correct_chars = StoryData.get_progress_correct_chars(id)
 	
-	# Only pad with true if word_states is completely empty when loading progress
-	if word_states.is_empty():
-		for i in current_word_index:
-			word_states.append(true)
+	word_states = StoryData.get_progress_word_states(id)
+
+	# Safety net for older saves that have no word_states stored
+	while word_states.size() < current_word_index:
+		word_states.append(true)
+	while word_states.size() > current_word_index:
+		word_states.pop_back()
 		
 	_render_words()
 	_update_stats()
@@ -160,6 +163,7 @@ func _fail_and_reset() -> void:
 func _save_progress() -> void:
 	if case_id != "":
 		StoryData.save_progress(case_id, current_word_index, typed_text, total_typed, correct_chars)
+		StoryData.save_word_states(case_id, word_states)
 
 func _count_correct(target: String, typed: String) -> int:
 	var n: int = min(target.length(), typed.length())
