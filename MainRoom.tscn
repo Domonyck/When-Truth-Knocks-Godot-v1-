@@ -43,6 +43,7 @@
 [ext_resource type="Texture2D" uid="uid://c2kqmnrnt1xjm" path="res://assets/student1.png" id="26_d6p8o"]
 [ext_resource type="PackedScene" uid="uid://caosyg6gnod10" path="res://assets/Dominic.glb" id="26_h1hmd"]
 [ext_resource type="AudioStream" uid="uid://dvxu71mqv62c1" path="res://assets/Sounds/open-and-close-creaking-doorwav-36256.mp3" id="27_heanb"]
+[ext_resource type="AudioStream" uid="uid://qn4m3r4a2a72" path="res://assets/Sounds/generator_off.mp3" id="30_5bfci"]
 [ext_resource type="AudioStream" uid="uid://6pkdujohhpca" path="res://assets/Sounds/knocking-on-door-46237.mp3" id="31_m8q3t"]
 [ext_resource type="AudioStream" uid="uid://buhhxfgf1td87" path="res://assets/Sounds/door lock.mp3" id="33_tkh0n"]
 [ext_resource type="AudioStream" uid="uid://dgexixj4njd2q" path="res://assets/Sounds/door unlock.mp3" id="34_nwjiw"]
@@ -61,6 +62,7 @@
 [ext_resource type="AudioStream" uid="uid://bd7q675kmunhr" path="res://assets/Sounds/powerdown.mp3" id="56_2syam"]
 [ext_resource type="FontFile" uid="uid://dob187nmmk24t" path="res://WindowsDesktop/digital-7.ttf" id="57_nwjiw"]
 [ext_resource type="PackedScene" uid="uid://cgoydnspmv6cc" path="res://assets/electrical_breaker_panel_box__lp_model.glb" id="58_16mnq"]
+[ext_resource type="AudioStream" uid="uid://deioqw7axa270" path="res://assets/Sounds/soundreality-finger-snap-sound-423220.mp3" id="58_p7kvt"]
 
 [sub_resource type="GDScript" id="GDScript_tnmiv"]
 
@@ -696,7 +698,11 @@ script = ExtResource("12_h4fbr")
 go_to_breaker_button = NodePath("../../../../CanvasLayer/go_to_breaker_button")
 go_back_button = NodePath("../../../../CanvasLayer/go_back_button")
 breaker_marker = NodePath("../../../Generator/CameraPoint")
+travel_time = 1.5
 breaker_look_target = NodePath("../../../Generator/BreakerPoint")
+
+[node name="GeneratorOff" type="AudioStreamPlayer" parent="SubViewportContainer/SubViewport/door/Area3D" unique_id=330270486]
+stream = ExtResource("30_5bfci")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="SubViewportContainer/SubViewport/door/Area3D" unique_id=1197394498]
 transform = Transform3D(1, 0, -8.100187e-13, 0, 0.9999625, 0, -1.7763568e-15, 0, 1, -0.29919434, 3.911728, -1.0256138)
@@ -898,6 +904,9 @@ door = NodePath("../SubViewport/door/Area3D")
 
 [node name="Powerdown" type="AudioStreamPlayer" parent="SubViewportContainer/Generator" unique_id=394610695]
 stream = ExtResource("56_2syam")
+
+[node name="click" type="AudioStreamPlayer" parent="SubViewportContainer/Generator" unique_id=1801837627]
+stream = ExtResource("58_p7kvt")
 
 [node name="SpotLight3D" type="SpotLight3D" parent="SubViewportContainer/Generator" unique_id=478902083]
 transform = Transform3D(0.015542739, 0.00088149385, 0.002701969, -0.0018855251, 0.015279168, 0.005860417, -0.0022786001, -0.006029426, 0.014986852, 0.15694988, 1.2342271, 0.83251965)

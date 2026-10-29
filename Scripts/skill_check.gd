@@ -6,7 +6,7 @@ signal finished(result: String)   # "great", "good" or "miss"
 @export var good_arc := deg_to_rad(40.0)
 @export var great_arc := deg_to_rad(12.0)
 @export var warning_time := 0.7   # zone is shown, needle waits
-
+@onready var click : AudioStreamPlayer = $"../../click"
 var needle_speed := 3.0
 var pos := 0.0
 var zone_start := 0.0
@@ -38,6 +38,7 @@ func _process(delta: float) -> void:
 		return
 	pos += needle_speed * delta
 	if Input.is_action_just_pressed("skill_check"):
+		click.play()
 		_resolve()
 	elif pos > zone_start + good_arc:
 		_end("miss")

@@ -7,11 +7,8 @@ signal repaired
 @export var clock_nodes: Array[Node]     # GameManager and ClockUI: these keep running while frozen
 @export var door: Area3D   # door/Area3D, so the camera can return to its original spot
 @export_group("Repair")
-@export var total_checks := 3
-@export var repair_time := 20.0          # seconds of holding E
+@export var total_checks := 7            # Changed default to 7 checks
 @export var trigger_distance := 12.0
-@export var miss_penalty := 0.12         # fraction of repair_time lost on a miss
-@export var great_bonus := 0.03          # fraction of repair_time gained on a great
 @export var start_speed := 2.8
 @export var end_speed := 4.2
 
@@ -19,11 +16,9 @@ signal repaired
 @export var shake_strength := 1.5
 @export var shake_duration := 0.35
 @onready var camera_point: Marker3D = $CameraPoint
-
+@onready var click: AudioStreamPlayer = $Clicks
 var power_out := false
 var session_active := false
-var progress := 0.0
-var check_times: Array[float] = []
 var next_check := 0
 var _saved_modes := {}
 var _shake_tween: Tween
@@ -47,6 +42,7 @@ func _ready() -> void:
 	
 	if light_manager.is_blackout:
 		_on_blackout()
+
 func _on_arrived_at_breaker() -> void:
 	if power_out and not session_active:
 		_start_session()
@@ -55,12 +51,7 @@ func _on_blackout() -> void:
 	if door:
 		door.blackout_active = true
 	power_out = true
-	progress = 0.0
 	next_check = 0
-	check_times.clear()
-	for i in total_checks:
-		var t := (i + randf_range(0.25, 0.85)) / total_checks
-		check_times.append(t * repair_time)
 
 func _on_power_restored() -> void:
 	if door:
@@ -68,45 +59,41 @@ func _on_power_restored() -> void:
 	power_out = false
 	_end_session()
 
-func _process(delta: float) -> void:
-	if not power_out:
+func _process(_delta: float) -> void:
+	if not power_out or not session_active:
 		return
 
-	# Before the session: walk to the marker and press E
-	if not session_active:
-		return
-
-	# During the session: the world is frozen, hold E to repair
+	# If a skill check is currently active, hide prompt
 	if skill_check.active:
 		_hint.hide()
 		return
 
-	_hint.text = "Hold E to repair"
+	# Prompt the player to start/continue the sequence with a single press
+	_hint.text = "Press E to repair"
 	_hint.show()
 
-	if not Input.is_action_pressed("repair"):
-		return
+	if Input.is_action_just_pressed("repair") and not skill_check.active:
+		_trigger_next_check()
 
-	progress += delta
-
-	if next_check < total_checks and progress >= check_times[next_check]:
-		var t : float = float(next_check) / max(total_checks - 1, 1)
-		skill_check.start_check(lerp(start_speed, end_speed, t), next_check, total_checks)
-		return
-
-	if progress >= repair_time and next_check >= total_checks:
-		_finish()
+func _trigger_next_check() -> void:
+	_hint.hide()
+	var t : float = float(next_check) / max(total_checks - 1, 1)
+	skill_check.start_check(lerp(start_speed, end_speed, t), next_check, total_checks)
 
 func _on_check_finished(result: String) -> void:
-	next_check += 1
 	match result:
-		"great":
-			progress = min(progress + great_bonus * repair_time, repair_time)
+		"great", "good":
+			next_check += 1
 		"miss":
-			progress = max(progress - miss_penalty * repair_time, 0.0)
+			# Optional: Decide if a miss resets progress or just shakes. 
+			# Keeping it simple: a miss just shakes, but you can add penalty logic here if desired.
 			_shake_camera()
-	if next_check >= total_checks and progress >= repair_time:
+
+	if next_check >= total_checks:
 		_finish()
+	else:
+		# Automatically trigger the next check right after finishing the previous one
+		_trigger_next_check()
 
 func _finish() -> void:
 	light_manager.restore_power()   # ends the session and unpauses
@@ -118,11 +105,14 @@ func _finish() -> void:
 
 func _start_session() -> void:
 	session_active = true
+	next_check = 0
 	for n in clock_nodes:
 		if is_instance_valid(n):
 			_saved_modes[n] = n.process_mode
 			n.process_mode = Node.PROCESS_MODE_ALWAYS
 	get_tree().paused = true
+	# Automatically kick off the first skill check immediately upon arriving
+	_trigger_next_check()
 
 func _end_session() -> void:
 	_hint.hide()
