@@ -392,7 +392,11 @@ func get_manuscript_text(case_id: String) -> String:
 		return ""
 	return cases[case_id].manuscript_text
 # ---------------------------------------------------------------------------
-
+func get_next_puzzle_case() -> String:
+	for id in interview_cases:
+		if cases[id].unlocked and not cases[id].puzzle_solved:
+			return id
+	return ""
 ## True once all 4 real cases (not counting "intro") are solved.
 func is_run_complete() -> bool:
 	for id in interview_cases:

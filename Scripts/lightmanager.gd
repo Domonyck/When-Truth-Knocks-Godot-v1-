@@ -6,6 +6,7 @@ extends Node2D
 @export var office_assets_area: Area3D
 @onready var night_ambience_29548: AudioStreamPlayer = $NightAmbience29548
 @onready var gen_off: AudioStreamPlayer = $SubViewportContainer/SubViewport/door/Area3D/GeneratorOff
+@onready var clock_label_one = $ClockUI/TimeLabel
 
 @export_group("Target Dependencies")
 @export var mesh_instance_2: MeshInstance3D
@@ -15,6 +16,11 @@ extends Node2D
 @export var cutout_chance_per_second: float = 0.02 
 @export var in_computer_multiplier: float = 3.5
 
+@export_group("Blackout Timer Settings (Seconds)")
+@export var min_blackout_cooldown: float = 120.0  # 2 minutes
+@export var max_blackout_cooldown: float = 180.0  # 3 minutes
+
+var blackout_timer: float = 0.0
 signal blackout_started
 signal power_restored
 
@@ -25,13 +31,22 @@ func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
 	_update_power_state()
 	night_ambience_29548.play()
+	GameManager.register_clock_1(clock_label_one)
+	_reset_blackout_timer()
 
 func _process(delta: float) -> void:
 	if not is_blackout:
+		blackout_timer -= delta
+		if blackout_timer <= 0.0:
+			force_blackout()
 		_process_random_cutout(delta)
 	
 	_update_power_state()
-
+	
+func _reset_blackout_timer() -> void:
+	# Picks a random time between 120 (2 mins) and 180 seconds (3 mins)
+	blackout_timer = randf_range(min_blackout_cooldown, max_blackout_cooldown)
+	
 func _process_random_cutout(delta: float) -> void:
 	var areas = [ceiling_fan_area, wall_lamp_area, office_assets_area]
 	
@@ -94,7 +109,7 @@ func restore_power() -> void:
 		turn_on_area_lights(area)
 		
 	is_blackout = false
-	
+	_reset_blackout_timer()
 	if is_instance_valid(mesh_instance_2) and not mesh_instance_2.visible:
 		mesh_instance_2.visible = true
 

@@ -3,11 +3,11 @@ extends Control
 @onready var window_dialog: Panel = $WindowDialog
 @onready var close_button: Button = $WindowDialog/Panel/CloseButton
 @onready var mouse: AudioStreamPlayer = $Mouse
-
-func _ready():
+@onready var clock_label_two = $Panel/Time/Label
+func _ready() -> void:
 	# Show the window on start (or trigger it via another button)
 	window_dialog.show()
-	
+	GameManager.register_clock_2(clock_label_two)
 	# Connect the custom X button to hide the window
 	if not close_button.pressed.is_connected(_on_close_pressed):
 		close_button.pressed.connect(_on_close_pressed)

@@ -10,7 +10,7 @@ signal repaired
 @export var total_checks := 7            # Changed default to 7 checks
 @export var trigger_distance := 12.0
 @export var start_speed := 2.8
-@export var end_speed := 4.2
+@export var end_speed := 7.2
 
 @export_group("Miss Shake")
 @export var shake_strength := 1.5
@@ -77,8 +77,13 @@ func _process(_delta: float) -> void:
 
 func _trigger_next_check() -> void:
 	_hint.hide()
+	
+	# Calculate progression percentage from 0.0 (stage 1) to 1.0 (stage 7)
 	var t : float = float(next_check) / max(total_checks - 1, 1)
-	skill_check.start_check(lerp(start_speed, end_speed, t), next_check, total_checks)
+	
+	# Interpolate speed and pass 't' to skill_check
+	var current_speed : int = lerp(start_speed, end_speed, t)
+	skill_check.start_check(current_speed, next_check, total_checks, t)
 
 func _on_check_finished(result: String) -> void:
 	match result:

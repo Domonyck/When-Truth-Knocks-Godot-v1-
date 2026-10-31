@@ -13,6 +13,7 @@
 [ext_resource type="Texture2D" uid="uid://chbakxufv82m5" path="res://WindowsDesktop/ClosePressed.png" id="7"]
 [ext_resource type="Script" uid="uid://b3s4q7ewvr0wa" path="res://WindowsDesktop/window_dialog.gd" id="7_jxju5"]
 [ext_resource type="Script" uid="uid://bq04howwaxtq1" path="res://WindowsDesktop/Desktop.gd" id="8"]
+[ext_resource type="Script" uid="uid://dmcmgr7x86bcf" path="res://WindowsDesktop/timer.gd" id="10_506vr"]
 [ext_resource type="Shader" uid="uid://b36d4lhtok4yi" path="res://WindowsDesktop/Desktop2D.gdshader" id="12_4upda"]
 [ext_resource type="Script" uid="uid://baveadn6se0a4" path="res://WindowsDesktop/noteTypingGame.gd" id="13_utm18"]
 [ext_resource type="AudioStream" uid="uid://d2tymg77aktjx" path="res://assets/Sounds/keyboard-393908.mp3" id="14_ig6x2"]
@@ -204,6 +205,7 @@ offset_bottom = -23.0
 grow_horizontal = 0
 grow_vertical = 2
 theme_override_styles/panel = SubResource("StyleBoxTexture_pvn8f")
+script = ExtResource("10_506vr")
 
 [node name="Label" type="Label" parent="Panel/Time" unique_id=1149134049]
 layout_mode = 1

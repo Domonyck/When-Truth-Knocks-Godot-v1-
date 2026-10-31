@@ -6,14 +6,14 @@ extends TextureButton
 func _pressed() -> void:
 	if mouse:
 		mouse.play()
-	
-	# Find the first case that is unlocked and ready to be typed
+
 	var active_case_id := _get_current_active_case()
-	
 	if active_case_id != "":
 		notepad_ui.start_manuscript(active_case_id)
+	elif StoryData.is_run_complete():
+		Notify.show_message("There's nothing left to write.")
 	else:
-		push_warning("No active manuscript is ready to type right now.")
+		Notify.show_message("You feel like you're missing something.")
 
 func _get_current_active_case() -> String:
 	# Iterate through cases in article sequence order

@@ -2,7 +2,7 @@ extends Node
 
 @onready var door: Area3D = $"../SubViewportContainer/SubViewport/door/Area3D"
 @onready var witness_target: Marker3D = $"../WitnessTarget"
-
+@onready var wrong: AudioStreamPlayer = $"../WrongDecision"
 @export var dialogue_ui: CanvasLayer 
 @export var name_label: RichTextLabel 
 @export var dialogue_label: RichTextLabel 
@@ -18,21 +18,25 @@ var real_time_passed: float = 0.0
 const REAL_SECONDS_PER_GAME_HOUR: float = 120.0 # 120 seconds = 2 real minutes
 var shift_ended: bool = false
 # ---------------------------------
+@export_group("Witness Spawning")
+@export var witness_interval: float = 60.0      # base time between witnesses
+@export var wrong_decision_penalty: float = 30.0 # extra delay for a wrong choice
+var next_witness_timer: float = 60.0
 
 var witnesses: Array[Node] = []
 var active_witness: Node3D = null
-
+var current_testimony
 # Dictionary to store each witness's starting global transform
 var initial_transforms: Dictionary = {}
+var clock_label_1: Label = null
+var clock_label_2: Label = null
+var waiting_for_door := false
 
 func _ready() -> void:
 	add_to_group("game_manager") 
 	
 	if Accept:
-		Accept.pressed.connect(_on_close_button_pressed)
-		
-	if Accept:
-		Accept.pressed.connect(_on_close_button_pressed)
+		Accept.pressed.connect(_on_accept_pressed)
 
 	if Decline:
 		Decline.pressed.connect(_on_close_button_pressed)
@@ -45,9 +49,26 @@ func _ready() -> void:
 			initial_transforms[witness] = witness.global_transform
 		witness.visible = false
 		
+	next_witness_timer = witness_interval
 	if door:
 		door.visitor_revealed.connect(_on_visitor_revealed)
+	if Accept:
+		Accept.pressed.connect(_on_accept_pressed)
+	if Decline:
+		Decline.pressed.connect(_on_decline_pressed)   # was _on_close_button_pressed
+		
+func register_clock_1(label: Label) -> void:
+	clock_label_1 = label
 
+func register_clock_2(label: Label) -> void:
+	clock_label_2 = label
+
+func update_clocks(time_str_1: String, time_str_2: String) -> void:
+	if is_instance_valid(clock_label_1):
+		clock_label_1.text = time_str_1
+	if is_instance_valid(clock_label_2):
+		clock_label_2.text = time_str_2
+		
 func _process(delta: float) -> void:
 	# 1. FLOATING NAME TAG LOGIC
 	if active_witness and name_label and name_label.visible:
@@ -68,6 +89,10 @@ func _process(delta: float) -> void:
 
 	# 2. TIME SHIFT LOGIC
 	if not shift_ended:
+		if active_witness == null and not waiting_for_door and not witnesses.is_empty():
+			next_witness_timer -= delta
+			if next_witness_timer <= 0.0:
+				_knock_for_next_witness()
 		real_time_passed += delta
 		
 		# Calculate how many full hours have passed
@@ -85,7 +110,16 @@ func _process(delta: float) -> void:
 		if current_hour >= 6:
 			shift_ended = true
 			_on_6_am_reached()
-
+func _knock_for_next_witness() -> void:
+	if door == null:
+		return
+	# trigger_knock() does nothing if the door is open, so wait until it's free.
+	# The timer stays at <= 0, so this retries every frame.
+	if door.is_open or door.is_animating or door.choosing or door.at_breaker or door.traveling:
+		return
+	waiting_for_door = true
+	door.trigger_knock()
+	
 func _on_6_am_reached() -> void:
 	print("6:00 AM REACHED! The shift is over.")
 	if clock_label:
@@ -93,6 +127,7 @@ func _on_6_am_reached() -> void:
 
 func _on_visitor_revealed() -> void:
 	# If the pool is empty AND the room is empty, do nothing
+	waiting_for_door = false
 	if witnesses.is_empty() and active_witness == null:
 		print("All witnesses have already visited!")
 		return
@@ -185,6 +220,7 @@ func _on_fade_finished() -> void:
 		var testimony = StoryData.draw_testimony_for_witness(witness_id)
 		
 		if testimony:
+			current_testimony = testimony
 			# Send the Name to the Left Box
 			if name_label:
 				name_label.text = "[center][b]" + StoryData.get_witness_display_name(witness_id) + "[/b][/center]"
@@ -214,10 +250,7 @@ func _on_fade_finished() -> void:
 				)
 			
 			# Process the true/false logic to advance the game state
-			if testimony.is_true:
-				var unlocked_case = StoryData.accept_true_testimony()
-				if unlocked_case != "":
-					print("PROGRESS: True testimony accepted! Unlocked case: ", unlocked_case)
+			
 
 	# FADE IN THE UI BOXES
 	if dialogue_ui:
@@ -279,7 +312,35 @@ func _on_close_button_pressed() -> void:
 				elif door.has_method("close"):
 					door.close()
 		)
-		
+func _on_accept_pressed() -> void:
+	if current_testimony:
+		if current_testimony.is_true:
+			var unlocked_case := StoryData.accept_true_testimony()
+			if unlocked_case != "":
+				Notify.show_message("Something has been unlocked.")
+				
+			next_witness_timer = witness_interval
+		else:
+			# Accepted a lie -> wrong decision
+			_apply_wrong_decision()
+	current_testimony = null
+	_on_close_button_pressed()
+
+func _on_decline_pressed() -> void:
+	if current_testimony:
+		if current_testimony.is_true:
+			# Rejected the truth -> wrong decision
+			_apply_wrong_decision()
+		else:
+			next_witness_timer = witness_interval
+	current_testimony = null
+	_on_close_button_pressed()
+	
+func _apply_wrong_decision() -> void:
+	wrong.play()
+	next_witness_timer = witness_interval + wrong_decision_penalty  # 90s instead of 60s
+	Notify.show_message("You feel like you've made the wrong decision. The next witness won't appear soon...")
+	
 func hide_time() -> void:
 	if clock_label:
 		# Hides the CanvasLayer parent so the whole UI disappears cleanly

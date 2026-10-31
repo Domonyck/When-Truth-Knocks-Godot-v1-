@@ -1,13 +1,22 @@
 extends Control
 
-signal finished(result: String)   # "great", "good" or "miss"
+signal finished(result: String)
 
 @export var radius := 90.0
-@export var good_arc := deg_to_rad(40.0)
-@export var great_arc := deg_to_rad(12.0)
-@export var warning_time := 0.7   # zone is shown, needle waits
+
+@export_group("Zone Size Progression")
+@export var start_good_arc := deg_to_rad(50.0)   # Larger starting zone
+@export var end_good_arc := deg_to_rad(20.0)     # Smaller final zone
+@export var start_great_arc := deg_to_rad(15.0)  # Larger starting great zone
+@export var end_great_arc := deg_to_rad(5.0)     # Tight final great zone
+
+@export var warning_time := 0.7
+
 @onready var click : AudioStreamPlayer = $"../../click"
+
 var needle_speed := 3.0
+var good_arc := deg_to_rad(40.0)
+var great_arc := deg_to_rad(12.0)
 var pos := 0.0
 var zone_start := 0.0
 var active := false
@@ -19,10 +28,16 @@ func _ready() -> void:
 	mouse_filter = Control.MOUSE_FILTER_IGNORE
 	hide()
 
-func start_check(speed: float, done: int, total: int) -> void:
+# Accept progress factor 't' (normalized float from 0.0 to 1.0)
+func start_check(speed: float, done: int, total: int, t: float = 0.0) -> void:
 	needle_speed = speed
 	checks_done = done
 	total_checks = total
+	
+	# Dynamically shrink zone arcs based on stage progression
+	good_arc = lerp(start_good_arc, end_good_arc, t)
+	great_arc = lerp(start_great_arc, end_great_arc, t)
+	
 	zone_start = randf_range(PI * 0.6, TAU - good_arc - 0.2)
 	pos = 0.0
 	_warmup = warning_time

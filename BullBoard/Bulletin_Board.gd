@@ -29,7 +29,7 @@ const WRONG_FLASH := Color(1.0, 0.4, 0.4)
 var stages: Array[Panel] = []
 var stage_buttons: Dictionary = {}     # stage_name -> Array[TextureButton]
 var stage_backgrounds: Dictionary = {} # stage_name -> Control
-
+var case_id: String = ""
 var current_stage: Panel = null
 var found_count: int = 0
 var time_remaining: float = 0.0
@@ -67,14 +67,17 @@ func _ready() -> void:
 		push_warning("BulletinBoard: no Stage panels found as direct children.")
 		return
 
-	# Start on whichever stage is already visible in the editor (defaults
-	# to the first one), everything else gets hidden.
-	var start_stage: Panel = stages[0]
+	case_id = StoryData.get_next_puzzle_case()
+	if case_id == "":
+		_close()
+		return
+	var stage_name := "Stage" + case_id.trim_prefix("case")
 	for stage in stages:
-		if stage.visible:
-			start_stage = stage
-			break
-	_start_stage(start_stage)
+		if stage.name == stage_name:
+			_start_stage(stage)
+			return
+	push_warning("No stage panel for %s" % case_id)
+	_close()
 
 func _setup_stage(stage: Panel) -> void:
 	var buttons: Array[TextureButton] = []
@@ -176,19 +179,12 @@ func _on_stage_solved(stage: Panel) -> void:
 	timer_label.text = ""
 	stage_solved.emit(stage.name)
 
-	if not auto_advance:
-		return
+	StoryData.mark_puzzle_solved(case_id)
+	puzzle_solved.emit()
 
-	var idx := stages.find(stage)
-	if idx == stages.size() - 1:
-		puzzle_solved.emit()
-		if auto_close_on_solved:
-			await get_tree().create_timer(auto_close_delay_seconds).timeout
-			_close()
-		return
-
-	await get_tree().create_timer(advance_delay_seconds).timeout
-	_start_stage(stages[idx + 1])
+	await get_tree().create_timer(auto_close_delay_seconds).timeout
+	Notify.show_message("Something has been unlocked.")
+	_close()
 
 func _on_time_up() -> void:
 	active = false

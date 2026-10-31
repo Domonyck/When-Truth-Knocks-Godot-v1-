@@ -46,7 +46,16 @@ func interact() -> void:
 		_close_door()
 	else:
 		_open_door(true)
+func open_door() -> void:
+	if is_open or is_animating:
+		return
+	_open_door(false)   # no visitor, not by player -> just opens
 
+func close_door() -> void:
+	if not is_open or is_animating:
+		return
+	_close_door()
+	
 func _open_door(by_player: bool = false) -> void:
 	is_animating = true
 	is_open = true

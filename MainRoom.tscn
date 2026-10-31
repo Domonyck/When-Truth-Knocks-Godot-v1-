@@ -52,10 +52,9 @@
 [ext_resource type="Texture2D" uid="uid://riqv5fjhsqss" path="res://assets/2dbafbe5-0e54-4a8f-8f60-c24da3b1ece0.png" id="45_dllnc"]
 [ext_resource type="Script" uid="uid://ce522xt3x8gkx" path="res://Scripts/GameManager.gd" id="45_vtemr"]
 [ext_resource type="Texture2D" uid="uid://8xi1lpkfbbh1" path="res://assets/12024981e-40f1-45bd-afcb-772b99b0af43_-_Edited.png" id="46_vrtfv"]
-[ext_resource type="Texture2D" uid="uid://fk0eahacxxd2" path="res://assets/42557be4-f45a-43fb-9115-172ccde45d32.png" id="47_cin8a"]
-[ext_resource type="Texture2D" uid="uid://cv7yiodyn3h2x" path="res://assets/ee2fac68-c4d8-4dfb-9573-683746b3e5fb.png" id="48_i755a"]
-[ext_resource type="Texture2D" uid="uid://6nphy7uii1nt" path="res://assets/3f557fa0-2949-44d6-9ff8-a38b64456806.png" id="49_bk1hi"]
-[ext_resource type="Texture2D" uid="uid://dfgdyfnq1b6cp" path="res://assets/1b898725-a95d-4ecd-a6ed-1ee5ecd8494b.png" id="50_x0cb2"]
+[ext_resource type="Texture2D" uid="uid://cq62ipy8puf3s" path="res://assets/c4d936d6-8653-4c54-85d2-37c82c65896f.png" id="51_5bfci"]
+[ext_resource type="Texture2D" uid="uid://bf40rm0rev2px" path="res://assets/acc3a5c7-4958-4116-b3f2-be42d3da8e9c.png" id="52_p7kvt"]
+[ext_resource type="Texture2D" uid="uid://ch86fvsfkdh28" path="res://assets/Gemini_Generated_Image_f8g2bef8g2bef8g2_-_Edited.png" id="53_v8c74"]
 [ext_resource type="PackedScene" uid="uid://c1nwvwcqhwxwy" path="res://assets/katrina_0930145730_texture.glb" id="54_bk1hi"]
 [ext_resource type="Script" uid="uid://d3jqom0mxu1hi" path="res://Scripts/generator.gd" id="55_ske8v"]
 [ext_resource type="Script" uid="uid://3a46qebxw8hd" path="res://Scripts/skill_check.gd" id="55_xqgp3"]
@@ -63,6 +62,7 @@
 [ext_resource type="FontFile" uid="uid://dob187nmmk24t" path="res://WindowsDesktop/digital-7.ttf" id="57_nwjiw"]
 [ext_resource type="PackedScene" uid="uid://cgoydnspmv6cc" path="res://assets/electrical_breaker_panel_box__lp_model.glb" id="58_16mnq"]
 [ext_resource type="AudioStream" uid="uid://deioqw7axa270" path="res://assets/Sounds/soundreality-finger-snap-sound-423220.mp3" id="58_p7kvt"]
+[ext_resource type="AudioStream" uid="uid://cm641bb3cndl" path="res://assets/Sounds/wrong decision.mp3" id="60_p7kvt"]
 
 [sub_resource type="GDScript" id="GDScript_tnmiv"]
 
@@ -853,7 +853,7 @@ shaded = true
 texture = ExtResource("26_d6p8o")
 
 [node name="Mother" type="Sprite3D" parent="SubViewportContainer/Characters" unique_id=503762292]
-transform = Transform3D(1.1969842, 0, 0, 0, 1.1289835, 0, 0, 0, 1, 3.3450756, 54.06216, -123.89665)
+transform = Transform3D(1.373384, 0, 0, 0, 1.1909648, 0, 0, 0, 1, 3.3450756, 59.642414, -123.89665)
 visible = false
 pixel_size = 0.035116
 shaded = true
@@ -867,32 +867,32 @@ shaded = true
 texture = ExtResource("46_vrtfv")
 
 [node name="Classmate2" type="Sprite3D" parent="SubViewportContainer/Characters" unique_id=1986889941]
-transform = Transform3D(1.416706, 0, 0, 0, 1.472177, 0, 0, 0, 1, 3.5942059, 45.36145, -123.89665)
+transform = Transform3D(1.1806581, 0, 0, 0, 1.1610683, 0, 0, 0, 1, 3.5942059, 58.349556, -123.89665)
 visible = false
 pixel_size = 0.035116
 shaded = true
-texture = ExtResource("47_cin8a")
+texture = ExtResource("46_vrtfv")
 
 [node name="Classmate1" type="Sprite3D" parent="SubViewportContainer/Characters" unique_id=1536249557]
-transform = Transform3D(0.8571524, 0, 0, 0, 1.0371692, 0, 0, 0, 1, 4.5184965, 56.156403, -123.89665)
+transform = Transform3D(1.3654374, 0, 0, 0, 1.2599901, 0, 0, 0, 1, 2.5913572, 56.156403, -123.89665)
 visible = false
 pixel_size = 0.035116
 shaded = true
-texture = ExtResource("48_i755a")
+texture = ExtResource("51_5bfci")
 
 [node name="Father" type="Sprite3D" parent="SubViewportContainer/Characters" unique_id=558162790]
-transform = Transform3D(1.6275684, 0, 0, 0, 1.7608384, 0, 0, 0, 1, 2.5674305, 57.366814, -123.89665)
+transform = Transform3D(1.4322598, 0, 0, 0, 1.4387465, 0, 0, 0, 1, 2.5674305, 58.92022, -123.89665)
 visible = false
 pixel_size = 0.035116
 shaded = true
-texture = ExtResource("49_bk1hi")
+texture = ExtResource("52_p7kvt")
 
 [node name="Basurero" type="Sprite3D" parent="SubViewportContainer/Characters" unique_id=833841980]
-transform = Transform3D(2.4092724, 0, 0, 0, 2.4419973, 0, 0, 0, 1, 2.3778687, 57.316902, -123.89665)
+transform = Transform3D(1.491372, 0, 0, 0, 1.6424894, 0, 0, 0, 1, 2.9880161, 55.907448, -123.89665)
 visible = false
 pixel_size = 0.027116
 shaded = true
-texture = ExtResource("50_x0cb2")
+texture = ExtResource("53_v8c74")
 
 [node name="Generator" parent="SubViewportContainer" unique_id=564851263 node_paths=PackedStringArray("light_manager", "skill_check", "clock_nodes", "door") instance=ExtResource("58_16mnq")]
 transform = Transform3D(1.1236893, 0, 61.286404, 0, 60.70618, 0, -63.27975, 0, 1.0882925, 112.20854, -0.63100433, -55.709457)
@@ -944,30 +944,48 @@ Decline = NodePath("../DialogueUI/Control/Decline")
 characters_parent = NodePath("../SubViewportContainer/Characters")
 clock_label = NodePath("../ClockUI/TimeLabel")
 
+[node name="WrongDecision" type="AudioStreamPlayer" parent="." unique_id=2014381312]
+stream = ExtResource("60_p7kvt")
+
 [node name="WitnessTarget" type="Marker3D" parent="." unique_id=401049037]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.3450756, 56.962513, 10.651829)
 
 [node name="DialogueUI" parent="." unique_id=780605922 instance=ExtResource("2_i755a")]
 visible = false
 
+[node name="Accept" parent="DialogueUI/Control" parent_id_path=PackedInt32Array(780605922, 2025151139) index="14" unique_id=764921111]
+offset_right = 1345.0
+scale = Vector2(2.0800147, 1.6400025)
+
+[node name="Decline" parent="DialogueUI/Control" parent_id_path=PackedInt32Array(780605922, 2025151139) index="15" unique_id=1844282039]
+offset_left = 1198.0
+offset_top = 482.0
+offset_right = 1349.0
+offset_bottom = 513.0
+scale = Vector2(2.0400097, 1.6)
+
 [node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=1184684587]
 
 [node name="go_to_breaker_button" type="Button" parent="CanvasLayer" unique_id=1844629225]
-offset_left = 877.0
-offset_top = 494.0
-offset_right = 1101.0
-offset_bottom = 547.0
+offset_left = 801.0
+offset_top = 502.0
+offset_right = 1025.0
+offset_bottom = 555.0
+scale = Vector2(1.7180095, 1.4800049)
 size_flags_horizontal = 4
 theme_override_font_sizes/font_size = 22
 text = "Go to Breaker"
+flat = true
 
 [node name="go_back_button" type="Button" parent="CanvasLayer" unique_id=768009102]
-offset_left = 876.0
-offset_top = 561.0
-offset_right = 1101.0
-offset_bottom = 611.0
+offset_left = 811.0
+offset_top = 567.00006
+offset_right = 1036.0
+offset_bottom = 617.00006
+scale = Vector2(1.6, 1.3600024)
 theme_override_font_sizes/font_size = 22
 text = "Go Back"
+flat = true
 
 [node name="katrina_0930145730_texture" parent="." unique_id=411335890 instance=ExtResource("54_bk1hi")]
 transform = Transform3D(50, 0, 0, 0, 50, 0, 0, 0, 50, 4.133541, 48.30636, -27.651114)

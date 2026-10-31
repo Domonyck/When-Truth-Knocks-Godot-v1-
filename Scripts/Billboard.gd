@@ -21,6 +21,9 @@ func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_PAUSABLE
 
 func interact() -> void:
+	if StoryData.get_next_puzzle_case() == "":
+		Notify.show_message("You feel like you're missing something.")
+		return
 	if is_transitioning or is_billboard_open:
 		return
 
