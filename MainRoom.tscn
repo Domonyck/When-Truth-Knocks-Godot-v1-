@@ -490,6 +490,14 @@ physics_object_picking_first_only = true
 size = Vector2i(1920, 1080)
 render_target_update_mode = 4
 
+[node name="Rain" type="AudioStreamPlayer3D" parent="SubViewportContainer/SubViewport" unique_id=924569334]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14.058941, 90.79336, -157.16153)
+attenuation_model = 3
+volume_db = 29.091
+unit_size = 37.25
+autoplay = true
+max_distance = 478.75
+
 [node name="NewRoom" parent="SubViewportContainer/SubViewport" unique_id=1646321474 instance=ExtResource("15_dhe4g")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.004, 0.117, 0)
 cast_shadow = 2
