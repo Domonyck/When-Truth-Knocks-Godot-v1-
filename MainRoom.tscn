@@ -10,8 +10,10 @@
 [ext_resource type="AudioStream" uid="uid://cc246cqsw44qr" path="res://assets/Sounds/night-ambience-29548.mp3" id="2_cbfv6"]
 [ext_resource type="PackedScene" uid="uid://cpsn4onkag8hc" path="res://dialogue_ui.tscn" id="2_i755a"]
 [ext_resource type="Script" uid="uid://dwt054jdqyovy" path="res://Scripts/ceilingfan.gd" id="2_shaa1"]
+[ext_resource type="AudioStream" uid="uid://bvxairaugirwb" path="res://assets/Sounds/freesound_community-rain-and-thunder-16705.mp3" id="3_v8c74"]
 [ext_resource type="Texture2D" uid="uid://byd37yo4crqtv" path="res://assets/ceilingfan_Image_0.jpg" id="4_7tsin"]
 [ext_resource type="Script" uid="uid://c5xk2yrkpt2ox" path="res://Scripts/walllamp.gd" id="4_g5nle"]
+[ext_resource type="Texture2D" uid="uid://bs74rc1t7qwyj" path="res://assets/Circle.png" id="4_i756o"]
 [ext_resource type="AudioStream" uid="uid://dn34jsb4f15q0" path="res://assets/ceiliing fan.mp3" id="5_4axq6"]
 [ext_resource type="Script" uid="uid://b6752tbe2hh42" path="res://Scripts/tablelamp.gd" id="5_gyk08"]
 [ext_resource type="Texture2D" uid="uid://b7coqh4pki84i" path="res://assets/ceilingfan_Image_1.png" id="5_heanb"]
@@ -63,6 +65,37 @@
 [ext_resource type="PackedScene" uid="uid://cgoydnspmv6cc" path="res://assets/electrical_breaker_panel_box__lp_model.glb" id="58_16mnq"]
 [ext_resource type="AudioStream" uid="uid://deioqw7axa270" path="res://assets/Sounds/soundreality-finger-snap-sound-423220.mp3" id="58_p7kvt"]
 [ext_resource type="AudioStream" uid="uid://cm641bb3cndl" path="res://assets/Sounds/wrong decision.mp3" id="60_p7kvt"]
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_7bb4q"]
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_1vivr"]
+emission_shape = 3
+emission_box_extents = Vector3(1, 1, 1)
+direction = Vector3(0, -1, 0)
+spread = 5.0
+initial_velocity_min = 10.0
+initial_velocity_max = 10.0
+color = Color(0.7330055, 0.7330054, 0.73300564, 1)
+collision_mode = 1
+collision_friction = 0.0
+collision_bounce = 0.0
+
+[sub_resource type="Curve" id="Curve_i756o"]
+_limits = [0.0, 0.1, 0.0, 1.0]
+_data = [Vector2(0, 0), 0.0, 0.0, 0, 0, Vector2(0.133829, 0.05799999), 0.39811996, 0.39811996, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
+point_count = 3
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_v8c74"]
+transparency = 1
+cull_mode = 2
+shading_mode = 0
+vertex_color_use_as_albedo = true
+albedo_texture = ExtResource("4_i756o")
+use_particle_trails = true
+
+[sub_resource type="RibbonTrailMesh" id="RibbonTrailMesh_8vrlf"]
+material = SubResource("StandardMaterial3D_v8c74")
+curve = SubResource("Curve_i756o")
 
 [sub_resource type="GDScript" id="GDScript_tnmiv"]
 
@@ -471,6 +504,12 @@ volume_db = -1.0
 autoplay = true
 parameters/looping = true
 
+[node name="Rain" type="AudioStreamPlayer" parent="." unique_id=839068195]
+stream = ExtResource("3_v8c74")
+volume_db = -15.323
+autoplay = true
+mix_target = 1
+
 [node name="SubViewportContainer" type="SubViewportContainer" parent="." unique_id=1300685362]
 anchors_preset = 15
 anchor_right = 1.0
@@ -490,13 +529,24 @@ physics_object_picking_first_only = true
 size = Vector2i(1920, 1080)
 render_target_update_mode = 4
 
-[node name="Rain" type="AudioStreamPlayer3D" parent="SubViewportContainer/SubViewport" unique_id=924569334]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14.058941, 90.79336, -157.16153)
-attenuation_model = 3
-volume_db = 29.091
-unit_size = 37.25
-autoplay = true
-max_distance = 478.75
+[node name="raincollision" type="MeshInstance3D" parent="SubViewportContainer/SubViewport" unique_id=47301379]
+transform = Transform3D(-86.28413, 0, 0, 0, -147.91536, 0, 0, 0, 100.51506, 17.759155, 121.72277, 0)
+mesh = SubResource("PlaneMesh_7bb4q")
+
+[node name="GPUParticlesCollisionBox3D" type="GPUParticlesCollisionBox3D" parent="SubViewportContainer/SubViewport/raincollision" unique_id=1855356642]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 0.9999998, 0.1292572, 0.34409213, -0.008789061)
+size = Vector3(2.3865662, 1.1934996, 2.0175781)
+
+[node name="GPUParticles3D" type="GPUParticles3D" parent="SubViewportContainer/SubViewport" unique_id=313578921]
+transform = Transform3D(164.64078, 0, 0, 0, 42.38231, 0, 0, 0, -108.27755, 7.844597, 238.30984, -93.67129)
+amount = 1000
+lifetime = 2.0
+randomness = 0.86
+visibility_aabb = AABB(-10, -4, -10, 20, 20, 20)
+trail_enabled = true
+trail_lifetime = 0.09999999999999999
+process_material = SubResource("ParticleProcessMaterial_1vivr")
+draw_pass_1 = SubResource("RibbonTrailMesh_8vrlf")
 
 [node name="NewRoom" parent="SubViewportContainer/SubViewport" unique_id=1646321474 instance=ExtResource("15_dhe4g")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.004, 0.117, 0)
@@ -996,7 +1046,7 @@ text = "Go Back"
 flat = true
 
 [node name="katrina_0930145730_texture" parent="." unique_id=411335890 instance=ExtResource("54_bk1hi")]
-transform = Transform3D(50, 0, 0, 0, 50, 0, 0, 0, 50, 4.133541, 48.30636, -27.651114)
+transform = Transform3D(22.264519, 0, 0, 0, 22.16081, 0, 0, 0, 17.866833, -115.86988, 64.42372, 49.961357)
 visible = false
 
 [node name="SpotLight3D" type="SpotLight3D" parent="." unique_id=1504472176]
