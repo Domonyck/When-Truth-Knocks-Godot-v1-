@@ -197,7 +197,5 @@ func _travel(cam: Camera3D, target: Transform3D, while_paused := false, keep_fro
 	traveling = false
 
 func _input(event: InputEvent) -> void:
-	if event is InputEventKey and event.pressed and event.keycode == KEY_K:
-		trigger_knock()
-	elif at_breaker and not traveling and event.is_action_pressed("ui_cancel"):
+	if at_breaker and not traveling and event.is_action_pressed("ui_cancel"):
 		return_from_breaker()

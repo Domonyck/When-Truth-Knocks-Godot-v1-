@@ -1,8 +1,8 @@
 extends Node
 
-@onready var door: Area3D = $"../SubViewportContainer/SubViewport/door/Area3D"
-@onready var witness_target: Marker3D = $"../WitnessTarget"
-@onready var wrong: AudioStreamPlayer = $"../WrongDecision"
+@onready var door: Area3D = get_node_or_null("../SubViewportContainer/SubViewport/door/Area3D")
+@onready var witness_target: Marker3D = get_node_or_null("../WitnessTarget")
+@onready var wrong: AudioStreamPlayer = get_node_or_null("../WrongDecision")
 @export var dialogue_ui: CanvasLayer 
 @export var name_label: RichTextLabel 
 @export var dialogue_label: RichTextLabel 
@@ -25,21 +25,22 @@ var next_witness_timer: float = 60.0
 
 var witnesses: Array[Node] = []
 var active_witness: Node3D = null
+var active_witness_id: String = ""
 var current_testimony
+var current_conversation: Array[StoryData.DialogueLine] = []
+var conversation_index: int = 0
+var in_conversation: bool = false
+var _active_type_tween: Tween = null
+
 # Dictionary to store each witness's starting global transform
 var initial_transforms: Dictionary = {}
 var clock_label_1: Label = null
 var clock_label_2: Label = null
 var waiting_for_door := false
+var witness_exiting := false
 
 func _ready() -> void:
 	add_to_group("game_manager") 
-	
-	if Accept:
-		Accept.pressed.connect(_on_accept_pressed)
-
-	if Decline:
-		Decline.pressed.connect(_on_close_button_pressed)
 
 	if characters_parent:
 		witnesses = characters_parent.get_children()
@@ -55,7 +56,7 @@ func _ready() -> void:
 	if Accept:
 		Accept.pressed.connect(_on_accept_pressed)
 	if Decline:
-		Decline.pressed.connect(_on_decline_pressed)   # was _on_close_button_pressed
+		Decline.pressed.connect(_on_decline_pressed)
 		
 func register_clock_1(label: Label) -> void:
 	clock_label_1 = label
@@ -68,17 +69,40 @@ func update_clocks(time_str_1: String, time_str_2: String) -> void:
 		clock_label_1.text = time_str_1
 	if is_instance_valid(clock_label_2):
 		clock_label_2.text = time_str_2
+
+func _input(event: InputEvent) -> void:
+	if not in_conversation:
+		return
+	var advance_pressed := false
+	if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
+		advance_pressed = true
+	elif event.is_action_pressed("ui_accept"):
+		advance_pressed = true
+
+	if advance_pressed:
+		get_viewport().set_input_as_handled()
+		# If text is still typing out, finish the current line immediately
+		if _active_type_tween and _active_type_tween.is_valid() and _active_type_tween.is_running():
+			_active_type_tween.kill()
+			if dialogue_label:
+				dialogue_label.visible_characters = -1
+			return
+
+		# Otherwise move to the next conversation line or into the testimony
+		conversation_index += 1
+		if conversation_index < current_conversation.size():
+			_play_conversation_line(conversation_index)
+		else:
+			_show_testimony_line()
 		
 func _process(delta: float) -> void:
 	# 1. FLOATING NAME TAG LOGIC
 	if active_witness and name_label and name_label.visible:
 		var camera = get_viewport().get_camera_3d()
 		if camera:
-			# Use the character's exact global position (their center/origin point)
 			var target_pos = active_witness.global_position
 			
 			if not camera.is_position_behind(target_pos):
-				# Get the 2D screen coordinates of the character's center
 				var screen_pos = camera.unproject_position(target_pos)
 				
 				var vertical_pixel_offset = 180.0
@@ -89,32 +113,28 @@ func _process(delta: float) -> void:
 
 	# 2. TIME SHIFT LOGIC
 	if not shift_ended:
-		if active_witness == null and not waiting_for_door and not witnesses.is_empty():
+		if not is_witness_busy() and not witnesses.is_empty() and not _is_blackout_active():   # <--- UPDATED
 			next_witness_timer -= delta
 			if next_witness_timer <= 0.0:
 				_knock_for_next_witness()
 		real_time_passed += delta
 		
-		# Calculate how many full hours have passed
 		var current_hour = int(real_time_passed / REAL_SECONDS_PER_GAME_HOUR)
 		
 		var display_hour = current_hour
 		if display_hour == 0:
 			display_hour = 12
 			
-		# Hardcode the ":00 AM" so it never shows minutes
 		if clock_label:
 			clock_label.text = str(display_hour) + ":00 AM"
 			
-		# Check for the 6:00 AM finish line
 		if current_hour >= 6:
 			shift_ended = true
 			_on_6_am_reached()
+
 func _knock_for_next_witness() -> void:
-	if door == null:
+	if door == null or _is_blackout_active():   # <--- UPDATED
 		return
-	# trigger_knock() does nothing if the door is open, so wait until it's free.
-	# The timer stays at <= 0, so this retries every frame.
 	if door.is_open or door.is_animating or door.choosing or door.at_breaker or door.traveling:
 		return
 	waiting_for_door = true
@@ -126,29 +146,24 @@ func _on_6_am_reached() -> void:
 		clock_label.text = "6:00 AM"
 
 func _on_visitor_revealed() -> void:
-	# If the pool is empty AND the room is empty, do nothing
 	waiting_for_door = false
 	if witnesses.is_empty() and active_witness == null:
 		print("All witnesses have already visited!")
 		return
 
-	# If there is already an active witness, fade them out first
 	if active_witness:
 		var previous_witness = active_witness
-		active_witness = null # Clear reference while previous fades
+		active_witness = null
 		_fade_out_witness(previous_witness, func(): _reveal_next_witness())
 	else:
 		_reveal_next_witness()
 
 func _reveal_next_witness() -> void:
-	# Check again before picking, in case the very last person just left
 	if witnesses.is_empty():
 		print("No more witnesses left to appear.")
 		return
 		
 	active_witness = witnesses.pick_random() as Node3D
-	
-	# KEY ADDITION: Remove the chosen witness from the pool so they can't be picked again
 	witnesses.erase(active_witness)
 	
 	if active_witness:
@@ -161,8 +176,6 @@ func _fade_in_witness(witness: Node3D) -> void:
 	if witness_target == null:
 		push_error("CRITICAL: WitnessTarget is missing! The script cannot find it, so movement was skipped.")
 	else:
-		print("DEBUG: ", witness.name, " is starting at ", witness.global_position)
-		print("DEBUG: The Target is at ", witness_target.global_position)
 		tween.tween_property(witness, "global_position", witness_target.global_position, fade_in_duration)
 
 	var sprite = witness if "modulate" in witness else _find_sprite_child(witness)
@@ -172,25 +185,20 @@ func _fade_in_witness(witness: Node3D) -> void:
 		current_color.a = 0.0
 		sprite.modulate = current_color
 		tween.parallel().tween_property(sprite, "modulate:a", 1.0, fade_in_duration)
-	else:
-		print("WARNING: No sprite found inside ", witness.name, " to fade.")
 
 	tween.finished.connect(_on_fade_finished)
 
 func _fade_out_witness(witness: Node3D, on_complete_callback: Callable = Callable()) -> void:
 	var tween = create_tween()
 
-	# Move back to original starting transform
 	if initial_transforms.has(witness):
 		var target_transform: Transform3D = initial_transforms[witness]
 		tween.tween_property(witness, "global_transform", target_transform, 1.5)
 
-	# Fade out opacity
 	var sprite = witness if "modulate" in witness else _find_sprite_child(witness)
 	if sprite:
 		tween.parallel().tween_property(sprite, "modulate:a", 0.0, 1.5)
 
-	# Once fade-out finishes, hide the node and trigger callback
 	tween.finished.connect(func():
 		witness.visible = false
 		if on_complete_callback.is_valid():
@@ -209,72 +217,90 @@ func _find_sprite_child(parent: Node) -> Node:
 
 func _on_fade_finished() -> void:
 	if active_witness:
-		# Format the 2D Node name to match StoryData IDs
-		var witness_id: String = active_witness.name.to_lower()
-		if witness_id == "classmate1":
-			witness_id = "classmate1_friend"
-		elif witness_id == "classmate2":
-			witness_id = "classmate2_bully"
+		active_witness_id = active_witness.name.to_lower()
+		if active_witness_id == "classmate1":
+			active_witness_id = "classmate1_friend"
+		elif active_witness_id == "classmate2":
+			active_witness_id = "classmate2_bully"
 
-		# Draw the testimony from the data manager
-		var testimony = StoryData.draw_testimony_for_witness(witness_id)
-		
-		if testimony:
-			current_testimony = testimony
-			# Send the Name to the Left Box
-			if name_label:
-				name_label.text = "[center][b]" + StoryData.get_witness_display_name(witness_id) + "[/b][/center]"
-				name_label.visible = true
-			
-			# Send the Testimony to the Bottom Box and Type it out
-			if dialogue_label:
-				dialogue_label.text = testimony.text
-				dialogue_label.visible_characters = 0 # Hide text initially
-				
-				# Hide buttons before typing starts
-				if Accept: Accept.visible = false
-				if Decline: Decline.visible = false
-				
-				# Calculate typing duration (0.03 seconds per character)
-				var text_length = testimony.text.length()
-				var typing_duration = text_length * 0.01 
-				
-				# Animate the text appearing
-				var type_tween = create_tween()
-				type_tween.tween_property(dialogue_label, "visible_characters", text_length, typing_duration)
-				
-				# Show the buttons once typing is finished
-				type_tween.finished.connect(func():
-					if Accept: Accept.visible = true
-					if Decline: Decline.visible = true
-				)
-			
-			# Process the true/false logic to advance the game state
-			
+		current_conversation = StoryData.draw_conversation_for_witness(active_witness_id)
+		current_testimony = StoryData.draw_testimony_for_witness(active_witness_id)
+		conversation_index = 0
+
+		if name_label:
+			name_label.text = "[center][b]" + StoryData.get_witness_display_name(active_witness_id) + "[/b][/center]"
+			name_label.visible = true
+
+		if Accept: Accept.visible = false
+		if Decline: Decline.visible = false
+
+		if not current_conversation.is_empty():
+			in_conversation = true
+			_play_conversation_line(0)
+		elif current_testimony:
+			_show_testimony_line()
 
 	# FADE IN THE UI BOXES
 	if dialogue_ui:
 		dialogue_ui.visible = true
-		# Grab the main Control node inside the CanvasLayer
 		if dialogue_ui.get_child_count() > 0:
 			var ui_root = dialogue_ui.get_child(0)
 			if "modulate" in ui_root:
-				ui_root.modulate.a = 0.0 # Start invisible
+				ui_root.modulate.a = 0.0
 				var tween = create_tween()
-				tween.tween_property(ui_root, "modulate:a", 1.0, 0.5) # Fade to fully visible over 0.5s
+				tween.tween_property(ui_root, "modulate:a", 1.0, 0.5)
 				var cam = get_tree().get_first_node_in_group("player_camera")
 				if cam and cam.has_method("lock_on_target"):
 					cam.lock_on_target(active_witness)
-					
+
+func _play_conversation_line(idx: int) -> void:
+	if dialogue_label == null or idx >= current_conversation.size():
+		return
+	var line: StoryData.DialogueLine = current_conversation[idx]
+	var speaker_prefix: String = "[b]You:[/b] " if line.speaker == "player" else "[b]" + StoryData.get_witness_display_name(active_witness_id) + ":[/b] "
+	dialogue_label.text = speaker_prefix + line.text + "\n[i][color=#aaaaaa](Click to continue...)[/color][/i]"
+	dialogue_label.visible_characters = 0
+
+	var total_chars := dialogue_label.get_total_character_count()
+	var typing_duration := total_chars * 0.01
+
+	if _active_type_tween and _active_type_tween.is_valid():
+		_active_type_tween.kill()
+	_active_type_tween = create_tween()
+	_active_type_tween.tween_property(dialogue_label, "visible_characters", total_chars, typing_duration)
+
+func _show_testimony_line() -> void:
+	in_conversation = false
+	if current_testimony == null or dialogue_label == null:
+		return
+
+	dialogue_label.text = current_testimony.text
+	dialogue_label.visible_characters = 0
+
+	if Accept: Accept.visible = false
+	if Decline: Decline.visible = false
+
+	var total_chars := dialogue_label.get_total_character_count()
+	var typing_duration := total_chars * 0.01
+
+	if _active_type_tween and _active_type_tween.is_valid():
+		_active_type_tween.kill()
+	_active_type_tween = create_tween()
+	_active_type_tween.tween_property(dialogue_label, "visible_characters", total_chars, typing_duration)
+
+	_active_type_tween.finished.connect(func():
+		if Accept: Accept.visible = true
+		if Decline: Decline.visible = true
+	)
+
 func _on_close_button_pressed() -> void:
-	# --- NEW: Hide name tag and unlock camera immediately ---
+	in_conversation = false
 	if name_label:
 		name_label.visible = false
 		
 	var cam = get_tree().get_first_node_in_group("player_camera")
 	if cam and cam.has_method("unlock_camera"):
 		cam.unlock_camera()
-	# --------------------------------------------------------
 
 	# 1. FADE OUT THE UI BOXES FIRST
 	if dialogue_ui:
@@ -282,16 +308,16 @@ func _on_close_button_pressed() -> void:
 			var ui_root = dialogue_ui.get_child(0)
 			if "modulate" in ui_root:
 				var ui_tween = create_tween()
-				ui_tween.tween_property(ui_root, "modulate:a", 0.0, 0.4) # Fade to invisible over 0.4s
+				ui_tween.tween_property(ui_root, "modulate:a", 0.0, 0.4)
 				ui_tween.finished.connect(func(): dialogue_ui.visible = false)
 		else:
 			dialogue_ui.visible = false
 		
 	if active_witness:
 		var witness_to_dismiss = active_witness
-		active_witness = null # Clear the room status
+		active_witness = null
+		witness_exiting = true   # <--- ADD THIS
 		
-		# 2. Command the door to open BEFORE the character moves.
 		if door:
 			if door.has_method("open_door"):
 				door.open_door()
@@ -300,28 +326,26 @@ func _on_close_button_pressed() -> void:
 			elif door.has_method("interact"):
 				door.interact()
 		
-		# 3. Wait 1.5 seconds for the door animation to finish opening
 		await get_tree().create_timer(1.5).timeout
 		
-		# 4. Trigger the character's 1.5-second exit tween. 
-		# When they finish fading out, the door automatically closes behind them.
 		_fade_out_witness(witness_to_dismiss, func():
 			if door:
 				if door.has_method("close_door"):
 					door.close_door()
 				elif door.has_method("close"):
 					door.close()
+			witness_exiting = false   # <--- ADD THIS
 		)
+
 func _on_accept_pressed() -> void:
 	if current_testimony:
 		if current_testimony.is_true:
-			var unlocked_case := StoryData.accept_true_testimony()
+			var unlocked_case = StoryData.accept_true_testimony(active_witness_id)
 			if unlocked_case != "":
 				Notify.show_message("Something has been unlocked.")
 				
 			next_witness_timer = witness_interval
 		else:
-			# Accepted a lie -> wrong decision
 			_apply_wrong_decision()
 	current_testimony = null
 	_on_close_button_pressed()
@@ -329,7 +353,6 @@ func _on_accept_pressed() -> void:
 func _on_decline_pressed() -> void:
 	if current_testimony:
 		if current_testimony.is_true:
-			# Rejected the truth -> wrong decision
 			_apply_wrong_decision()
 		else:
 			next_witness_timer = witness_interval
@@ -338,14 +361,23 @@ func _on_decline_pressed() -> void:
 	
 func _apply_wrong_decision() -> void:
 	wrong.play()
-	next_witness_timer = witness_interval + wrong_decision_penalty  # 90s instead of 60s
+	next_witness_timer = witness_interval + wrong_decision_penalty
 	Notify.show_message("You feel like you've made the wrong decision. The next witness won't appear soon...")
 	
 func hide_time() -> void:
 	if clock_label:
-		# Hides the CanvasLayer parent so the whole UI disappears cleanly
 		clock_label.get_parent().visible = false 
 
 func show_time() -> void:
 	if clock_label:
 		clock_label.get_parent().visible = true
+
+func is_witness_busy() -> bool:
+	var door_has_visitor: bool = door != null and door.has_visitor
+	return active_witness != null or waiting_for_door or witness_exiting or door_has_visitor
+
+func _is_blackout_active() -> bool:
+	for lm in get_tree().get_nodes_in_group("light_manager"):
+		if "is_blackout" in lm and lm.is_blackout:
+			return true
+	return false

@@ -27,6 +27,7 @@ signal power_restored
 var is_blackout := false
 
 func _ready() -> void:
+	add_to_group("light_manager") 
 	randomize()
 	process_mode = Node.PROCESS_MODE_ALWAYS
 	_update_power_state()
@@ -35,7 +36,7 @@ func _ready() -> void:
 	_reset_blackout_timer()
 
 func _process(delta: float) -> void:
-	if not is_blackout:
+	if not is_blackout and not _is_witness_active():   # <--- UPDATED
 		blackout_timer -= delta
 		if blackout_timer <= 0.0:
 			force_blackout()
@@ -67,7 +68,7 @@ func _unhandled_input(event: InputEvent) -> void:
 		force_blackout()
 
 func force_blackout() -> void:
-	if is_blackout:
+	if is_blackout or _is_witness_active():   # <--- UPDATED
 		return
 		
 	is_blackout = true
@@ -200,3 +201,9 @@ func _update_power_state() -> void:
 			for child in computer2.get_children():
 				if (child is CollisionShape3D or child is CollisionPolygon3D) and not child.disabled:
 					child.disabled = true
+
+func _is_witness_active() -> bool:
+	for gm in get_tree().get_nodes_in_group("game_manager"):
+		if gm.has_method("is_witness_busy") and gm.is_witness_busy():
+			return true
+	return false

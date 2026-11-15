@@ -11,6 +11,7 @@
 [ext_resource type="PackedScene" uid="uid://cpsn4onkag8hc" path="res://dialogue_ui.tscn" id="2_i755a"]
 [ext_resource type="Script" uid="uid://dwt054jdqyovy" path="res://Scripts/ceilingfan.gd" id="2_shaa1"]
 [ext_resource type="AudioStream" uid="uid://bvxairaugirwb" path="res://assets/Sounds/freesound_community-rain-and-thunder-16705.mp3" id="3_v8c74"]
+[ext_resource type="AudioStream" uid="uid://bvsijwoh1i5o5" path="res://assets/Sounds/freesound_community-suspense-creepy-ominous-ambience-14569.mp3" id="4_7bb4q"]
 [ext_resource type="Texture2D" uid="uid://byd37yo4crqtv" path="res://assets/ceilingfan_Image_0.jpg" id="4_7tsin"]
 [ext_resource type="Script" uid="uid://c5xk2yrkpt2ox" path="res://Scripts/walllamp.gd" id="4_g5nle"]
 [ext_resource type="Texture2D" uid="uid://bs74rc1t7qwyj" path="res://assets/Circle.png" id="4_i756o"]
@@ -510,6 +511,12 @@ volume_db = -15.323
 autoplay = true
 mix_target = 1
 
+[node name="FreesoundCommunitySuspenseCreepyOminousAmbience14569" type="AudioStreamPlayer" parent="." unique_id=1110317648]
+stream = ExtResource("4_7bb4q")
+volume_db = -10.833
+autoplay = true
+parameters/looping = true
+
 [node name="SubViewportContainer" type="SubViewportContainer" parent="." unique_id=1300685362]
 anchors_preset = 15
 anchor_right = 1.0
@@ -538,13 +545,14 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 0.9999998, 0.1292572, 0.34409213
 size = Vector3(2.3865662, 1.1934996, 2.0175781)
 
 [node name="GPUParticles3D" type="GPUParticles3D" parent="SubViewportContainer/SubViewport" unique_id=313578921]
+process_mode = 3
 transform = Transform3D(164.64078, 0, 0, 0, 42.38231, 0, 0, 0, -108.27755, 7.844597, 238.30984, -93.67129)
 amount = 1000
 lifetime = 2.0
 randomness = 0.86
 visibility_aabb = AABB(-10, -4, -10, 20, 20, 20)
 trail_enabled = true
-trail_lifetime = 0.09999999999999999
+trail_lifetime = 0.1
 process_material = SubResource("ParticleProcessMaterial_1vivr")
 draw_pass_1 = SubResource("RibbonTrailMesh_8vrlf")
 
@@ -999,8 +1007,11 @@ name_label = NodePath("../DialogueUI/Control/NameLabel")
 dialogue_label = NodePath("../DialogueUI/Control/DialogueLabel")
 Accept = NodePath("../DialogueUI/Control/Accept")
 Decline = NodePath("../DialogueUI/Control/Decline")
+fade_in_duration = null
 characters_parent = NodePath("../SubViewportContainer/Characters")
 clock_label = NodePath("../ClockUI/TimeLabel")
+witness_interval = null
+wrong_decision_penalty = null
 
 [node name="WrongDecision" type="AudioStreamPlayer" parent="." unique_id=2014381312]
 stream = ExtResource("60_p7kvt")

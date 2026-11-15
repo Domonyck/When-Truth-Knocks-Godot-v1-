@@ -1,0 +1,1 @@
+class_name SpatialAudioPlayer3D extends AudioStreamPlayer3D

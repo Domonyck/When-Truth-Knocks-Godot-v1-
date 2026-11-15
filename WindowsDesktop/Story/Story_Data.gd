@@ -1,47 +1,44 @@
 extends Node
 # Autoload this as "StoryData" (Project Settings > Autoload).
-#
-# Scope note: this file covers the STORY DATA + TYPING GAME half of the loop
-# below. The door-knock/NPC-appearance/bulletin-puzzle SCENES are someone
-# else's systems -- this file just exposes what they need to call.
-#
-#   Run starts -> the 8 witnesses are shuffled into a random knock order
-#     -> door/NPC system pulls the next witness id off that order
-#     -> draw_testimony_for_witness(witness_id) hands back ONE of that
-#        witness's 3 lines (each witness only ever gets ONE draw per run --
-#        no re-knocking, no re-drawing)
-#     -> [OUT OF SCOPE] NPC scene displays the line
-#     -> external script checks the returned Testimony.is_true itself
-#     -> if true: call accept_true_testimony() -- this bumps the internal
-#        true-count and unlocks the NEXT case in order (case1, then case2,
-#        then case3, then case4). Which witness said it does NOT matter --
-#        the 4 stages are just "the next 4 true testimonies accepted,"
-#        full stop.
-#     -> if false: nothing unlocks. Move on to the next witness.
-#     -> once 4 TRUE testimonies have been accepted total, the cap is hit --
-#        draw_testimony_for_witness() will only ever hand out a FALSE line
-#        for every witness knocked after that point, so the remaining
-#        witnesses can still be interviewed (flavor/red herrings, no
-#        mechanical effect) and all 8 still get exhausted over the run.
-#     -> [OUT OF SCOPE] bulletin board hidden-object puzzle for that case
-#        (3 evidence items, wrong click = time penalty)
-#     -> on puzzle success: Monkeytype game types that case's manuscript
-#        (the computer "chapter")
-#
-# It's all ONE article, assembled in order. "intro" is the first entry --
-# unlocked from the start, no testimony needed, so the player has something
-# to type before any interviews happen. The 4 real cases (case1-4) unlock
-# in strict order as true testimonies come in, and get appended after it.
 
 signal case_unlocked(case_id: String)
 signal case_completed(case_id: String)
 signal evidence_found(case_id: String, item_id: String)
 signal puzzle_solved(case_id: String)
 signal testimony_given(witness_id: String, testimony: Testimony)
-signal witness_exhausted(witness_id: String)   # emitted the moment a witness has been knocked (their one-shot is used up)
+signal witness_exhausted(witness_id: String)
+signal conversation_drawn(witness_id: String, lines: Array[DialogueLine])
 
 const INTRO_ID := "intro"
-const TRUE_TESTIMONY_CAP := 4   # after this many TRUE testimonies are accepted, every later witness is forced to give a false line
+const TRUE_TESTIMONY_CAP := 4
+
+# Maps each witness to the specific case/bulletin stage their testimony unlocks
+const WITNESS_CASE_MAP := {
+	"teacher": "case1",
+	"classmate2_bully": "case1",
+	"classmate1_friend": "case2",
+	"mother": "case2",
+	"marites": "case3",
+	"basurero": "case3",
+	"classmate3": "case4",
+	"father": "case4",
+}
+
+# Witness-specific Monkeytype manuscripts loaded when that witness unlocks their case
+const WITNESS_MANUSCRIPTS := {
+	"teacher": "The classroom smells like chalk dust; the teacher's hands won't stay still. Unexcused absences, stacked for months. \"I flagged it,\" she says, \"pero walang gumalaw.\" Even when she called home, the mother panicked and hung up. None of it proves anything. Yet.",
+	"classmate2_bully": "The classroom smells like chalk dust. Behind the bleachers after sixth period, someone saw Maya climb into a black SUV. Scrawled near the back row, half-erased: \"sugar daddy.\" Even the school bully caught her whispering about quotas before crying in the washroom.",
+	"classmate1_friend": "Her room is too tidy. Under the bed: a second phone, shoes still boxed, gifts no one explains. Her closest friend noticed the burner phone and designer jackets weeks ago -- and how Maya stared at the floor and told her to shut up. Someone is funding a double life.",
+	"mother": "Her room is too tidy. Under the bed: a second phone, shoes still boxed, gifts no one explains. The mother's voice catches when pressed -- admitting Maya has been going out with \"a friend\" named Mang Rudy. She calls it a family arrangement. You write bugaw in the margin.",
+	"marites": "Marites remembers a dark tinted sedan idling near the alley past midnight -- \"hindi naman akin ang anak.\" An envelope changed hands outside the gate, followed by expensive cigarette smoke drifting from the shed. Nothing happens on this narrow row without someone watching.",
+	"basurero": "Behind the narrow alley row, the green recycling bin tells the story the household won't. The basurero found sealed foil wrappers and adult contraceptives buried beneath ordinary waste -- too embarrassed to confront them. Combined with a hotel keycard in the trash, the pattern is unmistakable.",
+	"classmate3": "Classmate 3 walks the route by heart -- away from the north bus stop, toward the old commercial motels downtown. The same red sedan. An older man waiting at the curb, and Maya stepping out clutching a cash-stuffed envelope, completely numb. She wasn't running away; she was being delivered.",
+	"father": "The back service exit near the kitchen avoids the neighbor's porch light. Her father finally admits she slipped out through the rear door -- and that money has been \"okay lately\" since she started meeting her mother's contact. You sit with that before typing your report. Bugaw.",
+}
+
+class DialogueLine:
+	var speaker: String = ""
+	var text: String = ""
 
 class Testimony:
 	var text: String = ""
@@ -50,36 +47,40 @@ class Testimony:
 class WitnessData:
 	var id: String
 	var display_name: String = ""
-	var testimonies: Array[Testimony] = []   # exactly 3, fixed per witness (2 true/1 false or 1 true/2 false)
-	var knocked: bool = false                # true once this witness's one-shot draw has been used
-	var given: Testimony = null              # the line they actually ended up giving, once knocked
+	var testimonies: Array[Testimony] = []
+	var conversations: Array = []
+	var chosen_conversation: Array[DialogueLine] = []
+	var knocked: bool = false
+	var given: Testimony = null
 
 class CaseData:
 	var id: String
 	var manuscript_text: String = ""
-	var unlocked: bool = false   # true once its turn comes up in the true-testimony order (case1 = 1st true, case2 = 2nd true, etc.)
+	var unlocked: bool = false
+	var unlocked_by_witness: String = ""
 
 	# --- hidden object puzzle (bulletin board stage) ---
-	var evidence_items: Array[String] = []   # exactly 3 correct item ids ([] for intro)
-	var found_items: Array[String] = []      # subset of evidence_items found so far, persists across attempts
-	var puzzle_solved: bool = false          # true once all 3 evidence_items have been found
+	var evidence_items: Array[String] = []
+	var found_items: Array[String] = []
+	var puzzle_solved: bool = false
 
 	# --- typing game (Monkeytype) ---
-	var solved: bool = false     # true once the manuscript has been typed
+	var solved: bool = false
 	var progress_word_index: int = 0
 	var progress_typed_text: String = ""
 	var progress_total_typed: int = 0
 	var progress_correct_chars: int = 0
 	var progress_word_states: Array[bool] = []
 
-var cases: Dictionary = {}          # id -> CaseData
-var witnesses: Dictionary = {}      # id -> WitnessData
-var witness_order: Array[String] = []   # shuffled once per new_game(); the order the door system should offer knocks in
-var order: Array[String] = [INTRO_ID, "case1", "case2", "case3", "case4"]   # article assembly order
-var interview_cases: Array[String] = ["case1", "case2", "case3", "case4"]   # gate is_run_complete()
-var unlock_sequence: Array[String] = ["case1", "case2", "case3", "case4"]   # which case the 1st/2nd/3rd/4th true testimony unlocks
+var cases: Dictionary = {}
+var witnesses: Dictionary = {}
+var witness_order: Array[String] = []
+var order: Array[String] = [INTRO_ID, "case1", "case2", "case3", "case4"]
+var interview_cases: Array[String] = ["case1", "case2", "case3", "case4"]
+var unlocked_order: Array[String] = []
 
 var true_accepted_count: int = 0
+var last_knocked_witness_id: String = ""
 
 func _ready() -> void:
 	randomize()
@@ -88,28 +89,31 @@ func _ready() -> void:
 func new_game() -> void:
 	cases.clear()
 	witnesses.clear()
+	unlocked_order.clear()
 	true_accepted_count = 0
+	last_knocked_witness_id = ""
+	order = [INTRO_ID, "case1", "case2", "case3", "case4"]
 
 	_build_case(INTRO_ID, [],
 		"Three weeks in this city and the cases were still routine work; unpaid invoices, wandering house cats, husbands who forgot their own anniversaries. Then a forum post caught my eye late one night -- an anonymous thread about a missing child, buried under dead links and paranoid warnings. I saved it before I could think twice. By morning, someone already had my number."
 	)
-	cases[INTRO_ID].unlocked = true   # no interview needed for this one
+	cases[INTRO_ID].unlocked = true
 
 	_build_case("case1",
 		["attendance_record", "visitor_log_note", "hallway_graffiti"],
-		"The classroom smells like chalk dust; the teacher's hands won't stay still. Unexcused absences, stacked for months. \"I flagged it,\" she says, \"pero walang gumalaw.\" The mother signed the excuse slips herself -- \"family matters,\" vague, rehearsed. Scrawled near the back row, half-erased: \"sugar daddy.\" None of it proves anything. Yet."
+		WITNESS_MANUSCRIPTS["teacher"]
 	)
 	_build_case("case2",
 		["hidden_phone", "business_card", "cash_envelope"],
-		"Her room is too tidy. Under the bed: a second phone, shoes still boxed, gifts no one explains. A blank business card in a drawer. The father mutters, \"money's been okay lately.\" The mother calls it \"an arrangement,\" voice catching. You write bugaw in the margin; cross it out; write it again."
+		WITNESS_MANUSCRIPTS["mother"]
 	)
 	_build_case("case3",
 		["tire_tracks", "hotel_keycard", "torn_envelope"],
-		"Marites remembers a tinted car, past nine -- \"hindi naman akin ang anak.\" An envelope changed hands outside the gate. The basurero found a hotel keycard, half-buried in trash, too embarrassed to say more. None of it proves anything alone. Together, it forms a shape you can't unsee anymore."
+		WITNESS_MANUSCRIPTS["marites"]
 	)
 	_build_case("case4",
 		["worn_footpath", "parked_car_photo", "witness_sketch"],
-		"Classmate 3 walks the route by heart -- away from home, toward the old apartments. The same car. The same man, named twice, unprompted. She wasn't running from home; she was being sent out of it. You sit with that before typing your report. Bugaw. Someone who arranges. Someone who profits."
+		WITNESS_MANUSCRIPTS["classmate3"]
 	)
 
 	_build_witness("mother", "Mother", [
@@ -160,6 +164,8 @@ func new_game() -> void:
 		_t("She mentioned once, offhand, na gusto niyang 'mawala na lang.' Baka runaway talaga ang nangyari, hindi ko masyadong pinansin noon, sa totoo lang.", false),
 	])
 
+	_build_all_conversations()
+
 	witness_order.assign(witnesses.keys())
 	witness_order.shuffle()
 
@@ -174,9 +180,6 @@ func _build_case(id: String, evidence_items: Array[String], manuscript_text: Str
 	c.id = id
 	c.evidence_items = evidence_items
 	c.manuscript_text = manuscript_text
-	# A case with no evidence items (i.e. "intro") has no bulletin puzzle to
-	# solve, so treat it as already solved -- otherwise mark_item_found()
-	# never fires for it and the notepad stays permanently locked.
 	c.puzzle_solved = evidence_items.is_empty()
 	cases[id] = c
 
@@ -187,10 +190,173 @@ func _build_witness(id: String, display_name: String, testimonies: Array[Testimo
 	w.testimonies = testimonies
 	witnesses[id] = w
 
+## --- CONVERSATION HOOK ------------------------------------------------------
+func _line(speaker: String, text: String) -> DialogueLine:
+	var d := DialogueLine.new()
+	d.speaker = speaker
+	d.text = text
+	return d
+
+func _add_conversation(witness_id: String, lines: Array[DialogueLine]) -> void:
+	if not witnesses.has(witness_id):
+		return
+	witnesses[witness_id].conversations.append(lines)
+
+func _build_all_conversations() -> void:
+	# --- MOTHER ---
+	_add_conversation("mother", [
+		_line("player", "Come on in out of the rain, Mrs. Reyes. Please, have a seat—no rush at all. I'm investigating Maya's disappearance and just want to help bring her home safely."),
+		_line("witness", "Private investigator? Sino nag-hire sa'yo? Hindi naman kami nagbayad ng detective—may blotter na sa presinto."),
+		_line("player", "I understand it's overwhelming having someone new ask questions, especially after dealing with the precinct. Whenever you're ready, just tell me how things were at home before she went missing."),
+	])
+	_add_conversation("mother", [
+		_line("player", "Thank you for making the trip up here in this weather, Mrs. Reyes. Take a breath—I know the precinct marked this as a runaway, but I'd rather hear directly from her mother."),
+		_line("witness", "Wala naman akong tinatago. Pagod na pagod na ako kakahanap sa District 4, tapos kung anu-ano pang tsismis ang naririnig ko."),
+		_line("player", "I hear you, and I'm not here to judge or add to the noise. Take your time and walk me through her last few days at home."),
+	])
+	_add_conversation("mother", [
+		_line("player", "Good evening, Mrs. Reyes. Come sit down and dry off a bit. I've been trying to piece together Maya's timeline around District 4, and I wanted to check in with you directly."),
+		_line("witness", "Bakit mga kapitbahay ang pinapakinggan mo? Anak ko si Maya, mas kilala ko siya kaysa kanino man."),
+		_line("player", "And that's exactly why you're the person I want to listen to. No pressure—just share your side of what happened."),
+	])
+
+	# --- FATHER ---
+	_add_conversation("father", [
+		_line("player", "Evening, Mr. Reyes. Come in and take a seat—I appreciate you climbing all these stairs after a long shift. I'm following up on Maya's case."),
+		_line("witness", "Gabi na ah. Kakauwi ko lang galing trabaho, wala akong gana sa mga imbestiga-imbestiga na 'yan."),
+		_line("player", "I completely understand you're exhausted, Sir, so I won't keep you long. Even a small detail from before she went missing could really help."),
+	])
+	_add_conversation("father", [
+		_line("player", "Take a seat and relax for a minute, Mr. Reyes. I've been reviewing the local notes on Maya, and a few neighbors in District 4 mentioned late-night activity near your place."),
+		_line("witness", "Sino nagsabi niyan? Mga chismoso sa eskinita namin, walang magawa kundi manilip ng buhay ng may buhay."),
+		_line("player", "Neighbors talk, I know how that goes. That's why I'd rather hear the truth straight from you—what was your routine like around the time she left?"),
+	])
+	_add_conversation("father", [
+		_line("player", "Good evening, Sir. Have a seat out of the storm. I'm handling Maya's missing person file, and I just wanted to have a quiet, straightforward chat."),
+		_line("witness", "Huwag mo na kaming idamay sa gulo. Dalaga na 'yon, may sariling isip na."),
+		_line("player", "I'm not here to cause trouble for your family, Mr. Reyes. She's still sixteen, and anything you noticed could point us in the right direction."),
+	])
+
+	# --- MARITES / NEIGHBOR ---
+	_add_conversation("marites", [
+		_line("player", "Watch your step by the door—the floor's a little wet. Thank you for coming all this way, Ate. You live right beside the Reyes house in District 4, right?"),
+		_line("witness", "Oo, magkatabi lang bintana namin! Naku, buti may nag-imbestiga na talaga, kanina pa ako kinakabahan sa mga nangyayari doon."),
+		_line("player", "Take your time and catch your breath. You're completely safe here—just tell me calmly whatever you've noticed along the alley."),
+	])
+	_add_conversation("marites", [
+		_line("player", "Good evening, Ate. Please, have a comfortable seat. I'm looking into Maya Reyes's disappearance, and folks on the block mentioned you usually have a good eye on the street."),
+		_line("witness", "Hindi naman sa pakialamera ako ha, pero sa kitid ng eskinita namin, kahit kaluskos sa gabi rinig ko."),
+		_line("player", "Nobody's calling you nosy—looking out for a missing kid is a good thing. What stood out to you before Maya vanished?"),
+	])
+	_add_conversation("marites", [
+		_line("player", "Pull up a chair and make yourself comfortable. No police uniforms or loud questions here—just a quiet conversation to help find Maya."),
+		_line("witness", "Basta huwag mo sasabihin sa mag-asawa na pumunta ako dito ha! Mahirap na, pader lang pagitan namin."),
+		_line("player", "You have my word—your name stays completely off the record and between the two of us. Whenever you're ready, tell me what you saw."),
+	])
+
+	# --- BASURERO ---
+	_add_conversation("basurero", [
+		_line("player", "Come on in, Kuya, and don't worry about your boots—the floor's already damp from the rain. You handle the collection route along the District 4 alley, right?"),
+		_line("witness", "Opo, Boss. Pero taga-hakot lang po ako ng basura doon, baka wala naman akong alam sa pagkawala nung bata."),
+		_line("player", "No pressure at all, Kuya. Sometimes people who work the streets notice the quiet details everyone else misses. Did anything around their place catch your eye?"),
+	])
+	_add_conversation("basurero", [
+		_line("player", "Salamat sa pagpunta, Kuya. Please, take a seat and rest for a bit. I'm investigating Maya Reyes's case, and I'm just checking every part of the neighborhood."),
+		_line("witness", "Sa trabaho namin, Boss, marami kang nakikita pero tahimik ka na lang. Ayoko pong madamay sa away-kapitbahay."),
+		_line("player", "I respect that, and I won't drag your name into anything. Just share whatever you remember near their curb—it stays strictly between us."),
+	])
+	_add_conversation("basurero", [
+		_line("player", "Good evening, Kuya. Come in out of the weather and have a seat. I'm trying to put together a clear picture of Maya Reyes's routine before she went missing."),
+		_line("witness", "Ah, yung dalagita sa dulo ng eskinita? Matagal ko na ring napapansin na kakaiba kilos sa bahay nila."),
+		_line("player", "I appreciate you speaking up, Kuya. Take your time—what seemed unusual to you?"),
+	])
+
+	# --- CLASSMATE 1 (THE FRIEND) ---
+	_add_conversation("classmate1_friend", [
+		_line("player", "Hey, come on in and take a seat. Don't be nervous—you're not in any trouble at all. I'm just investigating Maya's disappearance so we can find her."),
+		_line("witness", "Opo... magkaibigan po kami sa school, pero hindi ko po talaga alam kung nasaan siya ngayon."),
+		_line("player", "I believe you, and I'm glad she had a good friend like you. Just take it easy and tell me how she was acting in the weeks before she stopped coming to class."),
+	])
+	_add_conversation("classmate1_friend", [
+		_line("player", "Rough night to travel across town—thanks for coming up here. You and Maya were pretty close at school, weren't you?"),
+		_line("witness", "Natatakot po kasi ako baka magalit si Tita—yung mama niya—pag nalaman niyang nakikipag-usap ako sa detective."),
+		_line("player", "You don't have to worry about that. Her parents won't hear a single word from me—just share whatever you feel comfortable telling me."),
+	])
+	_add_conversation("classmate1_friend", [
+		_line("player", "Have a seat and relax for a moment. I've been reading through Maya's file, and honestly, the rumors going around don't quite match the girl you knew."),
+		_line("witness", "Sabi ng iba naglayas daw siya, pero... hindi naman siya ganoon dati eh."),
+		_line("player", "That's really helpful to hear. Whenever you're ready, tell me what you noticed changing with her."),
+	])
+
+	# --- CLASSMATE 2 (THE BULLY) ---
+	_add_conversation("classmate2_bully", [
+		_line("player", "Hey, come in and take a seat. I know an investigator's office isn't where you want to spend your evening, so I'll keep this brief and straightforward."),
+		_line("witness", "Tss. Bakit ako pinatawag mo? Hindi naman kami close ni Maya, wala akong pake kung saan siya nagpunta."),
+		_line("player", "Fair enough—you don't have to be friends with someone to notice what happens around school. Just tell me calmly whatever you happened to see."),
+	])
+	_add_conversation("classmate2_bully", [
+		_line("player", "Come on in out of the rain. I'm looking into Maya Reyes's disappearance, and a few people mentioned you might have noticed who she hung around with."),
+		_line("witness", "Kung iniisip mong may kinalaman ako sa pagkawala niya, nagkakamali ka."),
+		_line("player", "Relax, nobody's pointing fingers at you here. I'm just trying to get the full picture—what did you observe around campus?"),
+	])
+	_add_conversation("classmate2_bully", [
+		_line("player", "Have a seat—no need to stay on guard. Most of your class seems hesitant to talk about Maya, so I appreciate you showing up."),
+		_line("witness", "Eh totoo namang maraming kalokohan 'yon pagkatapos ng klase, nagbabait-baitan lang."),
+		_line("player", "All right, I'm listening. Tell me plainly what you saw after classes let out."),
+	])
+
+	# --- CLASSMATE 3 ---
+	_add_conversation("classmate3", [
+		_line("player", "Good evening. Thanks for coming up to the office in this weather—have a seat. I'm just trying to trace Maya's usual route after dismissal."),
+		_line("witness", "Ah, sabay po kami minsan lumalabas ng gate, pero naghihiwalay din kami pagdating sa sakayan."),
+		_line("player", "That's already a big help. Do you remember which direction she usually headed from there?"),
+	])
+	_add_conversation("classmate3", [
+		_line("player", "Come in and make yourself comfortable. I'm investigating Maya Reyes's case, and I'm grateful you took the time to stop by."),
+		_line("witness", "Hindi ko po alam kung makakatulong 'to, pero ilang beses ko siyang nakita pagkatapos ng klase."),
+		_line("player", "Even small details end up being the most important ones. Take your time and tell me what you saw."),
+	])
+	_add_conversation("classmate3", [
+		_line("player", "Have a seat out of the rain. I'm putting together a timeline of Maya's last few weeks—you sat near her in class, right?"),
+		_line("witness", "Opo. Tahimik lang siya nitong mga nakaraang buwan, parang laging nagmamadali umalis pag-bell."),
+		_line("player", "I appreciate you paying attention. Did you ever notice where she was heading in such a hurry?"),
+	])
+
+	# --- TEACHER ---
+	_add_conversation("teacher", [
+		_line("player", "Good evening, Ma'am. Please, have a seat—thank you so much for making time after school hours to help with Maya's case."),
+		_line("witness", "Matagal na akong nag-aalala kay Maya. Sa wakas may nag-iimbestiga nang seryoso sa kaso niya."),
+		_line("player", "I'm glad we could speak. You know her classroom routine best, so whenever you're ready, walk me through what you noticed."),
+	])
+	_add_conversation("teacher", [
+		_line("player", "Come on in out of the rain, Ma'am, and make yourself comfortable. I'm investigating Maya Reyes's disappearance and wanted to check in with you."),
+		_line("witness", "Sa totoo lang, matino siyang estudyante dati. Bigla na lang nagbago nitong huling dalawang buwan."),
+		_line("player", "That's a really important detail. Could you tell me a bit more about those changes—and how her family responded when you reached out?"),
+	])
+	_add_conversation("teacher", [
+		_line("player", "Thank you for coming up to this quiet loft, Ma'am. Take a breath—I just want to have a calm, thorough look at Maya's behavior at school."),
+		_line("witness", "Basta makatulong mahanap si Maya, sasabihin ko lahat ng nasa record ko at lahat ng napansin ko."),
+		_line("player", "I truly appreciate your openness, Ma'am. Take your time and start wherever feels right."),
+	])
+
+func draw_conversation_for_witness(witness_id: String) -> Array[DialogueLine]:
+	if not witnesses.has(witness_id):
+		push_warning("draw_conversation_for_witness: no witness '%s'." % witness_id)
+		return []
+	var w: WitnessData = witnesses[witness_id]
+	if not w.chosen_conversation.is_empty():
+		return w.chosen_conversation
+	if w.conversations.is_empty():
+		return []
+	var picked: Array = w.conversations[randi() % w.conversations.size()]
+	var chosen: Array[DialogueLine] = []
+	chosen.assign(picked)
+	w.chosen_conversation = chosen
+	conversation_drawn.emit(witness_id, chosen)
+	return chosen
+# ---------------------------------------------------------------------------
+
 ## --- DOOR/NPC HOOK ---------------------------------------------------------
-## The order the door system should offer knocks in, for this run. Shuffled
-## fresh every new_game() so which witness shows up when is randomized, but
-## all 8 ids are always present -- every witness gets exhausted over a run.
 func get_witness_order() -> Array[String]:
 	return witness_order.duplicate()
 
@@ -202,28 +368,21 @@ func get_witness_display_name(witness_id: String) -> String:
 func has_been_knocked(witness_id: String) -> bool:
 	return witnesses.has(witness_id) and witnesses[witness_id].knocked
 
-## Call when this witness's door is knocked on. Each witness is ONE knock
-## per run -- calling this again for the same witness just returns the same
-## line they already gave (it does not re-roll).
-##
-## Before the 4-true cap is hit: draws randomly from all 3 of the witness's
-## lines (so a 2-true/1-false witness is more likely, but not guaranteed,
-## to hand you a true lead).
-## After the cap is hit: only the FALSE line(s) in their pool are eligible,
-## so every witness knocked after the 4th true testimony gives a false
-## statement, no exceptions -- they can still be interviewed for flavor,
-## but nothing more will unlock.
 func draw_testimony_for_witness(witness_id: String) -> Testimony:
 	if not witnesses.has(witness_id):
 		push_warning("draw_testimony_for_witness: no witness '%s'." % witness_id)
 		return null
 	var w: WitnessData = witnesses[witness_id]
+	last_knocked_witness_id = witness_id
 	if w.knocked:
 		return w.given
 
+	var target_case: String = WITNESS_CASE_MAP.get(witness_id, "")
+	var case_already_unlocked: bool = not target_case.is_empty() and is_unlocked(target_case)
+
 	var pool: Array[Testimony] = w.testimonies
 	var candidates: Array[Testimony] = pool
-	if true_accepted_count >= TRUE_TESTIMONY_CAP:
+	if true_accepted_count >= TRUE_TESTIMONY_CAP or case_already_unlocked:
 		var false_only: Array[Testimony] = []
 		for t in pool:
 			if not t.is_true:
@@ -237,20 +396,41 @@ func draw_testimony_for_witness(witness_id: String) -> Testimony:
 	witness_exhausted.emit(witness_id)
 	return chosen
 
-## Call by the door/NPC script once it sees the returned Testimony.is_true
-## was true. Bumps the true-count and unlocks whichever case is next in
-## unlock_sequence (1st true -> case1, 2nd -> case2, 3rd -> case3,
-## 4th -> case4). Which witness said it is irrelevant -- returns the case_id
-## that just got unlocked, or "" if the cap was already reached (shouldn't
-## normally happen, since draw_testimony_for_witness stops handing out true
-## lines once the cap is hit, but the guard is here just in case).
-func accept_true_testimony() -> String:
+func accept_true_testimony(witness_id: String = "") -> String:
 	if true_accepted_count >= TRUE_TESTIMONY_CAP:
 		return ""
-	var case_id: String = unlock_sequence[true_accepted_count]
+
+	var w_id := witness_id if not witness_id.is_empty() else last_knocked_witness_id
+	var case_id: String = WITNESS_CASE_MAP.get(w_id, "")
+
+	if case_id.is_empty() or not cases.has(case_id) or cases[case_id].unlocked:
+		for id in interview_cases:
+			if not cases[id].unlocked:
+				case_id = id
+				break
+
+	if case_id.is_empty():
+		return ""
+
+	if WITNESS_MANUSCRIPTS.has(w_id):
+		cases[case_id].manuscript_text = WITNESS_MANUSCRIPTS[w_id]
+	cases[case_id].unlocked_by_witness = w_id
+
 	true_accepted_count += 1
+	unlocked_order.append(case_id)
+	_rebuild_article_order()
 	mark_case_unlocked(case_id)
 	return case_id
+
+func _rebuild_article_order() -> void:
+	var new_order: Array[String] = [INTRO_ID]
+	for id in unlocked_order:
+		if id not in new_order:
+			new_order.append(id)
+	for id in interview_cases:
+		if id not in new_order:
+			new_order.append(id)
+	order = new_order
 
 func get_true_accepted_count() -> int:
 	return true_accepted_count
@@ -263,22 +443,14 @@ func mark_case_unlocked(case_id: String) -> void:
 # ---------------------------------------------------------------------------
 
 ## --- BULLETIN BOARD HOOK (hidden object puzzle) -----------------------------
-## Call once a case has been unlocked (via accept_true_testimony), right
-## before letting the player open that case's hidden-object scene.
 func is_unlocked(case_id: String) -> bool:
 	return cases.has(case_id) and cases[case_id].unlocked
 
-## The 3 correct item ids for this case. The hidden-object scene's clickable
-## nodes should be named to match these exactly -- anything else clickable in
-## that scene is a decoy (wrong click = time penalty, no story significance).
 func get_evidence_items(case_id: String) -> Array[String]:
 	if not cases.has(case_id):
 		return []
 	return cases[case_id].evidence_items.duplicate()
 
-## Items already found for this case, kept across board close/reopen and
-## across a failed (timed-out) attempt, so a bad run doesn't wipe items the
-## player already legitimately found.
 func get_found_items(case_id: String) -> Array[String]:
 	if not cases.has(case_id):
 		return []
@@ -287,8 +459,6 @@ func get_found_items(case_id: String) -> Array[String]:
 func is_item_found(case_id: String, item_id: String) -> bool:
 	return cases.has(case_id) and item_id in cases[case_id].found_items
 
-## Call when the player clicks a correct evidence item. Returns true if this
-## was the 3rd and final item, i.e. the puzzle (60-second search) is now solved.
 func mark_item_found(case_id: String, item_id: String) -> bool:
 	if not cases.has(case_id):
 		return false
@@ -313,10 +483,6 @@ func mark_puzzle_solved(case_id: String) -> void:
 	cases[case_id].puzzle_solved = true
 	puzzle_solved.emit(case_id)
 
-## Optional: wipes found-item progress for a case. Not called automatically
-## on a timed-out attempt -- found items persist by default so a failed run
-## isn't a total loss. Wire this in if you'd rather a timeout clear
-## everything instead.
 func reset_puzzle_progress(case_id: String) -> void:
 	if not cases.has(case_id):
 		return
@@ -324,11 +490,6 @@ func reset_puzzle_progress(case_id: String) -> void:
 # ---------------------------------------------------------------------------
 
 ## --- TYPING GAME HOOK -------------------------------------------------------
-## Called by noteTypingGame.gd on every keystroke/word so progress survives
-## the notepad window being force-closed (e.g. lightmanager.gd cutting power
-## and calling computer2.force_shutdown_desktop()). total_typed and
-## correct_chars are saved too, so the accuracy tally can't be reset just by
-## closing and reopening the notepad.
 func save_progress(case_id: String, word_index: int, partial_text: String, total_typed: int, correct_chars: int, word_states: Array[bool] = []) -> void:
 	if not cases.has(case_id):
 		return
@@ -338,9 +499,6 @@ func save_progress(case_id: String, word_index: int, partial_text: String, total
 	cases[case_id].progress_correct_chars = correct_chars
 	cases[case_id].progress_word_states = word_states.duplicate()
 
-
-## Called by noteTypingGame.gd when (re)opening a manuscript, to resume
-## exactly where the player left off.
 func get_progress_word_index(case_id: String) -> int:
 	if not cases.has(case_id):
 		return 0
@@ -360,16 +518,17 @@ func get_progress_correct_chars(case_id: String) -> int:
 	if not cases.has(case_id):
 		return 0
 	return cases[case_id].progress_correct_chars
+
 func save_word_states(case_id: String, states: Array[bool]) -> void:
 	if not cases.has(case_id):
 		return
 	cases[case_id].progress_word_states = states.duplicate()
+
 func get_progress_word_states(case_id: String) -> Array[bool]:
 	if not cases.has(case_id):
 		return []
 	return cases[case_id].progress_word_states.duplicate()
-## Wipes saved progress for a case (used when accuracy drops too low and the
-## manuscript has to be restarted from scratch).
+
 func reset_progress(case_id: String) -> void:
 	if not cases.has(case_id):
 		return
@@ -379,7 +538,6 @@ func reset_progress(case_id: String) -> void:
 	cases[case_id].progress_correct_chars = 0
 	cases[case_id].progress_word_states.clear()
 
-## Called by noteTypingGame.gd once the manuscript has been fully typed.
 func mark_case_solved(case_id: String) -> void:
 	if not cases.has(case_id) or cases[case_id].solved:
 		return
@@ -392,21 +550,22 @@ func get_manuscript_text(case_id: String) -> String:
 		return ""
 	return cases[case_id].manuscript_text
 # ---------------------------------------------------------------------------
+
 func get_next_puzzle_case() -> String:
+	for id in unlocked_order:
+		if cases[id].unlocked and not cases[id].puzzle_solved:
+			return id
 	for id in interview_cases:
 		if cases[id].unlocked and not cases[id].puzzle_solved:
 			return id
 	return ""
-## True once all 4 real cases (not counting "intro") are solved.
+
 func is_run_complete() -> bool:
 	for id in interview_cases:
 		if not cases[id].solved:
 			return false
 	return true
 
-## The article: every solved entry's manuscript, in order (intro first, then
-## case1-4), with the closing headline appended once all 4 real cases are
-## done. Empty until the player types the intro.
 func get_article_text() -> String:
 	var pieces: Array[String] = []
 	for id in order:
