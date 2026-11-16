@@ -132,16 +132,41 @@ func _end_session() -> void:
 
 func _shake_camera() -> void:
 	var cam := get_viewport().get_camera_3d()
+
 	if cam == null:
+		print("No active camera found!")
 		return
+
+	print("SHAKE ACTIVATED!")
+
 	if _shake_tween and _shake_tween.is_valid():
 		_shake_tween.kill()
+
 	_shake_tween = create_tween()
-	var steps := 8
-	var from := Vector2(cam.h_offset, cam.v_offset)
-	for i in steps:
+	_shake_tween.set_pause_mode(Tween.TWEEN_PAUSE_PROCESS)
+
+	var original_rotation := cam.rotation
+	var steps := 12
+
+	for i in range(steps):
 		var falloff := 1.0 - float(i) / steps
-		var to := Vector2(randf_range(-1, 1), randf_range(-1, 1)) * shake_strength * falloff
-		_shake_tween.tween_method(func(o: Vector2): cam.h_offset = o.x; cam.v_offset = o.y, from, to, shake_duration / steps)
-		from = to
-	_shake_tween.tween_method(func(o: Vector2): cam.h_offset = o.x; cam.v_offset = o.y, from, Vector2.ZERO, 0.04)
+
+		var shake := Vector3(
+			randf_range(-1.0, 1.0),
+			randf_range(-1.0, 1.0),
+			randf_range(-1.0, 1.0)
+		) * deg_to_rad(shake_strength) * falloff
+
+		_shake_tween.tween_property(
+			cam,
+			"rotation",
+			original_rotation + shake,
+			shake_duration / steps
+		)
+
+	_shake_tween.tween_property(
+		cam,
+		"rotation",
+		original_rotation,
+		0.08
+	)

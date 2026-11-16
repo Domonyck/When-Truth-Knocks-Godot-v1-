@@ -23,7 +23,7 @@ extends Node2D
 var blackout_timer: float = 0.0
 signal blackout_started
 signal power_restored
-
+var _was_powered_last_frame := true
 var is_blackout := false
 
 func _ready() -> void:
@@ -73,7 +73,6 @@ func force_blackout() -> void:
 		
 	is_blackout = true
 	blackout_started.emit()
-	
 	for area in [ceiling_fan_area, wall_lamp_area, office_assets_area]:
 		if is_instance_valid(gen_off):
 			gen_off.play()
@@ -81,7 +80,7 @@ func force_blackout() -> void:
 		
 		# FORCE BLACKOUT: Keep lights UNINTERACTABLE as requested
 		_set_area_interactable(area, false)
-
+		
 	# Update environmental assets/computer for blackout mode
 	if is_instance_valid(mesh_instance_2) and mesh_instance_2.visible:
 		mesh_instance_2.visible = false
@@ -95,7 +94,7 @@ func force_blackout() -> void:
 		for child in computer2.get_children():
 			if (child is CollisionShape3D or child is CollisionPolygon3D) and not child.disabled:
 				child.disabled = true
-
+	Notify.show_message("You should check outside.", 10.0)
 func _set_area_interactable(area: Area3D, enabled: bool) -> void:
 	if area == null:
 		return
@@ -178,6 +177,7 @@ func _update_power_state() -> void:
 
 	# Handle regular state changes based on individual light statuses
 	if has_power:
+		_was_powered_last_frame = true
 		if is_instance_valid(mesh_instance_2) and not mesh_instance_2.visible:
 			mesh_instance_2.visible = true
 
@@ -201,9 +201,25 @@ func _update_power_state() -> void:
 			for child in computer2.get_children():
 				if (child is CollisionShape3D or child is CollisionPolygon3D) and not child.disabled:
 					child.disabled = true
+		if _was_powered_last_frame:
+			_was_powered_last_frame = false
+
 
 func _is_witness_active() -> bool:
 	for gm in get_tree().get_nodes_in_group("game_manager"):
 		if gm.has_method("is_witness_busy") and gm.is_witness_busy():
 			return true
 	return false
+	
+func _show_power_warning_after_delay() -> void:
+	print("Power warning timer started!")
+
+	await get_tree().create_timer(5.0).timeout
+
+	var c_on = is_area_light_on(ceiling_fan_area)
+	var w_on = is_area_light_on(wall_lamp_area)
+	var o_on = is_area_light_on(office_assets_area)
+
+	if not (c_on or w_on or o_on) and not is_blackout:
+		print("Showing power warning!")
+		Notify.show_message("You should check outside.")
