@@ -324,17 +324,17 @@ func _build_all_conversations() -> void:
 
 	# --- TEACHER ---
 	_add_conversation("teacher", [
-		_line("player", "Good evening, Ma'am. Please, have a seat—thank you so much for making time after school hours to help with Maya's case."),
+		_line("player", "Good evening, Sir. Please, have a seat—thank you so much for making time after school hours to help with Maya's case."),
 		_line("witness", "Matagal na akong nag-aalala kay Maya. Sa wakas may nag-iimbestiga nang seryoso sa kaso niya."),
 		_line("player", "I'm glad we could speak. You know her classroom routine best, so whenever you're ready, walk me through what you noticed."),
 	])
 	_add_conversation("teacher", [
-		_line("player", "Come on in out of the rain, Ma'am, and make yourself comfortable. I'm investigating Maya Reyes's disappearance and wanted to check in with you."),
+		_line("player", "Come on in out of the rain, Sir, and make yourself comfortable. I'm investigating Maya Reyes's disappearance and wanted to check in with you."),
 		_line("witness", "Sa totoo lang, matino siyang estudyante dati. Bigla na lang nagbago nitong huling dalawang buwan."),
 		_line("player", "That's a really important detail. Could you tell me a bit more about those changes—and how her family responded when you reached out?"),
 	])
 	_add_conversation("teacher", [
-		_line("player", "Thank you for coming up to this quiet loft, Ma'am. Take a breath—I just want to have a calm, thorough look at Maya's behavior at school."),
+		_line("player", "Thank you for coming up to this quiet loft, Sir. Take a breath—I just want to have a calm, thorough look at Maya's behavior at school."),
 		_line("witness", "Basta makatulong mahanap si Maya, sasabihin ko lahat ng nasa record ko at lahat ng napansin ko."),
 		_line("player", "I truly appreciate your openness, Ma'am. Take your time and start wherever feels right."),
 	])
@@ -368,6 +368,18 @@ func get_witness_display_name(witness_id: String) -> String:
 func has_been_knocked(witness_id: String) -> bool:
 	return witnesses.has(witness_id) and witnesses[witness_id].knocked
 
+func get_unknocked_count() -> int:
+	var n := 0
+	for w in witnesses.values():
+		if not w.knocked:
+			n += 1
+	return n
+
+func release_witness(witness_id: String) -> void:
+	if witnesses.has(witness_id):
+		witnesses[witness_id].knocked = false
+		witnesses[witness_id].given = null
+
 func draw_testimony_for_witness(witness_id: String) -> Testimony:
 	if not witnesses.has(witness_id):
 		push_warning("draw_testimony_for_witness: no witness '%s'." % witness_id)
@@ -377,17 +389,18 @@ func draw_testimony_for_witness(witness_id: String) -> Testimony:
 	if w.knocked:
 		return w.given
 
-	var target_case: String = WITNESS_CASE_MAP.get(witness_id, "")
-	var case_already_unlocked: bool = not target_case.is_empty() and is_unlocked(target_case)
-
 	var pool: Array[Testimony] = w.testimonies
 	var candidates: Array[Testimony] = pool
-	if true_accepted_count >= TRUE_TESTIMONY_CAP or case_already_unlocked:
-		var false_only: Array[Testimony] = []
+
+	var needed := TRUE_TESTIMONY_CAP - true_accepted_count
+	var must_be_true := needed > 0 and get_unknocked_count() <= needed
+
+	if true_accepted_count >= TRUE_TESTIMONY_CAP or must_be_true:
+		var filtered: Array[Testimony] = []
 		for t in pool:
-			if not t.is_true:
-				false_only.append(t)
-		candidates = false_only
+			if t.is_true == must_be_true:
+				filtered.append(t)
+		candidates = filtered
 
 	var chosen: Testimony = candidates[randi() % candidates.size()]
 	w.knocked = true

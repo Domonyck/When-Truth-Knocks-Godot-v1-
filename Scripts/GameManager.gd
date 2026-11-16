@@ -20,7 +20,7 @@ var shift_ended: bool = false
 # ---------------------------------
 @export_group("Witness Spawning")
 @export var witness_interval: float = 60.0      # base time between witnesses
-@export var wrong_decision_penalty: float = 30.0 # extra delay for a wrong choice
+@export var wrong_decision_penalty: float = 20.0 # extra delay for a wrong choice
 var next_witness_timer: float = 60.0
 
 var witnesses: Array[Node] = []
@@ -31,13 +31,15 @@ var current_conversation: Array[StoryData.DialogueLine] = []
 var conversation_index: int = 0
 var in_conversation: bool = false
 var _active_type_tween: Tween = null
-
+var current_witness_id: String = ""
+var returning_witnesses: Array[Node] = []
 # Dictionary to store each witness's starting global transform
 var initial_transforms: Dictionary = {}
 var clock_label_1: Label = null
 var clock_label_2: Label = null
 var waiting_for_door := false
 var witness_exiting := false
+
 
 func _ready() -> void:
 	add_to_group("game_manager") 
@@ -159,6 +161,10 @@ func _on_visitor_revealed() -> void:
 		_reveal_next_witness()
 
 func _reveal_next_witness() -> void:
+	for w in returning_witnesses:
+		if w != active_witness and not witnesses.has(w):
+			witnesses.append(w)
+	returning_witnesses.clear()
 	if witnesses.is_empty():
 		print("No more witnesses left to appear.")
 		return
@@ -351,11 +357,9 @@ func _on_accept_pressed() -> void:
 	_on_close_button_pressed()
 
 func _on_decline_pressed() -> void:
-	if current_testimony:
-		if current_testimony.is_true:
-			_apply_wrong_decision()
-		else:
-			next_witness_timer = witness_interval
+	if current_testimony and current_testimony.is_true:
+		StoryData.release_witness(current_witness_id)
+		returning_witnesses.append(active_witness)
 	current_testimony = null
 	_on_close_button_pressed()
 	

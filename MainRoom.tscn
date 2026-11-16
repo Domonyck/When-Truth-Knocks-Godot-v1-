@@ -57,6 +57,7 @@
 [ext_resource type="Texture2D" uid="uid://8xi1lpkfbbh1" path="res://assets/12024981e-40f1-45bd-afcb-772b99b0af43_-_Edited.png" id="46_vrtfv"]
 [ext_resource type="Texture2D" uid="uid://cq62ipy8puf3s" path="res://assets/c4d936d6-8653-4c54-85d2-37c82c65896f.png" id="51_5bfci"]
 [ext_resource type="Texture2D" uid="uid://bf40rm0rev2px" path="res://assets/acc3a5c7-4958-4116-b3f2-be42d3da8e9c.png" id="52_p7kvt"]
+[ext_resource type="Texture2D" uid="uid://t5ism43ug1oj" path="res://assets/c0d18a6a-5da2-4ccc-8d23-7f12a55ccb91.png" id="53_d2nro"]
 [ext_resource type="Texture2D" uid="uid://ch86fvsfkdh28" path="res://assets/Gemini_Generated_Image_f8g2bef8g2bef8g2_-_Edited.png" id="53_v8c74"]
 [ext_resource type="PackedScene" uid="uid://c1nwvwcqhwxwy" path="res://assets/katrina_0930145730_texture.glb" id="54_bk1hi"]
 [ext_resource type="Script" uid="uid://d3jqom0mxu1hi" path="res://Scripts/generator.gd" id="55_ske8v"]
@@ -904,7 +905,7 @@ libraries/ = SubResource("AnimationLibrary_c8856")
 [node name="Characters" type="Node3D" parent="SubViewportContainer" unique_id=1305229521]
 
 [node name="Teacher" type="Sprite3D" parent="SubViewportContainer/Characters" unique_id=1515566829]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.3450756, 59.49117, -123.89665)
+transform = Transform3D(1.2261329, 0, 0, 0, 1.3250754, 0, 0, 0, 1, 3.3450756, 68.11556, -121.45085)
 top_level = true
 visible = false
 pixel_size = 0.027116
@@ -926,21 +927,21 @@ shaded = true
 texture = ExtResource("45_dllnc")
 
 [node name="Marites" type="Sprite3D" parent="SubViewportContainer/Characters" unique_id=1920042992]
-transform = Transform3D(1.1496369, 0, 0, 0, 1.1424842, 0, 0, 0, 1, 2.6462688, 56.864445, -123.89665)
+transform = Transform3D(1.3269174, 0, 0, 0, 1.5785265, 0, 0, 0, 1, 2.6462688, 65.713715, -127.743034)
 visible = false
 pixel_size = 0.035116
 shaded = true
-texture = ExtResource("46_vrtfv")
+texture = ExtResource("53_d2nro")
 
 [node name="Classmate2" type="Sprite3D" parent="SubViewportContainer/Characters" unique_id=1986889941]
-transform = Transform3D(1.1806581, 0, 0, 0, 1.1610683, 0, 0, 0, 1, 3.5942059, 58.349556, -123.89665)
+transform = Transform3D(1.2100487, 0, 0, 0, 1.3054067, 0, 0, 0, 1, 3.5942059, 59.79325, -125.895515)
 visible = false
 pixel_size = 0.035116
 shaded = true
 texture = ExtResource("46_vrtfv")
 
 [node name="Classmate1" type="Sprite3D" parent="SubViewportContainer/Characters" unique_id=1536249557]
-transform = Transform3D(1.3654374, 0, 0, 0, 1.2599901, 0, 0, 0, 1, 2.5913572, 56.156403, -123.89665)
+transform = Transform3D(1.7494037, 0, 0, 0, 1.301814, 0, 0, 0, 1, 2.5913572, 60.100945, -128.71881)
 visible = false
 pixel_size = 0.035116
 shaded = true
@@ -1007,11 +1008,8 @@ name_label = NodePath("../DialogueUI/Control/NameLabel")
 dialogue_label = NodePath("../DialogueUI/Control/DialogueLabel")
 Accept = NodePath("../DialogueUI/Control/Accept")
 Decline = NodePath("../DialogueUI/Control/Decline")
-fade_in_duration = null
 characters_parent = NodePath("../SubViewportContainer/Characters")
 clock_label = NodePath("../ClockUI/TimeLabel")
-witness_interval = null
-wrong_decision_penalty = null
 
 [node name="WrongDecision" type="AudioStreamPlayer" parent="." unique_id=2014381312]
 stream = ExtResource("60_p7kvt")
@@ -1059,13 +1057,6 @@ flat = true
 [node name="katrina_0930145730_texture" parent="." unique_id=411335890 instance=ExtResource("54_bk1hi")]
 transform = Transform3D(22.264519, 0, 0, 0, 22.16081, 0, 0, 0, 17.866833, -115.86988, 64.42372, 49.961357)
 visible = false
-
-[node name="SpotLight3D" type="SpotLight3D" parent="." unique_id=1504472176]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 62.360283, 68.774124)
-visible = false
-spot_range = 133.322
-spot_attenuation = 0.21
-spot_angle = 21.32
 
 [node name="ClockUI" type="CanvasLayer" parent="." unique_id=1297701799]
 

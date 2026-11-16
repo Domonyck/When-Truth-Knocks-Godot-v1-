@@ -199,3 +199,12 @@ func _travel(cam: Camera3D, target: Transform3D, while_paused := false, keep_fro
 func _input(event: InputEvent) -> void:
 	if at_breaker and not traveling and event.is_action_pressed("ui_cancel"):
 		return_from_breaker()
+	if event is InputEventKey and event.pressed and not event.echo:
+		if event.keycode == KEY_K or event.physical_keycode == KEY_K:
+			print("DEBUG: Force-triggered knock via 'K' key!")
+			
+			# If the door is currently closed or busy, reset states safely for testing
+			if is_animating:
+				return
+
+			trigger_knock()
