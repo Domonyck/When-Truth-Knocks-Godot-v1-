@@ -39,7 +39,7 @@ var clock_label_1: Label = null
 var clock_label_2: Label = null
 var waiting_for_door := false
 var witness_exiting := false
-
+var welcome_already_shown: bool = false
 
 func _ready() -> void:
 	add_to_group("game_manager") 

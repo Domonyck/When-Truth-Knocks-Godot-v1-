@@ -109,6 +109,7 @@ func _finish() -> void:
 # ---------- Freeze / resume ----------
 
 func _start_session() -> void:
+	Notify.show_message("Press Space to Repair", 10)
 	session_active = true
 	next_check = 0
 	for n in clock_nodes:

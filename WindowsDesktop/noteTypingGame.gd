@@ -11,7 +11,10 @@ signal manuscript_failed(case_id: String)
 @onready var mouse: AudioStreamPlayer = $Mouse
 
 @export var min_accuracy_percent: float = 80.0
+@onready var title_bar: Control = $NotepadTitle
 
+var dragging := false
+var drag_offset := Vector2.ZERO
 var case_id: String = ""
 var words: Array[String] = []
 var word_states: Array[bool] = []  # Stores true if typed correctly, false if incorrect/missed
@@ -223,6 +226,34 @@ func _update_stats() -> void:
 func _finish_manuscript() -> void:
 	finished = true
 	StoryData.mark_case_solved(case_id)
-	stats_label.text += "   [Manuscript filed]"
+	stats_label.text += "\n\n\n\n\n\n\n\n[Current Report Done]"
 	_render_words()
 	manuscript_typed.emit(case_id)
+
+func _input(event: InputEvent) -> void:
+	if not visible:
+		return
+
+	if event is InputEventMouseButton:
+		if event.button_index == MOUSE_BUTTON_LEFT:
+
+			if event.pressed:
+				var mouse_position = get_global_mouse_position()
+				var title_rect = Rect2(
+					title_bar.global_position,
+					title_bar.size
+				)
+
+				if title_rect.has_point(mouse_position):
+					dragging = true
+					drag_offset = mouse_position - global_position
+
+					# Prevent other UI elements from receiving the click.
+					get_viewport().set_input_as_handled()
+
+			else:
+				dragging = false
+
+	elif event is InputEventMouseMotion and dragging:
+		global_position = get_global_mouse_position() - drag_offset
+		get_viewport().set_input_as_handled()

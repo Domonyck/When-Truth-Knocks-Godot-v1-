@@ -275,7 +275,34 @@ theme_override_styles/normal = SubResource("StyleBoxTexture_auskg")
 theme_override_styles/pressed = SubResource("StyleBoxTexture_0sxyj")
 theme_override_styles/hover = SubResource("StyleBoxTexture_jxju5")
 
+[node name="Panel2" type="Panel" parent="WindowDialog" unique_id=1730774936]
+layout_mode = 0
+offset_left = 4.0
+offset_top = 74.0
+offset_right = 1137.0
+offset_bottom = 616.0
+
+[node name="Label" type="RichTextLabel" parent="WindowDialog/Panel2" unique_id=2127828241]
+layout_mode = 0
+offset_left = 43.0
+offset_top = 22.0
+offset_right = 1132.0
+offset_bottom = 509.0
+theme_override_fonts/normal_font = ExtResource("2_5udwm")
+theme_override_font_sizes/normal_font_size = 59
+text = "To Do:
+Accept Truthful Testimonies
+Complete Investigations via the Bulletin Board
+Complete the Manuscript.
+
+Computer Functions:
+Notepad: Complete manuscripts here
+Start: Open the Welcome window
+Esc: Exit Computer"
+vertical_alignment = 3
+
 [node name="Notepad2" type="Panel" parent="." unique_id=1602833461]
+visible = false
 self_modulate = Color(0.6847319, 0.6847319, 0.6847319, 1)
 texture_filter = 1
 layout_mode = 1

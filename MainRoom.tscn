@@ -499,6 +499,7 @@ wall_lamp_area = NodePath("SubViewportContainer/SubViewport/wall_lamp/Area3D")
 office_assets_area = NodePath("SubViewportContainer/SubViewport/OfficeAssets_free/Area3D")
 mesh_instance_2 = NodePath("SubViewportContainer/SubViewport/OfficeAssets_free/MeshInstance3D2")
 computer2 = NodePath("SubViewportContainer/SubViewport/OfficeAssets_free/Computer2")
+in_computer_multiplier = 1.8
 
 [node name="NightAmbience29548" type="AudioStreamPlayer" parent="." unique_id=19192241]
 stream = ExtResource("2_cbfv6")
