@@ -10,6 +10,8 @@
 [ext_resource type="AudioStream" uid="uid://cc246cqsw44qr" path="res://assets/Sounds/night-ambience-29548.mp3" id="2_cbfv6"]
 [ext_resource type="PackedScene" uid="uid://cpsn4onkag8hc" path="res://dialogue_ui.tscn" id="2_i755a"]
 [ext_resource type="Script" uid="uid://dwt054jdqyovy" path="res://Scripts/ceilingfan.gd" id="2_shaa1"]
+[ext_resource type="AudioStream" uid="uid://be6ke66qoajdn" path="res://assets/Sounds/thunder-clap-521194.mp3" id="2_wid6m"]
+[ext_resource type="Script" uid="uid://bx3p0cn8qqefv" path="res://Scripts/thunder_clap_521194.gd" id="3_fs0jg"]
 [ext_resource type="AudioStream" uid="uid://bvxairaugirwb" path="res://assets/Sounds/freesound_community-rain-and-thunder-16705.mp3" id="3_v8c74"]
 [ext_resource type="AudioStream" uid="uid://bvsijwoh1i5o5" path="res://assets/Sounds/freesound_community-suspense-creepy-ominous-ambience-14569.mp3" id="4_7bb4q"]
 [ext_resource type="Texture2D" uid="uid://byd37yo4crqtv" path="res://assets/ceilingfan_Image_0.jpg" id="4_7tsin"]
@@ -491,6 +493,8 @@ _data = {
 &"normal_walk": SubResource("Animation_vtemr")
 }
 
+[sub_resource type="PlaneMesh" id="PlaneMesh_ky0sj"]
+
 [node name="Node2D" type="Node2D" unique_id=117264161 node_paths=PackedStringArray("ceiling_fan_area", "wall_lamp_area", "office_assets_area", "mesh_instance_2", "computer2")]
 process_mode = 1
 script = ExtResource("1_5xmfd")
@@ -499,7 +503,13 @@ wall_lamp_area = NodePath("SubViewportContainer/SubViewport/wall_lamp/Area3D")
 office_assets_area = NodePath("SubViewportContainer/SubViewport/OfficeAssets_free/Area3D")
 mesh_instance_2 = NodePath("SubViewportContainer/SubViewport/OfficeAssets_free/MeshInstance3D2")
 computer2 = NodePath("SubViewportContainer/SubViewport/OfficeAssets_free/Computer2")
-in_computer_multiplier = 1.8
+
+[node name="ThunderPlayer" type="AudioStreamPlayer" parent="." unique_id=1734772370 node_paths=PackedStringArray("light_manager", "lightning_light")]
+stream = ExtResource("2_wid6m")
+volume_db = 0.808
+script = ExtResource("3_fs0jg")
+light_manager = NodePath("..")
+lightning_light = NodePath("../SubViewportContainer/SubViewport/lightning_light")
 
 [node name="NightAmbience29548" type="AudioStreamPlayer" parent="." unique_id=19192241]
 stream = ExtResource("2_cbfv6")
@@ -537,6 +547,15 @@ physics_object_picking_sort = true
 physics_object_picking_first_only = true
 size = Vector2i(1920, 1080)
 render_target_update_mode = 4
+
+[node name="lightning_light" type="AreaLight3D" parent="SubViewportContainer/SubViewport" unique_id=765074948]
+transform = Transform3D(0.34722915, 0, -0.9377803, 0, 1, 0, 0.9377803, 0, 0.34722915, -416.02313, 196.43404, -221.11142)
+visible = false
+light_color = Color(0.87058824, 1, 1, 1)
+light_energy = 5.0
+shadow_enabled = true
+area_range = 4096.0
+area_attenuation = -1.359
 
 [node name="raincollision" type="MeshInstance3D" parent="SubViewportContainer/SubViewport" unique_id=47301379]
 transform = Transform3D(-86.28413, 0, 0, 0, -147.91536, 0, 0, 0, 100.51506, 17.759155, 121.72277, 0)
@@ -893,7 +912,7 @@ visible = false
 mesh = SubResource("PlaneMesh_cpeaq")
 
 [node name="roof" type="MeshInstance3D" parent="SubViewportContainer" unique_id=1164471898]
-transform = Transform3D(90.23177, 0, 0, 0, 1.6345725, 0, 0, 0, 98.07208, 15.738525, 114.24826, -5.508507)
+transform = Transform3D(90.23177, 0, 0, 0, 1.6345725, 0, 0, 0, 98.07208, 15.738525, 114.58675, -5.508507)
 mesh = SubResource("PlaneMesh_d0hwy")
 
 [node name="Dominic" parent="SubViewportContainer" unique_id=1517903016 instance=ExtResource("26_h1hmd")]
@@ -1073,6 +1092,18 @@ theme_override_fonts/font = ExtResource("57_nwjiw")
 theme_override_font_sizes/font_size = 75
 text = "12:00 AM"
 uppercase = true
+
+[node name="roof" type="MeshInstance3D" parent="." unique_id=2118946752]
+transform = Transform3D(2.235199, -2.9805636, 0, 62.38812, 0.10678513, 0, 0, 0, 108.70656, -98.88977, 167.50127, 15.52597)
+mesh = SubResource("PlaneMesh_d0hwy")
+
+[node name="roof2" type="MeshInstance3D" parent="." unique_id=833562607]
+transform = Transform3D(3.330104, -63.42036, 0, 96.10284, -92.73917, 0, 0, 0, 31.611477, -82.53501, 120.25522, -77.690414)
+mesh = SubResource("PlaneMesh_d0hwy")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=1848524878]
+transform = Transform3D(0.59010655, -35.836372, 14.117252, -68.11913, 1.3100256, 0.19919653, -1.0693756, -103.22378, -4.8985844, 84.86683, 59.60659, -101.67509)
+mesh = SubResource("PlaneMesh_ky0sj")
 
 [connection signal="input_event" from="SubViewportContainer/SubViewport/StaticBody3D" to="SubViewportContainer/SubViewport/StaticBody3D" method="_on_input_event"]
 
