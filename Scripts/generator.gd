@@ -7,10 +7,10 @@ signal repaired
 @export var clock_nodes: Array[Node]     # GameManager and ClockUI: these keep running while frozen
 @export var door: Area3D   # door/Area3D, so the camera can return to its original spot
 @export_group("Repair")
-@export var total_checks := 7            # Changed default to 7 checks
+@export var total_checks := 5            # Changed default to 7 checks
 @export var trigger_distance := 12.0
 @export var start_speed := 2.8
-@export var end_speed := 7.2
+@export var end_speed := 6.0
 
 @export_group("Miss Shake")
 @export var shake_strength := 1.5
@@ -111,6 +111,7 @@ func _finish() -> void:
 func _start_session() -> void:
 	Notify.show_message("Press Space to Repair", 10)
 	session_active = true
+	dominic.set_events_paused(true)   # freeze anomaly events during the repair
 	next_check = 0
 	for n in clock_nodes:
 		if is_instance_valid(n):
@@ -125,6 +126,7 @@ func _end_session() -> void:
 	if not session_active:
 		return
 	session_active = false
+	dominic.set_events_paused(false)  # anomaly events resume
 	get_tree().paused = false
 	for n in _saved_modes:
 		if is_instance_valid(n):

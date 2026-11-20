@@ -1,11 +1,14 @@
 [gd_scene format=3 uid="uid://btbau7xgd07fp"]
 
 [ext_resource type="Script" uid="uid://dirbwrm1q6d27" path="res://Scripts/anomaly.gd" id="1_p7kjy"]
-[ext_resource type="AudioStream" uid="uid://b27yckoneobn1" path="res://assets/floraphonic-glass-knock-1-189096.mp3" id="5_6ajq5"]
+[ext_resource type="AudioStream" uid="uid://dlf2ubxmhpvcn" path="res://assets/Sounds/glass rub.mp3" id="2_83ht0"]
 [ext_resource type="AudioStream" uid="uid://cm641bb3cndl" path="res://assets/Sounds/wrong decision.mp3" id="6_bb4xv"]
 [ext_resource type="AudioStream" uid="uid://cnf17tvt44grb" path="res://assets/floraphonic-glass-knock-12-189878.mp3" id="6_dqmrh"]
+[ext_resource type="AudioStream" uid="uid://diwn5g05dy660" path="res://assets/Sounds/fast banging.mp3" id="7_83ht0"]
 [ext_resource type="AudioStream" uid="uid://bpfgqqfcwji32" path="res://assets/freesound_community-running-on-grass-with-wet-feet-7030.mp3" id="7_i5rii"]
+[ext_resource type="AudioStream" uid="uid://cq5nmmaoll64y" path="res://assets/Sounds/medium fast banging.mp3" id="8_qx2aa"]
 [ext_resource type="AudioStream" uid="uid://cxpye561s1ena" path="res://assets/freesound_community-walking-through-grass-80308.mp3" id="8_tl8v2"]
+[ext_resource type="AudioStream" uid="uid://dcb72hgwcc6rc" path="res://assets/Sounds/super fast banging.mp3" id="9_b14bp"]
 
 [node name="Dominic" type="Node" unique_id=739445656]
 process_mode = 3
@@ -13,8 +16,8 @@ script = ExtResource("1_p7kjy")
 
 [node name="FloraphonicGlassKnock1189096" type="AudioStreamPlayer" parent="." unique_id=275842097]
 process_mode = 3
-stream = ExtResource("5_6ajq5")
-volume_db = 0.925
+stream = ExtResource("2_83ht0")
+volume_db = 3.301
 
 [node name="FloraphonicGlassKnock12189878" type="AudioStreamPlayer" parent="." unique_id=809699426]
 process_mode = 3
@@ -33,3 +36,15 @@ volume_db = 0.611
 
 [node name="WrongDecision" type="AudioStreamPlayer" parent="." unique_id=1866086471]
 stream = ExtResource("6_bb4xv")
+
+[node name="FastBanging" type="AudioStreamPlayer" parent="." unique_id=1020580901]
+stream = ExtResource("7_83ht0")
+volume_db = 5.807
+
+[node name="MediumFastBanging" type="AudioStreamPlayer" parent="." unique_id=828175853]
+stream = ExtResource("8_qx2aa")
+volume_db = 5.543
+
+[node name="SuperFastBanging" type="AudioStreamPlayer" parent="." unique_id=450994226]
+stream = ExtResource("9_b14bp")
+volume_db = 3.959

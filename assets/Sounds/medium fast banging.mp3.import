@@ -1,0 +1,19 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+uid="uid://cq5nmmaoll64y"
+path="res://.godot/imported/medium fast banging.mp3-48a0543db82a422d4dfaccf2244d1911.mp3str"
+
+[deps]
+
+source_file="res://assets/Sounds/medium fast banging.mp3"
+dest_files=["res://.godot/imported/medium fast banging.mp3-48a0543db82a422d4dfaccf2244d1911.mp3str"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4

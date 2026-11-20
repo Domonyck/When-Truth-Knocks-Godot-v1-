@@ -5,6 +5,9 @@ extends Node
 @onready var sound_3: AudioStreamPlayer = $FloraphonicGlassKnock1189096
 @onready var sound_4: AudioStreamPlayer = $FloraphonicGlassKnock12189878
 @onready var wrong: AudioStreamPlayer = $WrongDecision
+@onready var life_lost_1: AudioStreamPlayer = $FastBanging
+@onready var life_lost_2: AudioStreamPlayer = $MediumFastBanging
+@onready var life_lost_3: AudioStreamPlayer = $SuperFastBanging
 var elapsed_time: float = 0.0
 var cooldown_timer: float = 0.0
 
@@ -18,7 +21,7 @@ signal lives_exhausted
 # ------------------------------------------------------------------
 # HIDDEN LIVES / "SECURE THE ROOM" CHALLENGE
 # ------------------------------------------------------------------
-const MAX_LIVES: int = 3
+const MAX_LIVES: int = 4
 
 # Optional: scene to load when the lives run out (e.g. "res://GameOver.tscn").
 # Leave empty to only emit the lives_exhausted signal.
@@ -46,6 +49,10 @@ var _game_over: bool = false
 var _blinds_closed_seen: bool = false
 var _node_cache: Dictionary = {}
 
+# While true, nothing in this script advances: no new events, no event cooldown,
+# no challenge countdown. The generator minigame turns this on and off.
+var events_paused: bool = false
+
 var blinds_timer: Timer
 func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
@@ -64,6 +71,9 @@ func stop_all_audio() -> void:
 	if sound_3 and sound_3.playing: sound_3.stop()
 	if sound_4 and sound_4.playing: sound_4.stop()
 	if wrong and wrong.playing: wrong.stop()
+	if life_lost_1 and life_lost_1.playing: life_lost_1.stop()
+	if life_lost_2 and life_lost_2.playing: life_lost_2.stop()
+	if life_lost_3 and life_lost_3.playing: life_lost_3.stop()
 
 func start_blinds_timer(duration: float = 7.0) -> void:
 	blinds_timer.start(duration)
@@ -73,8 +83,17 @@ func stop_blinds_timer() -> void:
 
 func _on_blinds_timer_timeout() -> void:
 	blinds_timer_expired.emit()
+
+# Called by generator.gd: freeze all anomaly activity during the repair minigame.
+# Timers resume exactly where they left off when it ends.
+func set_events_paused(paused: bool) -> void:
+	events_paused = paused
+	if paused:
+		stop_all_audio()
+
 # Fully reset state when returning to the title screen
 func reset_state() -> void:
+	events_paused = false
 	stop_all_audio()
 	if blinds_timer:
 		blinds_timer.stop()
@@ -95,7 +114,7 @@ func reset_state() -> void:
 func _process(delta: float) -> void:
 	if get_tree().current_scene and get_tree().current_scene.scene_file_path.get_file() == "TitleScreen.tscn":
 			return
-	if _game_over:
+	if _game_over or events_paused:
 		return
 	elapsed_time += delta
 	cooldown_timer -= delta
@@ -200,16 +219,34 @@ func _resolve_challenge() -> void:
 	_lives -= 1
 	print("CHALLENGE FAILED (", ", ".join(missing), "). Lives left: ", _lives)
 
-	if wrong:
-		if wrong.stream != null:
-			wrong.play()
-		else:
-			push_warning("Anomaly: 'wrong' AudioStreamPlayer has no AudioStream assigned.")
+	if _lives > 0:
+		var life_lost_index := MAX_LIVES - _lives
+		_play_life_lost_audio(life_lost_index)
 
 	Notify.show_message(_build_warning(missing))
 
 	if _lives <= 0:
 		_trigger_game_over()
+
+func _play_life_lost_audio(loss_number: int) -> void:
+	var player: AudioStreamPlayer = null
+	match loss_number:
+		1:
+			player = life_lost_1
+		2:
+			player = life_lost_2
+		3:
+			player = life_lost_3
+		_:
+			return
+
+	if player == null:
+		push_warning("Anomaly: life lost audio player #%d is null." % loss_number)
+		return
+	if player.stream == null:
+		push_warning("Anomaly: '%s' has no AudioStream assigned." % player.name)
+		return
+	player.play()
 
 # Returns the keys of everything the player failed to secure:
 # "table_lamp", "wall_lamp", "ceiling_fan", "blinds", "door"

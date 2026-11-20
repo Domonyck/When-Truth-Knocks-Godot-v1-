@@ -1,0 +1,19 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+uid="uid://dlf2ubxmhpvcn"
+path="res://.godot/imported/glass rub.mp3-1f4697f007318b09fc00df82d3cb0240.mp3str"
+
+[deps]
+
+source_file="res://assets/Sounds/glass rub.mp3"
+dest_files=["res://.godot/imported/glass rub.mp3-1f4697f007318b09fc00df82d3cb0240.mp3str"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4
