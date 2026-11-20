@@ -35,7 +35,7 @@ func toggle_blinds() -> void:
 	if not is_open:
 		# Blinds were closed -> Start persistent 7-second timer on Autoload
 		if dominic:
-			dominic.start_blinds_timer(7.0)
+			dominic.start_blinds_timer(12.5)
 	else:
 		# Blinds manually opened -> Cancel timer on Autoload
 		if dominic:

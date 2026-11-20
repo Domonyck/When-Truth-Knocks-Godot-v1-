@@ -2,6 +2,7 @@
 
 [ext_resource type="Script" uid="uid://dirbwrm1q6d27" path="res://Scripts/anomaly.gd" id="1_p7kjy"]
 [ext_resource type="AudioStream" uid="uid://b27yckoneobn1" path="res://assets/floraphonic-glass-knock-1-189096.mp3" id="5_6ajq5"]
+[ext_resource type="AudioStream" uid="uid://cm641bb3cndl" path="res://assets/Sounds/wrong decision.mp3" id="6_bb4xv"]
 [ext_resource type="AudioStream" uid="uid://cnf17tvt44grb" path="res://assets/floraphonic-glass-knock-12-189878.mp3" id="6_dqmrh"]
 [ext_resource type="AudioStream" uid="uid://bpfgqqfcwji32" path="res://assets/freesound_community-running-on-grass-with-wet-feet-7030.mp3" id="7_i5rii"]
 [ext_resource type="AudioStream" uid="uid://cxpye561s1ena" path="res://assets/freesound_community-walking-through-grass-80308.mp3" id="8_tl8v2"]
@@ -29,3 +30,6 @@ volume_db = 0.732
 process_mode = 3
 stream = ExtResource("8_tl8v2")
 volume_db = 0.611
+
+[node name="WrongDecision" type="AudioStreamPlayer" parent="." unique_id=1866086471]
+stream = ExtResource("6_bb4xv")
