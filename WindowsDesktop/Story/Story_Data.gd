@@ -142,7 +142,7 @@ func new_game() -> void:
 
 	_build_witness("classmate1_friend", "Classmate 1 (The Friend)", [
 		_t("She seemed happy, actually -- said may boyfriend siya from another school. Sabi niya, 'ipapakilala ko sa'yo balang araw.' Wala akong nakita, pero ganoon sabi niya.", false),
-		_t("Baka na-stress lang siya kay Ma'am -- parang mahigpit kasi si teacher tungkol sa grades niya. Baka doon galing lahat 'to.", false),
+		_t("Baka na-stress lang siya kay sir -- parang mahigpit kasi si teacher tungkol sa grades niya. Baka doon galing lahat 'to.", false),
 		_t("She had a new phone, expensive pa; and shoes, gifts -- hindi niya sinasabi galing kanino. Tinanong ko minsan, natawa lang siya, sabi 'wag ka na maingay.' Hindi ko na po tinuloy magtanong.", true),
 	])
 
@@ -224,7 +224,7 @@ func _build_all_conversations() -> void:
 	_add_conversation("father", [
 		_line("player", "Evening, Mr. Reyes. Come in and take a seat—I appreciate you climbing all these stairs after a long shift. I'm following up on Maya's case."),
 		_line("witness", "Gabi na ah. Kakauwi ko lang galing trabaho, wala akong gana sa mga imbestiga-imbestiga na 'yan."),
-		_line("player", "I completely understand you're exhausted, Sir, so I won't keep you long. Even a small detail from before she went missing could really help."),
+		_line("player", "I completely understand you're exhausted, sir, so I won't keep you long. Even a small detail from before she went missing could really help."),
 	])
 	_add_conversation("father", [
 		_line("player", "Take a seat and relax for a minute, Mr. Reyes. I've been reviewing the local notes on Maya, and a few neighbors in District 4 mentioned late-night activity near your place."),
@@ -232,7 +232,7 @@ func _build_all_conversations() -> void:
 		_line("player", "Neighbors talk, I know how that goes. That's why I'd rather hear the truth straight from you—what was your routine like around the time she left?"),
 	])
 	_add_conversation("father", [
-		_line("player", "Good evening, Sir. Have a seat out of the storm. I'm handling Maya's missing person file, and I just wanted to have a quiet, straightforward chat."),
+		_line("player", "Good evening, sir. Have a seat out of the storm. I'm handling Maya's missing person file, and I just wanted to have a quiet, straightforward chat."),
 		_line("witness", "Huwag mo na kaming idamay sa gulo. Dalaga na 'yon, may sariling isip na."),
 		_line("player", "I'm not here to cause trouble for your family, Mr. Reyes. She's still sixteen, and anything you noticed could point us in the right direction."),
 	])
@@ -324,19 +324,19 @@ func _build_all_conversations() -> void:
 
 	# --- TEACHER ---
 	_add_conversation("teacher", [
-		_line("player", "Good evening, Sir. Please, have a seat—thank you so much for making time after school hours to help with Maya's case."),
+		_line("player", "Good evening, sir. Please, have a seat—thank you so much for making time after school hours to help with Maya's case."),
 		_line("witness", "Matagal na akong nag-aalala kay Maya. Sa wakas may nag-iimbestiga nang seryoso sa kaso niya."),
 		_line("player", "I'm glad we could speak. You know her classroom routine best, so whenever you're ready, walk me through what you noticed."),
 	])
 	_add_conversation("teacher", [
-		_line("player", "Come on in out of the rain, Sir, and make yourself comfortable. I'm investigating Maya Reyes's disappearance and wanted to check in with you."),
+		_line("player", "Come on in out of the rain, sir, and make yourself comfortable. I'm investigating Maya Reyes's disappearance and wanted to check in with you."),
 		_line("witness", "Sa totoo lang, matino siyang estudyante dati. Bigla na lang nagbago nitong huling dalawang buwan."),
 		_line("player", "That's a really important detail. Could you tell me a bit more about those changes—and how her family responded when you reached out?"),
 	])
 	_add_conversation("teacher", [
-		_line("player", "Thank you for coming up to this quiet loft, Sir. Take a breath—I just want to have a calm, thorough look at Maya's behavior at school."),
+		_line("player", "Thank you for coming up to this quiet loft, sir. Take a breath—I just want to have a calm, thorough look at Maya's behavior at school."),
 		_line("witness", "Basta makatulong mahanap si Maya, sasabihin ko lahat ng nasa record ko at lahat ng napansin ko."),
-		_line("player", "I truly appreciate your openness, Ma'am. Take your time and start wherever feels right."),
+		_line("player", "I truly appreciate your openness, sir. Take your time and start wherever feels right."),
 	])
 
 func draw_conversation_for_witness(witness_id: String) -> Array[DialogueLine]:

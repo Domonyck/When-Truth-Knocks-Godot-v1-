@@ -4,7 +4,7 @@ extends AudioStreamPlayer
 @export var lightning_light: Node    # Drag LightningLight from SubViewport here
 
 @export_group("Storm Timing")
-@export var min_strike_interval: float = 20.0
+@export var min_strike_interval: float = 35.0
 @export var max_strike_interval: float = 55.0
 @export var thunder_delays: Array[float] = [1.0, 3.0, 4.0]
 

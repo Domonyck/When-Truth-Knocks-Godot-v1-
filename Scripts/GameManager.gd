@@ -40,6 +40,7 @@ var clock_label_2: Label = null
 var waiting_for_door := false
 var witness_exiting := false
 var welcome_already_shown: bool = false
+var _run_id: int = 0   # bumps on every reset so stale awaits can bail out
 
 func _ready() -> void:
 	add_to_group("game_manager") 
@@ -332,7 +333,10 @@ func _on_close_button_pressed() -> void:
 			elif door.has_method("interact"):
 				door.interact()
 		
+		var my_run := _run_id
 		await get_tree().create_timer(1.5).timeout
+		if my_run != _run_id or not is_inside_tree():
+			return
 		
 		_fade_out_witness(witness_to_dismiss, func():
 			if door:
@@ -385,3 +389,53 @@ func _is_blackout_active() -> bool:
 		if "is_blackout" in lm and lm.is_blackout:
 			return true
 	return false
+	
+func reset_state() -> void:
+	_run_id += 1
+
+	# Stop typing / fade tweens
+	if _active_type_tween and _active_type_tween.is_valid():
+		_active_type_tween.kill()
+	_active_type_tween = null
+
+	# Time
+	real_time_passed = 0.0
+	shift_ended = false
+	if clock_label:
+		clock_label.text = "12:00 AM"
+
+	# Witness pool: rebuild from the original children, put everyone back
+	returning_witnesses.clear()
+	witnesses.clear()
+	if characters_parent:
+		witnesses = characters_parent.get_children()
+	for witness in witnesses:
+		if initial_transforms.has(witness):
+			witness.global_transform = initial_transforms[witness]
+		witness.visible = false
+		var sprite = witness if "modulate" in witness else _find_sprite_child(witness)
+		if sprite:
+			var c = sprite.modulate
+			c.a = 1.0
+			sprite.modulate = c
+
+	# Timers and flags
+	next_witness_timer = witness_interval
+	active_witness = null
+	active_witness_id = ""
+	current_witness_id = ""
+	current_testimony = null
+	current_conversation.clear()
+	conversation_index = 0
+	in_conversation = false
+	waiting_for_door = false
+	witness_exiting = false
+	welcome_already_shown = false
+
+	# UI
+	if name_label:
+		name_label.visible = false
+	if dialogue_ui:
+		dialogue_ui.visible = false
+	if Accept: Accept.visible = false
+	if Decline: Decline.visible = false

@@ -43,9 +43,9 @@ anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
 offset_left = 814.0
-offset_top = 391.0
-offset_right = 1444.0
-offset_bottom = 680.0
+offset_top = 332.0
+offset_right = 1079.0
+offset_bottom = 621.0
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_fonts/font = ExtResource("2_cbrvg")
@@ -60,14 +60,14 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = 841.0
-offset_top = 514.0
-offset_right = 1028.0
-offset_bottom = 584.0
+offset_left = 840.0
+offset_top = 429.0
+offset_right = 1027.0
+offset_bottom = 499.0
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_fonts/font = ExtResource("2_cbrvg")
-theme_override_font_sizes/font_size = 70
+theme_override_font_sizes/font_size = 50
 text = "RESUME"
 flat = true
 
@@ -79,13 +79,57 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = 842.0
-offset_top = 598.0
-offset_right = 1028.0
-offset_bottom = 672.0
+offset_left = 840.0
+offset_top = 657.0
+offset_right = 1026.0
+offset_bottom = 731.0
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_fonts/font = ExtResource("2_cbrvg")
-theme_override_font_sizes/font_size = 74
+theme_override_font_sizes/font_size = 50
 text = "QUIT"
 flat = true
+
+[node name="Label2" type="Label" parent="Control" unique_id=2139433019]
+layout_mode = 0
+offset_left = 804.0
+offset_top = 579.0
+offset_right = 988.0
+offset_bottom = 669.0
+theme_override_fonts/font = ExtResource("2_cbrvg")
+theme_override_font_sizes/font_size = 50
+text = "VOLUME"
+
+[node name="Volume" type="HSlider" parent="Control" unique_id=1651786495]
+layout_mode = 0
+offset_left = 958.0
+offset_top = 566.0
+offset_right = 1141.0
+offset_bottom = 645.0
+
+[node name="Label3" type="Label" parent="Control" unique_id=1314242552]
+layout_mode = 0
+offset_left = 722.0
+offset_top = 632.0
+offset_right = 935.0
+offset_bottom = 722.0
+theme_override_fonts/font = ExtResource("2_cbrvg")
+theme_override_font_sizes/font_size = 50
+text = "BRIGHTNESS"
+
+[node name="Brightness" type="HSlider" parent="Control" unique_id=1037606109]
+layout_mode = 0
+offset_left = 958.0
+offset_top = 617.0
+offset_right = 1141.0
+offset_bottom = 696.0
+
+[node name="Shaders" type="CheckButton" parent="Control" unique_id=1458202759]
+layout_mode = 0
+offset_left = 866.0
+offset_top = 511.0
+offset_right = 1072.0
+offset_bottom = 581.0
+theme_override_fonts/font = ExtResource("2_cbrvg")
+theme_override_font_sizes/font_size = 50
+text = "SHADERS"
