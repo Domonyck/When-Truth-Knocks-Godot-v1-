@@ -19,7 +19,7 @@
 [ext_resource type="Texture2D" uid="uid://bybbi4afxqawi" path="res://BullBoard/Game Pictures/4-1.png" id="15_sx6pb"]
 [ext_resource type="Texture2D" uid="uid://cv7kh5xhpx2m5" path="res://BullBoard/Game Pictures/4-2.png" id="16_uebf0"]
 [ext_resource type="Texture2D" uid="uid://dei26eeoyavaa" path="res://BullBoard/Game Pictures/4-3.png" id="17_gaw8u"]
-[ext_resource type="FontFile" uid="uid://dh3sljjjsyr82" path="res://WindowsDesktop/Battlenet.ttf" id="18_ejs1y"]
+[ext_resource type="FontFile" uid="uid://1qviefdhvfht" path="res://WindowsDesktop/JMH Typewriter.otf" id="20_0h2ih"]
 
 [node name="Control" type="Control" unique_id=657436377]
 process_mode = 1
@@ -212,16 +212,17 @@ texture_normal = ExtResource("17_gaw8u")
 
 [node name="TimerLabel" type="Label" parent="." unique_id=718985248]
 layout_mode = 0
-offset_right = 40.0
-offset_bottom = 23.0
-theme_override_fonts/font = ExtResource("18_ejs1y")
+offset_left = 19.0
+offset_right = 59.0
+offset_bottom = 64.0
+theme_override_fonts/font = ExtResource("20_0h2ih")
 theme_override_font_sizes/font_size = 50
 
 [node name="StatusLabel" type="Label" parent="." unique_id=1268472159]
 layout_mode = 0
-offset_left = 148.0
-offset_top = -1.0
-offset_right = 188.0
-offset_bottom = 44.0
-theme_override_fonts/font = ExtResource("18_ejs1y")
+offset_left = 243.0
+offset_top = -2.0
+offset_right = 283.0
+offset_bottom = 62.0
+theme_override_fonts/font = ExtResource("20_0h2ih")
 theme_override_font_sizes/font_size = 50

@@ -10,7 +10,7 @@ extends AudioStreamPlayer
 
 @export_group("Blackout Integration")
 ## 0.0 = never causes blackout, 0.5 = 50% chance, 1.0 = always causes blackout
-@export_range(0.0, 1.0) var blackout_chance: float = 0.5
+@export_range(0.0, 1.0) var blackout_chance: float = 0.3
 
 var _is_striking: bool = false
 

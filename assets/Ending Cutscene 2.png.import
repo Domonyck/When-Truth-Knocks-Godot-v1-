@@ -2,21 +2,20 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://cv7yiodyn3h2x"
-path.s3tc="res://.godot/imported/ee2fac68-c4d8-4dfb-9573-683746b3e5fb.png-0312d47c4a7767623e580cd4245a9a9e.s3tc.ctex"
+uid="uid://c1e3pdrn8x4bc"
+path="res://.godot/imported/Ending Cutscene 2.png-a2586b80dd911ca26c71ed9e25a8b785.ctex"
 metadata={
-"imported_formats": ["s3tc_bptc"],
-"vram_texture": true
+"vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/ee2fac68-c4d8-4dfb-9573-683746b3e5fb.png"
-dest_files=["res://.godot/imported/ee2fac68-c4d8-4dfb-9573-683746b3e5fb.png-0312d47c4a7767623e580cd4245a9a9e.s3tc.ctex"]
+source_file="res://assets/Ending Cutscene 2.png"
+dest_files=["res://.godot/imported/Ending Cutscene 2.png-a2586b80dd911ca26c71ed9e25a8b785.ctex"]
 
 [params]
 
-compress/mode=2
+compress/mode=0
 compress/high_quality=false
 compress/lossy_quality=0.7
 compress/uastc_level=0
@@ -24,7 +23,7 @@ compress/rdo_quality_loss=0.0
 compress/hdr_compression=1
 compress/normal_map=0
 compress/channel_pack=0
-mipmaps/generate=true
+mipmaps/generate=false
 mipmaps/limit=-1
 roughness/mode=0
 roughness/src_normal=""
@@ -38,4 +37,4 @@ process/normal_map_invert_y=false
 process/hdr_as_srgb=false
 process/hdr_clamp_exposure=false
 process/size_limit=0
-detect_3d/compress_to=0
+detect_3d/compress_to=1

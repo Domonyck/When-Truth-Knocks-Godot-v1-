@@ -11,7 +11,7 @@ config_version=5
 [application]
 
 config/name="When the door knocks"
-run/main_scene="uid://bidhay1q88cyu"
+run/main_scene="uid://c64o1r5r8k606"
 config/features=PackedStringArray("4.7", "Forward Plus")
 config/icon="res://icon.svg"
 
