@@ -112,8 +112,13 @@ func reset_state() -> void:
 	_schedule_next_event()
 
 func _process(delta: float) -> void:
+	var menu_paused: bool = Engine.get_meta("menu_paused", false)
+	if blinds_timer:
+		blinds_timer.paused = menu_paused
+	if menu_paused:
+		return
 	if get_tree().current_scene and get_tree().current_scene.scene_file_path.get_file() == "TitleScreen.tscn":
-			return
+		return
 	if _game_over or events_paused:
 		return
 	elapsed_time += delta

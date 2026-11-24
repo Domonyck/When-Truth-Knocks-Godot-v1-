@@ -47,6 +47,7 @@ func _unhandled_input(event: InputEvent) -> void:
 func toggle_pause() -> void:
 	var opening = !get_tree().paused
 	get_tree().paused = opening
+	Engine.set_meta("menu_paused", opening)   # <-- add
 	visible = opening
 	if opening:
 		_sync_shader_button()
@@ -97,6 +98,7 @@ func _on_resume_pressed() -> void:
 func _on_quit_pressed() -> void:
 	Engine.time_scale = 1.0
 	get_tree().paused = false
+	Engine.set_meta("menu_paused", false)
 
 	var master_bus_idx = AudioServer.get_bus_index("Master")
 	AudioServer.set_bus_mute(master_bus_idx, false)
@@ -109,6 +111,12 @@ func _on_quit_pressed() -> void:
 	var gm = get_tree().get_first_node_in_group("game_manager")
 	if gm and gm.has_method("reset_state"):
 		gm.reset_state()
+	for lm in get_tree().get_nodes_in_group("light_manager"):
+		if lm.has_method("reset_state"):
+			lm.reset_state()
+	for t in get_tree().get_nodes_in_group("thunder"):
+		if t.has_method("reset_state"):
+			t.reset_state()
 	for node in get_tree().get_nodes_in_group("desktop_overlay"):
 		node.queue_free()
 

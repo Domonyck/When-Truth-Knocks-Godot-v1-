@@ -100,6 +100,8 @@ func _input(event: InputEvent) -> void:
 		
 func _process(delta: float) -> void:
 	# 1. FLOATING NAME TAG LOGIC
+	if Engine.get_meta("menu_paused", false):
+		return
 	if active_witness and name_label and name_label.visible:
 		var camera = get_viewport().get_camera_3d()
 		if camera:
@@ -334,7 +336,7 @@ func _on_close_button_pressed() -> void:
 				door.interact()
 		
 		var my_run := _run_id
-		await get_tree().create_timer(1.5).timeout
+		await get_tree().create_timer(1.5, false).timeout
 		if my_run != _run_id or not is_inside_tree():
 			return
 		

@@ -15,11 +15,18 @@ extends AudioStreamPlayer
 var _is_striking: bool = false
 
 func _ready() -> void:
+	add_to_group("thunder") 
 	if is_instance_valid(lightning_light) and "visible" in lightning_light:
 		lightning_light.visible = false
 
 	light_manager = _find_valid_light_manager()
 	_storm_loop()
+
+func reset_state() -> void:
+	_is_striking = false
+	stop()                      # cut any thunder that is playing
+	if is_instance_valid(lightning_light) and "visible" in lightning_light:
+		lightning_light.visible = false
 
 func _find_valid_light_manager() -> Node:
 	if is_instance_valid(light_manager):

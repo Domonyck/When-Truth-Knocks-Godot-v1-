@@ -36,6 +36,8 @@ func _ready() -> void:
 	_reset_blackout_timer()
 
 func _process(delta: float) -> void:
+	if Engine.get_meta("menu_paused", false):
+		return
 	if not is_blackout and not _is_witness_active():   # <--- UPDATED
 		blackout_timer -= delta
 		if blackout_timer <= 0.0:
@@ -43,6 +45,12 @@ func _process(delta: float) -> void:
 		_process_random_cutout(delta)
 	
 	_update_power_state()
+	
+func reset_state() -> void:
+	if is_instance_valid(gen_off) and gen_off.playing:
+		gen_off.stop()
+	restore_power()          # lights on, interactable, computer powered, is_blackout = false, new blackout timer
+	_was_powered_last_frame = true
 	
 func _reset_blackout_timer() -> void:
 	# Picks a random time between 120 (2 mins) and 180 seconds (3 mins)

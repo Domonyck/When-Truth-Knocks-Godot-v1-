@@ -566,7 +566,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 0.9999998, 0.1292572, 0.34409213
 size = Vector3(2.3865662, 1.1934996, 2.0175781)
 
 [node name="GPUParticles3D" type="GPUParticles3D" parent="SubViewportContainer/SubViewport" unique_id=313578921]
-process_mode = 3
+process_mode = 1
 transform = Transform3D(164.64078, 0, 0, 0, 42.38231, 0, 0, 0, -108.27755, 7.844597, 238.30984, -93.67129)
 amount = 1000
 lifetime = 2.0
