@@ -14,7 +14,7 @@ extends Node2D
 
 @export_group("Light Cutout Settings")
 @export var cutout_chance_per_second: float = 0.02 
-@export var in_computer_multiplier: float = 3.5
+@export var in_computer_multiplier: float = 2.0
 
 @export_group("Blackout Timer Settings (Seconds)")
 @export var min_blackout_cooldown: float = 120.0  # 2 minutes

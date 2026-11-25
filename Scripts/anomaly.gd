@@ -27,7 +27,11 @@ const MAX_LIVES: int = 4
 # Leave empty to only emit the lives_exhausted signal.
 const GAME_OVER_SCENE: String = ""
 
-const CHALLENGE_WINDOW: float = 12.5
+# Seconds the player gets to secure the room, depending on which event played
+const WINDOW_NORMAL_WALK: float = 12.5
+const WINDOW_FAST_WALK: float = 6.0
+const WINDOW_NORMAL_TAP: float = 4.0
+const WINDOW_FAST_TAP: float = 4.0
 # Seconds the warning stays on screen before game over kicks in.
 const GAME_OVER_DELAY: float = 3.0
 
@@ -136,32 +140,37 @@ func _schedule_next_event() -> void:
 	var max_delay: float
 
 	if total_minutes < 3.0:
-		min_delay = 30.0
-		max_delay = 60.0
+		min_delay = 45.0
+		max_delay = 55.0
 	elif total_minutes < 6.0:
-		min_delay = 20.0
-		max_delay = 40.0
+		min_delay = 35.0
+		max_delay = 45.0
 	else:
-		min_delay = 15.0
+		min_delay = 25.0
 		max_delay = 35.0
 
 	cooldown_timer = randf_range(min_delay, max_delay)
 
 func _trigger_random_event() -> void:
 	var roll := randi_range(1, 4)
+	var window: float
 
 	match roll:
 		1:
 			_play_event("normal_walk", sound_1)
+			window = WINDOW_NORMAL_WALK
 		2:
 			_play_event("fast_walk", sound_2)
+			window = WINDOW_FAST_WALK
 		3:
 			_play_event("normal_tap", sound_3)
+			window = WINDOW_NORMAL_TAP
 		4:
 			_play_event("fast_tap", sound_4)
+			window = WINDOW_FAST_TAP
 
-	# Every event starts the "secure the room" countdown
-	_begin_challenge()
+	# Every event starts the "secure the room" countdown with its own time limit
+	_begin_challenge(window)
 
 func _play_event(anim_name: String, sound_player: AudioStreamPlayer) -> void:
 	if sound_player:
@@ -187,16 +196,13 @@ func _play_event(anim_name: String, sound_player: AudioStreamPlayer) -> void:
 # HIDDEN LIVES / CHALLENGE LOGIC
 # ==================================================================
 
-func _get_response_window() -> float:
-	return CHALLENGE_WINDOW
-
-func _begin_challenge() -> void:
+func _begin_challenge(window: float) -> void:
 	# If a challenge is already running, let it finish instead of stacking a second one
 	if _challenge_active or _game_over:
 		return
 	_challenge_active = true
 	_blinds_closed_seen = false
-	_challenge_timer = _get_response_window()
+	_challenge_timer = window
 	print("CHALLENGE STARTED: ", _challenge_timer, "s to secure the room (lives hidden: ", _lives, ")")
 
 func _update_challenge(delta: float) -> void:

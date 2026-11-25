@@ -1,6 +1,7 @@
 [gd_scene format=3 uid="uid://c64o1r5r8k606"]
 
 [ext_resource type="Shader" uid="uid://bgr78qxy1b0du" path="res://remove black.gdshader" id="1_fgk7k"]
+[ext_resource type="Script" uid="uid://by006pd6hbtym" path="res://Scripts/title_screen.gd" id="1_s146n"]
 [ext_resource type="Texture2D" uid="uid://bk1buc0galrpq" path="res://textures/8.png" id="4_m8vxo"]
 [ext_resource type="Texture2D" uid="uid://bym6qtnfsnw15" path="res://textures/10.png" id="6_yngg5"]
 [ext_resource type="Texture2D" uid="uid://jy8fwe4skyyp" path="res://textures/21.png" id="7_s146n"]
@@ -134,6 +135,20 @@ _data = {
 }
 
 [node name="Node2D" type="Node2D" unique_id=1928681451]
+script = ExtResource("1_s146n")
+
+[node name="TransitionLayer" type="CanvasLayer" parent="." unique_id=1725143589]
+layer = 100
+visible = false
+
+[node name="FadeRect" type="ColorRect" parent="TransitionLayer" unique_id=1716522429]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0, 0, 0, 1)
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=1333254584]
 visible = false
@@ -171,6 +186,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
+color = Color(0, 0, 0, 1)
 
 [node name="scan line" type="Sprite2D" parent="." unique_id=1365065499]
 modulate = Color(1, 1, 1, 0.11764706)
