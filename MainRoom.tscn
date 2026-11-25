@@ -70,6 +70,14 @@
 [ext_resource type="PackedScene" uid="uid://cgoydnspmv6cc" path="res://assets/electrical_breaker_panel_box__lp_model.glb" id="58_16mnq"]
 [ext_resource type="AudioStream" uid="uid://deioqw7axa270" path="res://assets/Sounds/soundreality-finger-snap-sound-423220.mp3" id="58_p7kvt"]
 [ext_resource type="AudioStream" uid="uid://cm641bb3cndl" path="res://assets/Sounds/wrong decision.mp3" id="60_p7kvt"]
+[ext_resource type="AudioStream" uid="uid://byh4j506ive4d" path="res://assets/Sounds/freesound_community-cats-fighting-73284.mp3" id="63_flbix"]
+[ext_resource type="AudioStream" uid="uid://by83affl1qbnv" path="res://assets/Sounds/freesound_community-crickets-26444.mp3" id="63_q2ksf"]
+[ext_resource type="AudioStream" uid="uid://dmg8urldetoyx" path="res://assets/Sounds/loswin23-dog-barking-in-the-distance-520031.mp3" id="63_q8wn6"]
+[ext_resource type="AudioStream" uid="uid://dxh34gh3g3rcu" path="res://assets/Sounds/freesound_community-running-in-grass-6237.mp3" id="64_2s6p1"]
+[ext_resource type="AudioStream" uid="uid://d2ana2unpp32g" path="res://assets/Sounds/bark-fart_XRsy1HE.mp3" id="64_q2ksf"]
+[ext_resource type="AudioStream" uid="uid://ycp8euypnou3" path="res://assets/Sounds/tanweraman-car-pass-by-337871.mp3" id="65_q8wn6"]
+[ext_resource type="AudioStream" uid="uid://bx4qm3r65wvhq" path="res://assets/Sounds/plankton-augh.mp3" id="66_q2ksf"]
+[ext_resource type="AudioStream" uid="uid://ds4yccpnaejr8" path="res://assets/Sounds/mrstokes302-psst-whisper-sfx-mrstokes302-418603.mp3" id="69_fosux"]
 [ext_resource type="AudioStream" uid="uid://bxeqgkdm1m20n" path="res://assets/Sounds/fnaf-4-nightmare-jumpscare-sound-effect.mp3" id="70_errsv"]
 [ext_resource type="Texture2D" uid="uid://cb8oi77qcl7nc" path="res://assets/Jumpscare.png" id="70_imi0p"]
 [ext_resource type="Shader" uid="uid://dq0k2o7gdyfuw" path="res://Scripts/jumpscare.gdshader" id="71_errsv"]
@@ -1019,11 +1027,40 @@ skill_check = NodePath("SkillCheckLayer/SkillCheck")
 clock_nodes = [NodePath("../../ClockUI"), NodePath("../../GameManager")]
 door = NodePath("../SubViewport/door/Area3D")
 
+[node name="FreesoundCommunityCrickets26444" type="AudioStreamPlayer" parent="SubViewportContainer/Generator" unique_id=787367640]
+stream = ExtResource("63_q2ksf")
+
+[node name="Loswin23DogBarkingInTheDistance520031" type="AudioStreamPlayer" parent="SubViewportContainer/Generator" unique_id=1773518756]
+stream = ExtResource("63_q8wn6")
+volume_db = 7.638
+
+[node name="BarkFartXRsy1he" type="AudioStreamPlayer" parent="SubViewportContainer/Generator" unique_id=211462977]
+stream = ExtResource("64_q2ksf")
+volume_db = 3.819
+
+[node name="FreesoundCommunityCatsFighting73284" type="AudioStreamPlayer" parent="SubViewportContainer/Generator" unique_id=1747686317]
+stream = ExtResource("63_flbix")
+volume_db = 14.983
+
+[node name="FreesoundCommunityRunningInGrass6237" type="AudioStreamPlayer" parent="SubViewportContainer/Generator" unique_id=1337869211]
+stream = ExtResource("64_2s6p1")
+volume_db = 11.134
+
+[node name="TanweramanCarPassBy337871" type="AudioStreamPlayer" parent="SubViewportContainer/Generator" unique_id=1184478431]
+stream = ExtResource("65_q8wn6")
+
+[node name="PlanktonAugh" type="AudioStreamPlayer" parent="SubViewportContainer/Generator" unique_id=1037605700]
+stream = ExtResource("66_q2ksf")
+volume_db = -4.994
+
 [node name="Powerdown" type="AudioStreamPlayer" parent="SubViewportContainer/Generator" unique_id=394610695]
 stream = ExtResource("56_2syam")
 
 [node name="click" type="AudioStreamPlayer" parent="SubViewportContainer/Generator" unique_id=1801837627]
 stream = ExtResource("58_p7kvt")
+
+[node name="Mrstokes302PsstWhisperSfxMrstokes302418603" type="AudioStreamPlayer" parent="SubViewportContainer/Generator" unique_id=1570181782]
+stream = ExtResource("69_fosux")
 
 [node name="SpotLight3D" type="SpotLight3D" parent="SubViewportContainer/Generator" unique_id=478902083]
 transform = Transform3D(0.015542739, 0.00088149385, 0.002701969, -0.0018855251, 0.015279168, 0.005860417, -0.0022786001, -0.006029426, 0.014986852, 0.15694988, 1.2342271, 0.83251965)

@@ -114,6 +114,9 @@ func _on_quit_pressed() -> void:
 	for lm in get_tree().get_nodes_in_group("light_manager"):
 		if lm.has_method("reset_state"):
 			lm.reset_state()
+	for g in get_tree().get_nodes_in_group("generator"):
+		if g.has_method("reset_state"):
+			g.reset_state()
 	for t in get_tree().get_nodes_in_group("thunder"):
 		if t.has_method("reset_state"):
 			t.reset_state()

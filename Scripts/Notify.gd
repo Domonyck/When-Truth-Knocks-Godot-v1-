@@ -1,6 +1,6 @@
 
 extends CanvasLayer
-
+const TYPEWRITER_FONT: FontFile = preload("res://WindowsDesktop/JMH Typewriter.otf")
 var _label: Label
 var _timer_label: Label
 var _panel: PanelContainer
@@ -33,12 +33,14 @@ func _ready() -> void:
 	_panel.add_child(container)
 
 	_label = Label.new()
+	_label.add_theme_font_override("font", TYPEWRITER_FONT)
 	_label.add_theme_font_size_override("font_size", 36)
 	_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_LEFT
 	_label.add_theme_color_override("font_color", Color.WHITE)
 	container.add_child(_label)
 
 	_timer_label = Label.new()
+	_label.add_theme_font_override("font", TYPEWRITER_FONT)
 	_timer_label.add_theme_font_size_override("font_size", 18)
 	_timer_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_LEFT
 	_timer_label.add_theme_color_override("font_color", Color.WHITE)

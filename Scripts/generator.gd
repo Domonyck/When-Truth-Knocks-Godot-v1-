@@ -23,10 +23,33 @@ var next_check := 0
 var _saved_modes := {}
 var _shake_tween: Tween
 var _hint: Label
+@onready var background: AudioStreamPlayer = $FreesoundCommunityCrickets26444
+@onready var sound1: AudioStreamPlayer = $Loswin23DogBarkingInTheDistance520031
+@onready var sound2: AudioStreamPlayer = $BarkFartXRsy1he
+@onready var sound3: AudioStreamPlayer = $PlanktonAugh
+@onready var sound4: AudioStreamPlayer = $Mrstokes302PsstWhisperSfxMrstokes302418603
+@onready var sound5: AudioStreamPlayer = $FreesoundCommunityCatsFighting73284
+@onready var sound6: AudioStreamPlayer = $FreesoundCommunityRunningInGrass6237
+@onready var sound7: AudioStreamPlayer = $TanweramanCarPassBy337871
+
+@export_group("Session Sounds")
+@export_range(0.0, 1.0) var sound_chance := 0.6   # chance that a sound plays when a session starts
+@export var sound_roll_interval := 2.0            # seconds between chance rolls while no sound is on cooldown
+@export var sound_cooldown := 10.0                 # seconds to wait after a sound plays before rolling again
+
+var _all_sounds: Array[AudioStreamPlayer] = []    # sounds 1-7, never changes
+var _sound_pool: Array[AudioStreamPlayer] = []    # sounds not played yet; shrinks over the game
+var _audio_session_id := 0                        # invalidates stale sound loops when a session ends/restarts
 
 func _ready() -> void:
 	# The generator and its canvas layer must keep running while the tree is paused
 	process_mode = Node.PROCESS_MODE_ALWAYS
+	add_to_group("generator")   # so the pause menu can call reset_state()
+
+	_all_sounds = [sound1, sound2, sound3, sound4, sound5, sound6, sound7]
+	_sound_pool = _all_sounds.duplicate()
+	# Loop the background while the session is running
+	background.finished.connect(_on_background_finished)
 
 	skill_check.finished.connect(_on_check_finished)
 	light_manager.blackout_started.connect(_on_blackout)
@@ -113,6 +136,7 @@ func _start_session() -> void:
 	session_active = true
 	dominic.set_events_paused(true)   # freeze anomaly events during the repair
 	next_check = 0
+	_start_session_audio()
 	for n in clock_nodes:
 		if is_instance_valid(n):
 			_saved_modes[n] = n.process_mode
@@ -126,12 +150,73 @@ func _end_session() -> void:
 	if not session_active:
 		return
 	session_active = false
+	_stop_all_audio()
 	dominic.set_events_paused(false)  # anomaly events resume
 	get_tree().paused = false
 	for n in _saved_modes:
 		if is_instance_valid(n):
 			n.process_mode = _saved_modes[n]
 	_saved_modes.clear()
+
+# ---------- Reset (called by the pause menu on Quit) ----------
+
+func reset_state() -> void:
+	_stop_all_audio()
+	_sound_pool = _all_sounds.duplicate()   # every sound can play again
+	if _shake_tween and _shake_tween.is_valid():
+		_shake_tween.kill()
+	if _hint:
+		_hint.hide()
+	if skill_check and skill_check.active and skill_check.has_method("reset_state"):
+		skill_check.reset_state()
+	if session_active:
+		dominic.set_events_paused(false)
+		for n in _saved_modes:
+			if is_instance_valid(n):
+				n.process_mode = _saved_modes[n]
+		_saved_modes.clear()
+	session_active = false
+	power_out = false
+	next_check = 0
+	if door:
+		door.blackout_active = false
+
+# ---------- Session audio ----------
+
+func _start_session_audio() -> void:
+	_audio_session_id += 1
+	background.play()
+	_sound_loop(_audio_session_id)
+
+# Rolls the chance every sound_roll_interval seconds. After a sound plays, waits
+# sound_cooldown seconds before rolling again. Stops when the session ends.
+func _sound_loop(id: int) -> void:
+	while id == _audio_session_id and session_active and not _sound_pool.is_empty():
+		await get_tree().create_timer(sound_roll_interval, true).timeout   # true = ticks while paused
+		if id != _audio_session_id or not session_active:
+			return
+		if randf() <= sound_chance:
+			_play_random_sound()
+			await get_tree().create_timer(sound_cooldown, true).timeout
+
+func _play_random_sound() -> void:
+	if _sound_pool.is_empty():
+		return
+	var pick: AudioStreamPlayer = _sound_pool.pick_random()
+	_sound_pool.erase(pick)   # removed from the pool: won't repeat until every sound has played
+	pick.play()
+	if _sound_pool.is_empty():
+		_sound_pool = _all_sounds.duplicate()   # all played: refill the pool for the next round
+
+func _on_background_finished() -> void:
+	if session_active:
+		background.play()
+
+func _stop_all_audio() -> void:
+	_audio_session_id += 1   # cancels any running _sound_loop
+	background.stop()
+	for s in _all_sounds:
+		s.stop()
 
 func _shake_camera() -> void:
 	var cam := get_viewport().get_camera_3d()

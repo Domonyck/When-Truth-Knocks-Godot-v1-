@@ -22,6 +22,7 @@ signal puzzle_solved()
 ## its zoom-out animation. Set to false if you'd rather close it manually.
 @export var auto_close_on_solved: bool = true
 @export var auto_close_delay_seconds: float = 1.5
+@export var fade_in_duration: float = 0.6
 
 const FOUND_TINT := Color(0.5, 1.0, 0.5, 0.55)
 const WRONG_FLASH := Color(1.0, 0.4, 0.4)
@@ -56,6 +57,7 @@ func _close() -> void:
 	queue_free()
 
 func _ready() -> void:
+	_fade_in()
 	bg_music.play()
 	for child in get_children():
 		if child is Panel:
@@ -78,7 +80,15 @@ func _ready() -> void:
 			return
 	push_warning("No stage panel for %s" % case_id)
 	_close()
-
+	
+func _fade_in() -> void:
+	modulate.a = 0.0
+	var tween := create_tween()
+	tween.set_pause_mode(Tween.TWEEN_PAUSE_PROCESS)   # runs even though the tree is paused
+	tween.set_trans(Tween.TRANS_QUAD)
+	tween.set_ease(Tween.EASE_OUT)
+	tween.tween_property(self, "modulate:a", 1.0, fade_in_duration)
+	
 func _setup_stage(stage: Panel) -> void:
 	var buttons: Array[TextureButton] = []
 	var background: Control = null
