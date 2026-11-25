@@ -18,6 +18,7 @@
 [ext_resource type="Script" uid="uid://baveadn6se0a4" path="res://WindowsDesktop/noteTypingGame.gd" id="13_utm18"]
 [ext_resource type="AudioStream" uid="uid://d2tymg77aktjx" path="res://assets/Sounds/keyboard-393908.mp3" id="14_ig6x2"]
 [ext_resource type="AudioStream" uid="uid://3ult647ohixu" path="res://assets/Sounds/space-bar-press-slightly-loud-94422.mp3" id="15_5p434"]
+[ext_resource type="Shader" uid="uid://d2bjn4lt5rl7" path="res://Scripts/glitch.gdshader" id="19_scpvc"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_1vivr"]
 bg_color = Color(0.7179641, 0.7179642, 0.7179641, 1)
@@ -106,6 +107,14 @@ void fragment() {
 [sub_resource type="ShaderMaterial" id="8"]
 shader = SubResource("7")
 shader_parameter/SCREEN_HEIGHT = 240.0
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_1vivr"]
+shader = ExtResource("19_scpvc")
+shader_parameter/shake_power = 0.01
+shader_parameter/shake_rate = 1.0
+shader_parameter/shake_speed = 0.2
+shader_parameter/shake_block_size = 10.0
+shader_parameter/shake_color_rate = 0.0110000005225
 
 [node name="Desktop" type="Control" unique_id=735576688]
 process_mode = 1
@@ -412,4 +421,13 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
 
-[node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=1873287517]
+[node name="Glitch" type="CanvasLayer" parent="." unique_id=1873287517]
+
+[node name="ColorRect" type="ColorRect" parent="Glitch" unique_id=1155803715]
+material = SubResource("ShaderMaterial_1vivr")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2

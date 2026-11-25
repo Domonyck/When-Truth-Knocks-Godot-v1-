@@ -20,6 +20,21 @@
 [ext_resource type="Texture2D" uid="uid://cv7kh5xhpx2m5" path="res://BullBoard/Game Pictures/4-2.png" id="16_uebf0"]
 [ext_resource type="Texture2D" uid="uid://dei26eeoyavaa" path="res://BullBoard/Game Pictures/4-3.png" id="17_gaw8u"]
 [ext_resource type="FontFile" uid="uid://1qviefdhvfht" path="res://WindowsDesktop/JMH Typewriter.otf" id="20_0h2ih"]
+[ext_resource type="Shader" uid="uid://dkorhe4hti1sr" path="res://BullBoard/newnew.gdshader" id="21_32d67"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_scpvc"]
+shader = ExtResource("21_32d67")
+shader_parameter/shake = 0.0
+shader_parameter/noiseQuality = 220.60000328720471
+shader_parameter/noiseIntensity = 0.001
+shader_parameter/offsetIntensity = 0.0
+shader_parameter/colorOffsetIntensity = 0.10000000149012
+shader_parameter/pixelSize = 1024.0
+shader_parameter/grainIntensity = 0.1210000057475
+shader_parameter/use_overlay = true
+shader_parameter/use_lens_distortion = true
+shader_parameter/overlay_color = Color(1, 1, 1, 10)
+shader_parameter/lens_distortion_strength = 0.0
 
 [node name="Control" type="Control" unique_id=657436377]
 process_mode = 1
@@ -229,3 +244,14 @@ offset_bottom = 62.0
 theme_override_constants/outline_size = 5
 theme_override_fonts/font = ExtResource("20_0h2ih")
 theme_override_font_sizes/font_size = 50
+
+[node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=722084805]
+
+[node name="ColorRect" type="ColorRect" parent="CanvasLayer" unique_id=1059205164]
+material = SubResource("ShaderMaterial_scpvc")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2

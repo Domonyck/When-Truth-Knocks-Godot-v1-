@@ -54,6 +54,7 @@
 [ext_resource type="AudioStream" uid="uid://dgexixj4njd2q" path="res://assets/Sounds/door unlock.mp3" id="34_nwjiw"]
 [ext_resource type="PackedScene" uid="uid://bhi8ufwuqsots" path="res://BullBoard/BulletinBoardUI.tscn" id="37_cin8a"]
 [ext_resource type="Script" uid="uid://qugjp41bjlxm" path="res://Scripts/dominic3droom.gd" id="41_ay1s4"]
+[ext_resource type="Shader" uid="uid://dyc8oegt1unci" path="res://Scripts/new.gdshader" id="43_raaep"]
 [ext_resource type="Texture2D" uid="uid://riqv5fjhsqss" path="res://assets/2dbafbe5-0e54-4a8f-8f60-c24da3b1ece0.png" id="45_dllnc"]
 [ext_resource type="Script" uid="uid://ce522xt3x8gkx" path="res://Scripts/GameManager.gd" id="45_vtemr"]
 [ext_resource type="Texture2D" uid="uid://8xi1lpkfbbh1" path="res://assets/12024981e-40f1-45bd-afcb-772b99b0af43_-_Edited.png" id="46_vrtfv"]
@@ -375,9 +376,19 @@ material = SubResource("ShaderMaterial_raaep")
 flip_faces = true
 size = Vector2(2, 2)
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_1vivr"]
-shader = ExtResource("19_vprmq")
-shader_parameter/pixel_size = 2.0
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_v5gy4"]
+shader = ExtResource("43_raaep")
+shader_parameter/shake = 0.015
+shader_parameter/noiseQuality = 250.0
+shader_parameter/noiseIntensity = 0.0010000000475
+shader_parameter/offsetIntensity = 0.0029999999241
+shader_parameter/colorOffsetIntensity = 0.2
+shader_parameter/pixelSize = 268.658012713755
+shader_parameter/grainIntensity = 0.0
+shader_parameter/use_overlay = true
+shader_parameter/use_lens_distortion = true
+shader_parameter/overlay_color = Color(1, 1, 1, 10)
+shader_parameter/lens_distortion_strength = 0.0
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_sal5q"]
 size = Vector3(0.023136668, 0.01160254, 0.001)
@@ -854,8 +865,8 @@ collide_with_bodies = false
 
 [node name="CanvasLayer" type="CanvasLayer" parent="SubViewportContainer/SubViewport/Camera3D" unique_id=1125952233]
 
-[node name="ColorRect" type="ColorRect" parent="SubViewportContainer/SubViewport/Camera3D/CanvasLayer" unique_id=1695416500]
-material = SubResource("ShaderMaterial_1vivr")
+[node name="ColorRect" type="ColorRect" parent="SubViewportContainer/SubViewport/Camera3D/CanvasLayer" unique_id=321118433]
+material = SubResource("ShaderMaterial_v5gy4")
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
