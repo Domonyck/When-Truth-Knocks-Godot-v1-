@@ -18,6 +18,7 @@
 [ext_resource type="Script" uid="uid://baveadn6se0a4" path="res://WindowsDesktop/noteTypingGame.gd" id="13_utm18"]
 [ext_resource type="AudioStream" uid="uid://d2tymg77aktjx" path="res://assets/Sounds/keyboard-393908.mp3" id="14_ig6x2"]
 [ext_resource type="AudioStream" uid="uid://3ult647ohixu" path="res://assets/Sounds/space-bar-press-slightly-loud-94422.mp3" id="15_5p434"]
+[ext_resource type="Script" uid="uid://d00o82wnarpc7" path="res://WindowsDesktop/glitch_random.gd" id="19_ipd6s"]
 [ext_resource type="Shader" uid="uid://d2bjn4lt5rl7" path="res://Scripts/glitch.gdshader" id="19_scpvc"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_1vivr"]
@@ -422,6 +423,8 @@ grow_vertical = 2
 mouse_filter = 2
 
 [node name="Glitch" type="CanvasLayer" parent="." unique_id=1873287517]
+visible = false
+script = ExtResource("19_ipd6s")
 
 [node name="ColorRect" type="ColorRect" parent="Glitch" unique_id=1155803715]
 material = SubResource("ShaderMaterial_1vivr")

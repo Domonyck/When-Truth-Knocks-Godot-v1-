@@ -228,18 +228,19 @@ texture_normal = ExtResource("17_gaw8u")
 
 [node name="TimerLabel" type="Label" parent="." unique_id=718985248]
 layout_mode = 0
-offset_left = 19.0
-offset_right = 59.0
-offset_bottom = 64.0
+offset_left = 600.0
+offset_top = -2.0
+offset_right = 640.0
+offset_bottom = 62.0
 theme_override_constants/outline_size = 4
 theme_override_fonts/font = ExtResource("20_0h2ih")
 theme_override_font_sizes/font_size = 50
 
 [node name="StatusLabel" type="Label" parent="." unique_id=1268472159]
 layout_mode = 0
-offset_left = 243.0
+offset_left = 8.0
 offset_top = -2.0
-offset_right = 283.0
+offset_right = 48.0
 offset_bottom = 62.0
 theme_override_constants/outline_size = 5
 theme_override_fonts/font = ExtResource("20_0h2ih")
