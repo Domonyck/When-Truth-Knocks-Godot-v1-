@@ -295,12 +295,12 @@ grow_horizontal = 2
 grow_vertical = 2
 theme_override_fonts/normal_font = ExtResource("2_5udwm")
 theme_override_font_sizes/normal_font_size = 59
-text = "⁌ OBJECTIVES ⁍
+text = "    OBJECTIVES
 ➢ Verify and accept truthful testimonies.
 ➢ Conduct investigations through the Bulletin Board.
-➢ Finalize the manuscript.
+➢ Finalize the manuscript BEFORE 6:00 AM.
 
-⁌ TERMINAL CONTROLS ⁍
+    TERMINAL CONTROLS
 ➢ Notepad: Draft and complete manuscripts.
 ➢ Start: Access the Welcome window
 ➢ Esc: Terminate terminal session."
@@ -411,3 +411,5 @@ offset_bottom = -131.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
+
+[node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=1873287517]

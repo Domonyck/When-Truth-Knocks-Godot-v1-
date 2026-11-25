@@ -69,6 +69,9 @@
 [ext_resource type="PackedScene" uid="uid://cgoydnspmv6cc" path="res://assets/electrical_breaker_panel_box__lp_model.glb" id="58_16mnq"]
 [ext_resource type="AudioStream" uid="uid://deioqw7axa270" path="res://assets/Sounds/soundreality-finger-snap-sound-423220.mp3" id="58_p7kvt"]
 [ext_resource type="AudioStream" uid="uid://cm641bb3cndl" path="res://assets/Sounds/wrong decision.mp3" id="60_p7kvt"]
+[ext_resource type="AudioStream" uid="uid://bxeqgkdm1m20n" path="res://assets/Sounds/fnaf-4-nightmare-jumpscare-sound-effect.mp3" id="70_errsv"]
+[ext_resource type="Texture2D" uid="uid://cb8oi77qcl7nc" path="res://assets/Jumpscare.png" id="70_imi0p"]
+[ext_resource type="Shader" uid="uid://dq0k2o7gdyfuw" path="res://Scripts/jumpscare.gdshader" id="71_errsv"]
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_7bb4q"]
 
@@ -495,6 +498,22 @@ _data = {
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_ky0sj"]
 
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_8vrlf"]
+shader = ExtResource("71_errsv")
+shader_parameter/intensity = 1.0
+shader_parameter/chroma_shift = 2.5
+shader_parameter/chroma_bleed = 0.6
+shader_parameter/saturation = 0.8
+shader_parameter/tint = Color(1, 0.96, 0.9, 1)
+shader_parameter/line_wobble = 5.126000243485
+shader_parameter/tracking_amount = 0.6690000317775
+shader_parameter/tracking_speed = 2.426000115235
+shader_parameter/tracking_height = 0.03100000077398
+shader_parameter/head_switch_height = 0.05200000247
+shader_parameter/noise_amount = 0.18400000874
+shader_parameter/static_lines = 1.0
+shader_parameter/flicker = 0.182000008645
+
 [node name="Node2D" type="Node2D" unique_id=117264161 node_paths=PackedStringArray("ceiling_fan_area", "wall_lamp_area", "office_assets_area", "mesh_instance_2", "computer2")]
 process_mode = 1
 script = ExtResource("1_5xmfd")
@@ -566,7 +585,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 0.9999998, 0.1292572, 0.34409213
 size = Vector3(2.3865662, 1.1934996, 2.0175781)
 
 [node name="GPUParticles3D" type="GPUParticles3D" parent="SubViewportContainer/SubViewport" unique_id=313578921]
-process_mode = 1
+process_mode = 3
 transform = Transform3D(164.64078, 0, 0, 0, 42.38231, 0, 0, 0, -108.27755, 7.844597, 238.30984, -93.67129)
 amount = 1000
 lifetime = 2.0
@@ -1104,6 +1123,28 @@ mesh = SubResource("PlaneMesh_d0hwy")
 [node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=1848524878]
 transform = Transform3D(0.59010655, -35.836372, 14.117252, -68.11913, 1.3100256, 0.19919653, -1.0693756, -103.22378, -4.8985844, 84.86683, 59.60659, -101.67509)
 mesh = SubResource("PlaneMesh_ky0sj")
+
+[node name="Jumpscare" type="CanvasLayer" parent="." unique_id=1652823639]
+visible = false
+
+[node name="Fnaf4NightmareJumpscareSoundEffect" type="AudioStreamPlayer" parent="Jumpscare" unique_id=787502936]
+stream = ExtResource("70_errsv")
+
+[node name="TextureRect" type="TextureRect" parent="Jumpscare" unique_id=1757224043]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("70_imi0p")
+
+[node name="ColorRect" type="ColorRect" parent="Jumpscare" unique_id=341361471]
+material = SubResource("ShaderMaterial_8vrlf")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
 
 [connection signal="input_event" from="SubViewportContainer/SubViewport/StaticBody3D" to="SubViewportContainer/SubViewport/StaticBody3D" method="_on_input_event"]
 

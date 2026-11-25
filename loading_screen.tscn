@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://c1b5x802gad5d"]
 
 [ext_resource type="Script" uid="uid://c7hwl0h83r8it" path="res://Scripts/LoadingScreen.gd" id="1_mggpi"]
-[ext_resource type="FontFile" uid="uid://dh3sljjjsyr82" path="res://WindowsDesktop/Battlenet.ttf" id="2_htrc2"]
+[ext_resource type="FontFile" uid="uid://1qviefdhvfht" path="res://WindowsDesktop/JMH Typewriter.otf" id="2_htrc2"]
 
 [node name="LoadingScreen" type="Control" unique_id=720966127]
 layout_mode = 3
@@ -24,16 +24,16 @@ color = Color(0, 0, 0, 1)
 [node name="UIContainer" type="HBoxContainer" parent="." unique_id=1862310882]
 layout_mode = 0
 offset_left = 1428.0
-offset_top = 846.0
+offset_top = 891.0
 offset_right = 1814.0
-offset_bottom = 1021.0
+offset_bottom = 1066.0
 
 [node name="StatusLabel" type="Label" parent="UIContainer" unique_id=1202881434]
 layout_mode = 2
 theme_override_fonts/font = ExtResource("2_htrc2")
-theme_override_font_sizes/font_size = 100
+theme_override_font_sizes/font_size = 65
 
 [node name="ProgressLabel" type="Label" parent="UIContainer" unique_id=526431226]
 layout_mode = 2
 theme_override_fonts/font = ExtResource("2_htrc2")
-theme_override_font_sizes/font_size = 100
+theme_override_font_sizes/font_size = 65

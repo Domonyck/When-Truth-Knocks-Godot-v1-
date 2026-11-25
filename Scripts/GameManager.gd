@@ -3,6 +3,8 @@ extends Node
 @onready var door: Area3D = get_node_or_null("../SubViewportContainer/SubViewport/door/Area3D")
 @onready var witness_target: Marker3D = get_node_or_null("../WitnessTarget")
 @onready var wrong: AudioStreamPlayer = get_node_or_null("../WrongDecision")
+@onready var jumpscare: CanvasLayer = get_node_or_null("../Jumpscare")
+@onready var jumpscare_audio: AudioStreamPlayer = get_node_or_null("../Jumpscare/Fnaf4NightmareJumpscareSoundEffect")
 @export var dialogue_ui: CanvasLayer 
 @export var name_label: RichTextLabel 
 @export var dialogue_label: RichTextLabel 
@@ -17,6 +19,17 @@ extends Node
 var real_time_passed: float = 0.0
 const REAL_SECONDS_PER_GAME_HOUR: float = 120.0 # 120 seconds = 2 real minutes
 var shift_ended: bool = false
+# --- RANDOM JUMPSCARE ---
+@export_group("Jumpscare")
+@export var jumpscare_start_time: float = 480.0   # 8 real minutes of shift time
+@export var jumpscare_roll_interval: float = 10.0 # how often it rolls the dice after 8 min
+@export_range(0.0, 1.0) var jumpscare_chance: float = 0.15 # chance per roll
+@export var jumpscare_duration: float = 2.0       # visible + audio length
+@export var jumpscare_cooldown: float = 180.0     # seconds after a jumpscare before it can be rolled again
+var jumpscare_pending: bool = false   # chance succeeded, waiting for player to leave PC/board
+var _jumpscare_cooldown_left: float = 0.0
+var jumpscare_playing: bool = false
+var _jumpscare_roll_timer: float = 0.0
 # ---------------------------------
 @export_group("Witness Spawning")
 @export var witness_interval: float = 60.0      # base time between witnesses
@@ -53,6 +66,8 @@ func _ready() -> void:
 			initial_transforms[witness] = witness.global_transform
 		witness.visible = false
 		
+	_end_jumpscare()
+
 	next_witness_timer = witness_interval
 	if door:
 		door.visitor_revealed.connect(_on_visitor_revealed)
@@ -123,6 +138,7 @@ func _process(delta: float) -> void:
 			if next_witness_timer <= 0.0:
 				_knock_for_next_witness()
 		real_time_passed += delta
+		_update_jumpscare_roll(delta)
 		
 		var current_hour = int(real_time_passed / REAL_SECONDS_PER_GAME_HOUR)
 		
@@ -131,13 +147,14 @@ func _process(delta: float) -> void:
 			display_hour = 12
 			
 		if clock_label:
-			clock_label.text = str(display_hour) + ":00 AM"
+			clock_label.text = get_time_string()
 			
 		if current_hour >= 6:
 			shift_ended = true
 			_on_6_am_reached()
 
 func _knock_for_next_witness() -> void:
+	print("knock check: witnesses=", witnesses.size(), " busy=", is_witness_busy(), " waiting=", waiting_for_door, " blackout=", _is_blackout_active(), " timer=", next_witness_timer)
 	if door == null or _is_blackout_active():   # <--- UPDATED
 		return
 	if door.is_open or door.is_animating or door.choosing or door.at_breaker or door.traveling:
@@ -400,6 +417,12 @@ func reset_state() -> void:
 		_active_type_tween.kill()
 	_active_type_tween = null
 
+	# Jumpscare
+	jumpscare_pending = false
+	_jumpscare_cooldown_left = 0.0
+	_jumpscare_roll_timer = 0.0
+	_end_jumpscare()
+
 	# Time
 	real_time_passed = 0.0
 	shift_ended = false
@@ -441,3 +464,58 @@ func reset_state() -> void:
 		dialogue_ui.visible = false
 	if Accept: Accept.visible = false
 	if Decline: Decline.visible = false
+
+# ---------------- JUMPSCARE ----------------
+func _update_jumpscare_roll(delta: float) -> void:
+	if jumpscare_pending or jumpscare_playing:
+		return
+	if _jumpscare_cooldown_left > 0.0:
+		_jumpscare_cooldown_left -= delta
+		return
+	if real_time_passed < jumpscare_start_time:
+		return
+	_jumpscare_roll_timer -= delta
+	if _jumpscare_roll_timer <= 0.0:
+		_jumpscare_roll_timer = jumpscare_roll_interval
+		if randf() < jumpscare_chance:
+			jumpscare_pending = true   # armed: will fire once the player leaves PC / bulletin board
+			print("[Jumpscare] ARMED at ", int(real_time_passed), "s - waiting for player to leave PC/board")
+
+## Called (via group "game_manager") by computer_transition.gd and Billboard.gd
+## after the zoom-out animation has finished.
+func on_overlay_closed() -> void:
+	print("[Jumpscare] overlay closed. pending=", jumpscare_pending, " playing=", jumpscare_playing, " node_found=", jumpscare != null)
+	if jumpscare_pending and not jumpscare_playing:
+		_play_jumpscare()
+		
+func get_time_string() -> String:
+	var h := int(real_time_passed / REAL_SECONDS_PER_GAME_HOUR)
+	if h >= 6:
+		return "6:00 AM"
+	return "%d:00 AM" % (12 if h == 0 else h)
+	
+func _play_jumpscare() -> void:
+	if jumpscare == null:
+		return
+	jumpscare_pending = false
+	jumpscare_playing = true
+	_jumpscare_cooldown_left = jumpscare_cooldown
+	_jumpscare_roll_timer = jumpscare_roll_interval
+	var my_run := _run_id
+
+	print("[Jumpscare] PLAYING")
+	jumpscare.visible = true
+	if jumpscare_audio:
+		jumpscare_audio.play()
+
+	await get_tree().create_timer(jumpscare_duration, false).timeout
+	if my_run != _run_id or not is_inside_tree():
+		return   # reset_state() already cleaned up
+	_end_jumpscare()
+
+func _end_jumpscare() -> void:
+	jumpscare_playing = false
+	if jumpscare:
+		jumpscare.visible = false
+	if jumpscare_audio:
+		jumpscare_audio.stop()

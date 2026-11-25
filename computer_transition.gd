@@ -101,6 +101,9 @@ func force_shutdown_desktop() -> void:
 
 	is_transitioning = false
 
+	# --- JUMPSCARE CHECK: overlay fully closed, camera back ---
+	get_tree().call_group("game_manager", "on_overlay_closed")
+
 func zoom_out_camera() -> void:
 	if get_tree() == null or not is_inside_tree():
 		return
@@ -132,3 +135,6 @@ func zoom_out_camera() -> void:
 		camera.set_process_input(true)
 	
 	is_transitioning = false
+
+	# --- JUMPSCARE CHECK: overlay fully closed, camera back ---
+	get_tree().call_group("game_manager", "on_overlay_closed")

@@ -29,9 +29,9 @@ const GAME_OVER_SCENE: String = ""
 
 # Seconds the player gets to secure the room, depending on which event played
 const WINDOW_NORMAL_WALK: float = 12.5
-const WINDOW_FAST_WALK: float = 6.0
-const WINDOW_NORMAL_TAP: float = 4.0
-const WINDOW_FAST_TAP: float = 4.0
+const WINDOW_FAST_WALK: float = 8.0
+const WINDOW_NORMAL_TAP: float = 6.0
+const WINDOW_FAST_TAP: float = 6.0
 # Seconds the warning stays on screen before game over kicks in.
 const GAME_OVER_DELAY: float = 3.0
 

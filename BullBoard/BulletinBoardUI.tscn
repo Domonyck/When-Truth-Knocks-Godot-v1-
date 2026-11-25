@@ -43,6 +43,7 @@ stream = ExtResource("3_0h2ih")
 stream = ExtResource("3_0h2ih")
 
 [node name="Stage1" type="Panel" parent="." unique_id=553230175]
+visible = false
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -129,7 +130,6 @@ offset_bottom = 490.0
 texture_normal = ExtResource("9_lxbu2")
 
 [node name="Stage3" type="Panel" parent="." unique_id=1552680350]
-visible = false
 layout_mode = 0
 offset_right = 40.0
 offset_bottom = 40.0
@@ -147,10 +147,11 @@ texture = ExtResource("10_kbk5w")
 
 [node name="3-1" type="TextureButton" parent="Stage3" unique_id=2060086060]
 layout_mode = 0
-offset_left = 746.0
-offset_top = 783.0
-offset_right = 823.0
-offset_bottom = 826.0
+offset_left = 499.00006
+offset_top = 995.0
+offset_right = 576.00006
+offset_bottom = 1038.0
+scale = Vector2(1.5, 1.5)
 texture_normal = ExtResource("11_bgfmy")
 
 [node name="3-2" type="TextureButton" parent="Stage3" unique_id=1025643544]
@@ -215,6 +216,7 @@ layout_mode = 0
 offset_left = 19.0
 offset_right = 59.0
 offset_bottom = 64.0
+theme_override_constants/outline_size = 4
 theme_override_fonts/font = ExtResource("20_0h2ih")
 theme_override_font_sizes/font_size = 50
 
@@ -224,5 +226,6 @@ offset_left = 243.0
 offset_top = -2.0
 offset_right = 283.0
 offset_bottom = 62.0
+theme_override_constants/outline_size = 5
 theme_override_fonts/font = ExtResource("20_0h2ih")
 theme_override_font_sizes/font_size = 50

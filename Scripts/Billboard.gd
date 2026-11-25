@@ -94,3 +94,6 @@ func zoom_out_camera() -> void:
 	# Optional: Re-enable player movement here (e.g., player.set_physics_process(true))
 
 	is_transitioning = false
+
+	# --- JUMPSCARE CHECK: overlay fully closed, camera back ---
+	get_tree().call_group("game_manager", "on_overlay_closed")

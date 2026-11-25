@@ -1,4 +1,3 @@
-
 extends Control
 
 @onready var window_dialog: Panel = $WindowDialog
@@ -8,12 +7,11 @@ extends Control
 @onready var start_button: Button = $Panel/Start
 
 func _ready() -> void:
-	GameManager.register_clock_2(clock_label_two)
-
 	# Show the Welcome window automatically only once.
-	if not GameManager.welcome_already_shown:
+	var gm := get_tree().get_first_node_in_group("game_manager")
+	if gm and not gm.welcome_already_shown:
 		window_dialog.show()
-		GameManager.welcome_already_shown = true
+		gm.welcome_already_shown = true
 	else:
 		window_dialog.hide()
 
