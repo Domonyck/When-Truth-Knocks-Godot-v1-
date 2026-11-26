@@ -8,12 +8,16 @@
 [ext_resource type="Texture2D" uid="uid://bo5wjykv7x6m1" path="res://WindowsDesktop/Flag.png" id="3"]
 [ext_resource type="Texture2D" uid="uid://dvjjm7mlwm15b" path="res://WindowsDesktop/512x512.png" id="3_n6gkq"]
 [ext_resource type="Script" uid="uid://2tfa5ls4ttxr" path="res://WindowsDesktop/notepad.gd" id="4_7al4d"]
+[ext_resource type="Texture2D" uid="uid://c5vnvhl2caqhc" path="res://assets/internet.png" id="4_o8405"]
 [ext_resource type="Texture2D" uid="uid://dg348brh18k0l" path="res://WindowsDesktop/Window.png" id="5"]
+[ext_resource type="Script" uid="uid://7lj0gxhj0xnj" path="res://WindowsDesktop/texture_button.gd" id="5_enatx"]
 [ext_resource type="Texture2D" uid="uid://ux3o81dhp5aw" path="res://WindowsDesktop/CloseRegular.png" id="6"]
 [ext_resource type="Texture2D" uid="uid://chbakxufv82m5" path="res://WindowsDesktop/ClosePressed.png" id="7"]
+[ext_resource type="Script" uid="uid://cd61am5v2j8hq" path="res://WindowsDesktop/window_dialog_2.gd" id="7_bmlpe"]
 [ext_resource type="Script" uid="uid://b3s4q7ewvr0wa" path="res://WindowsDesktop/window_dialog.gd" id="7_jxju5"]
 [ext_resource type="Script" uid="uid://bq04howwaxtq1" path="res://WindowsDesktop/Desktop.gd" id="8"]
 [ext_resource type="Script" uid="uid://dmcmgr7x86bcf" path="res://WindowsDesktop/timer.gd" id="10_506vr"]
+[ext_resource type="Texture2D" uid="uid://o4rspx2338ym" path="res://assets/TUTORIAL.png" id="10_enatx"]
 [ext_resource type="Shader" uid="uid://b36d4lhtok4yi" path="res://WindowsDesktop/Desktop2D.gdshader" id="12_4upda"]
 [ext_resource type="Script" uid="uid://baveadn6se0a4" path="res://WindowsDesktop/noteTypingGame.gd" id="13_utm18"]
 [ext_resource type="AudioStream" uid="uid://d2tymg77aktjx" path="res://assets/Sounds/keyboard-393908.mp3" id="14_ig6x2"]
@@ -80,16 +84,16 @@ shader_parameter/roll_speed = 3.97
 shader_parameter/roll_size = 13.9230006613425
 shader_parameter/roll_variation = 1.50100006803762
 shader_parameter/distort_intensity = 0.0
-shader_parameter/noise_opacity = 0.214000010165
+shader_parameter/noise_opacity = 0.22400001064
 shader_parameter/noise_speed = 5.0
 shader_parameter/static_noise_intensity = 0.07200000342
-shader_parameter/aberration = 0.00400004768999995
+shader_parameter/aberration = -0.003999952689999975
 shader_parameter/brightness = 1.4
 shader_parameter/discolor = true
 shader_parameter/warp_amount = 0.0330000015675
 shader_parameter/clip_warp = false
 shader_parameter/vignette_intensity = 0.4
-shader_parameter/vignette_opacity = 0.3200000152
+shader_parameter/vignette_opacity = 0.4910000233225
 
 [sub_resource type="Shader" id="7"]
 code = "shader_type canvas_item;
@@ -143,6 +147,16 @@ grow_horizontal = 2
 grow_vertical = 2
 texture = ExtResource("2_pwha1")
 expand_mode = 1
+
+[node name="TextureButton" type="TextureButton" parent="." unique_id=515311621]
+layout_mode = 0
+offset_left = 54.0
+offset_top = 266.0
+offset_right = 1974.0
+offset_bottom = 1346.0
+scale = Vector2(0.12, 0.12)
+texture_normal = ExtResource("4_o8405")
+script = ExtResource("5_enatx")
 
 [node name="NotepadApp" type="TextureButton" parent="." unique_id=926456888]
 layout_mode = 0
@@ -236,6 +250,7 @@ horizontal_alignment = 1
 vertical_alignment = 1
 
 [node name="WindowDialog" type="Panel" parent="." unique_id=844715670]
+visible = false
 texture_filter = 1
 layout_mode = 1
 anchors_preset = 8
@@ -316,7 +331,6 @@ text = "    OBJECTIVES
 ➢ Esc: Terminate terminal session."
 
 [node name="Notepad2" type="Panel" parent="." unique_id=1602833461]
-visible = false
 self_modulate = Color(0.6847319, 0.6847319, 0.6847319, 1)
 texture_filter = 1
 layout_mode = 1
@@ -401,7 +415,91 @@ theme_override_fonts/font = ExtResource("2_5udwm")
 theme_override_font_sizes/font_size = 64
 text = "Time: 30 WPM: 0 Acc: 100%"
 
+[node name="WindowDialog2" type="Panel" parent="." unique_id=1181825024]
+visible = false
+texture_filter = 1
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -683.0
+offset_top = -462.0
+offset_right = 756.0
+offset_bottom = 374.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxTexture_1vivr")
+script = ExtResource("7_bmlpe")
+
+[node name="Panel" type="Panel" parent="WindowDialog2" unique_id=1853157193]
+layout_mode = 0
+offset_left = 118.5
+offset_top = -15.0
+offset_right = 937.5
+offset_bottom = 70.5
+theme_override_styles/panel = SubResource("StyleBoxEmpty_ql4es")
+
+[node name="Label" type="Label" parent="WindowDialog2/Panel" unique_id=727092929]
+layout_mode = 0
+offset_left = 421.5
+offset_top = 4.5
+offset_right = 711.5
+offset_bottom = 197.5
+theme_override_fonts/font = ExtResource("2_5udwm")
+theme_override_font_sizes/font_size = 108
+text = "Internet
+"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="CloseButton" type="Button" parent="WindowDialog2/Panel" unique_id=1994197728]
+texture_filter = 1
+layout_mode = 0
+offset_left = 1214.5
+offset_top = 18.5
+offset_right = 1283.5
+offset_bottom = 96.5
+theme_override_fonts/font = ExtResource("2_5udwm")
+theme_override_font_sizes/font_size = 80
+theme_override_styles/normal = SubResource("StyleBoxTexture_auskg")
+theme_override_styles/pressed = SubResource("StyleBoxTexture_0sxyj")
+theme_override_styles/hover = SubResource("StyleBoxTexture_jxju5")
+
+[node name="Panel2" type="Panel" parent="WindowDialog2" unique_id=599063309]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 3.0
+offset_top = 100.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="ScrollContainer" type="ScrollContainer" parent="WindowDialog2/Panel2" unique_id=2114342807]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = 1.0
+offset_right = -2.5
+grow_horizontal = 2
+grow_vertical = 2
+horizontal_scroll_mode = 0
+
+[node name="CenterContainer" type="CenterContainer" parent="WindowDialog2/Panel2/ScrollContainer" unique_id=1122132986]
+layout_mode = 2
+
+[node name="TextureRect" type="TextureRect" parent="WindowDialog2/Panel2/ScrollContainer/CenterContainer" unique_id=340004074]
+layout_mode = 2
+texture = ExtResource("10_enatx")
+expand_mode = 3
+stretch_mode = 5
+
 [node name="ColorRect2" type="ColorRect" parent="." unique_id=1797555366]
+top_level = true
 material = SubResource("ShaderMaterial_8vrlf")
 layout_mode = 0
 offset_right = 1924.0
