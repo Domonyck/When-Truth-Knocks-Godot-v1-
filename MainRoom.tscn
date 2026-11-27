@@ -9,9 +9,9 @@
 [ext_resource type="PackedScene" uid="uid://crjw6d4u1q1tc" path="res://assets/oldRoom.glb" id="2_abmy8"]
 [ext_resource type="AudioStream" uid="uid://cc246cqsw44qr" path="res://assets/Sounds/night-ambience-29548.mp3" id="2_cbfv6"]
 [ext_resource type="PackedScene" uid="uid://cpsn4onkag8hc" path="res://dialogue_ui.tscn" id="2_i755a"]
+[ext_resource type="AudioStream" uid="uid://cejp8ogj5i0w2" path="res://assets/Sounds/ThunClap.mp3" id="2_q2ksf"]
 [ext_resource type="Script" uid="uid://dwt054jdqyovy" path="res://Scripts/ceilingfan.gd" id="2_shaa1"]
-[ext_resource type="AudioStream" uid="uid://be6ke66qoajdn" path="res://assets/Sounds/thunder-clap-521194.mp3" id="2_wid6m"]
-[ext_resource type="Script" uid="uid://bx3p0cn8qqefv" path="res://Scripts/thunder_clap_521194.gd" id="3_fs0jg"]
+[ext_resource type="Script" uid="uid://co34adgvdbvcf" path="res://Scripts/thun_clap.gd" id="3_fosux"]
 [ext_resource type="AudioStream" uid="uid://bvxairaugirwb" path="res://assets/Sounds/freesound_community-rain-and-thunder-16705.mp3" id="3_v8c74"]
 [ext_resource type="AudioStream" uid="uid://bvsijwoh1i5o5" path="res://assets/Sounds/freesound_community-suspense-creepy-ominous-ambience-14569.mp3" id="4_7bb4q"]
 [ext_resource type="Texture2D" uid="uid://byd37yo4crqtv" path="res://assets/ceilingfan_Image_0.jpg" id="4_7tsin"]
@@ -81,6 +81,8 @@
 [ext_resource type="AudioStream" uid="uid://bxeqgkdm1m20n" path="res://assets/Sounds/fnaf-4-nightmare-jumpscare-sound-effect.mp3" id="70_errsv"]
 [ext_resource type="Texture2D" uid="uid://cb8oi77qcl7nc" path="res://assets/Jumpscare.png" id="70_imi0p"]
 [ext_resource type="Shader" uid="uid://dq0k2o7gdyfuw" path="res://Scripts/jumpscare.gdshader" id="71_errsv"]
+[ext_resource type="Texture2D" uid="uid://cjmegksjvxx44" path="res://assets/missing.png" id="75_vthu4"]
+[ext_resource type="Shader" uid="uid://l334tu3lt2jj" path="res://Scripts/MayaPosterBlur.gdshader" id="76_ha37m"]
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_7bb4q"]
 
@@ -407,11 +409,11 @@ sky_horizon_color = Color(0.003070068, 0.10436324, 0.25312415, 1)
 ground_bottom_color = Color(0, 0, 0, 1)
 ground_horizon_color = Color(0, 0, 0, 1)
 
-[sub_resource type="Sky" id="Sky_2gs6a"]
+[sub_resource type="Sky" id="Sky_q2ksf"]
 sky_material = SubResource("ProceduralSkyMaterial_meq1q")
 
 [sub_resource type="Environment" id="Environment_1vivr"]
-sky = SubResource("Sky_2gs6a")
+sky = SubResource("Sky_q2ksf")
 ambient_light_source = 3
 ambient_light_color = Color(0.0012205493, 8.534494e-05, 0.0036303957, 0.8980392)
 ambient_light_sky_contribution = 0.4
@@ -515,6 +517,11 @@ _data = {
 &"normal_walk": SubResource("Animation_vtemr")
 }
 
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_d0hwy"]
+shader = ExtResource("76_ha37m")
+shader_parameter/blur_radius = 3.0
+shader_parameter/dim_amount = 0.28
+
 [sub_resource type="PlaneMesh" id="PlaneMesh_ky0sj"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_8vrlf"]
@@ -542,10 +549,10 @@ office_assets_area = NodePath("SubViewportContainer/SubViewport/OfficeAssets_fre
 mesh_instance_2 = NodePath("SubViewportContainer/SubViewport/OfficeAssets_free/MeshInstance3D2")
 computer2 = NodePath("SubViewportContainer/SubViewport/OfficeAssets_free/Computer2")
 
-[node name="ThunderPlayer" type="AudioStreamPlayer" parent="." unique_id=1734772370 node_paths=PackedStringArray("light_manager", "lightning_light")]
-stream = ExtResource("2_wid6m")
-volume_db = 0.808
-script = ExtResource("3_fs0jg")
+[node name="ThunClap" type="AudioStreamPlayer" parent="." unique_id=717491590 node_paths=PackedStringArray("light_manager", "lightning_light")]
+stream = ExtResource("2_q2ksf")
+autoplay = true
+script = ExtResource("3_fosux")
 light_manager = NodePath("..")
 lightning_light = NodePath("../SubViewportContainer/SubViewport/lightning_light")
 
@@ -1096,7 +1103,26 @@ dialogue_label = NodePath("../DialogueUI/Control/DialogueLabel")
 Accept = NodePath("../DialogueUI/Control/Accept")
 Decline = NodePath("../DialogueUI/Control/Decline")
 characters_parent = NodePath("../SubViewportContainer/Characters")
+wanted_poster_texture = ExtResource("75_vthu4")
 clock_label = NodePath("../ClockUI/TimeLabel")
+
+[node name="PosterFocusLayer" type="CanvasLayer" parent="GameManager" unique_id=443350055]
+
+[node name="BackgroundBlur" type="ColorRect" parent="GameManager/PosterFocusLayer" unique_id=1398749932]
+material = SubResource("ShaderMaterial_d0hwy")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="WantedPoster" type="TextureRect" parent="GameManager/PosterFocusLayer" unique_id=272173520]
+offset_left = 503.0
+offset_top = 20.0
+offset_right = 1797.0
+offset_bottom = 2020.0
+scale = Vector2(0.72751486, 0.43536156)
+texture = ExtResource("75_vthu4")
 
 [node name="WrongDecision" type="AudioStreamPlayer" parent="." unique_id=2014381312]
 stream = ExtResource("60_p7kvt")

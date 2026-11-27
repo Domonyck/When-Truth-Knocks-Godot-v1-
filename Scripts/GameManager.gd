@@ -11,7 +11,15 @@ extends Node
 @export var Accept: Button
 @export var Decline: Button
 @export var fade_in_duration: float = 1.5
-@export var characters_parent: Node3D 
+@export var characters_parent: Node3D
+@export_group("Maya Poster Focus")
+@export var wanted_poster_texture: Texture2D
+
+@onready var poster_focus_layer: CanvasLayer = get_node_or_null("PosterFocusLayer")
+@onready var poster_blur_rect: ColorRect = get_node_or_null("PosterFocusLayer/BackgroundBlur")
+@onready var wanted_poster_rect: TextureRect = get_node_or_null("PosterFocusLayer/WantedPoster")
+
+var poster_pause_active: bool = false
 
 # --- TIME MANAGEMENT VARIABLES ---
 @export_group("Time Management")
@@ -35,6 +43,26 @@ var _jumpscare_roll_timer: float = 0.0
 @export var witness_interval: float = 60.0      # base time between witnesses
 @export var wrong_decision_penalty: float = 20.0 # extra delay for a wrong choice
 var next_witness_timer: float = 60.0
+
+# --- OPENING MONOLOGUE ---
+@export_group("Intro Monologue")
+@export var play_intro: bool = true
+@export var intro_start_delay: float = 1.0   # wait for the scene/fade to settle before the box appears
+@export var intro_lines: Array[String] = [
+	"A crack of thunder splits the sky, and the whole room shudders with it. My heart is still hammering...",
+	"Wait... where was I? What was I doing? The rain, the flickering lights, that thunder... my head is a blur.",
+	"Right. The investigation. That's why I'm here. That's why I'm still awake at this hour.",
+	"Maya Reyes. Sixteen years old. Reported missing, written off as a runaway, and then forgotten. The case was abandoned a decade ago, and nobody has lifted a finger since.",
+	"But someone called me. Someone wants her found. Tonight, I find out what really happened to her.",
+	"The manuscript has to be finished before 6 AM. Every lead I piece together goes into it. If dawn comes and it isn't done, everything I do here is for nothing.",
+	"People will come knocking. I'll hear every one of them out, but people lie, or misremember, or say what they think I want to hear. I accept only the truth, and I turn the rest away.",
+	"And this place... something feels off tonight. If the lights die, or I hear something I can't explain, I stay sharp. I stay calm. Not everything here has an explanation.",
+	"Alright. Let's begin.",
+]
+var in_intro: bool = false              # true from load until the monologue is finished (pauses clock + witnesses)
+var intro_dialogue_open: bool = false   # true while the box is up and clicks advance it
+var intro_index: int = 0
+var intro_played: bool = false
 
 var witnesses: Array[Node] = []
 var active_witness: Node3D = null
@@ -68,6 +96,13 @@ func _ready() -> void:
 		
 	_end_jumpscare()
 
+	if wanted_poster_rect:
+		if wanted_poster_texture:
+			wanted_poster_rect.texture = wanted_poster_texture
+		wanted_poster_rect.visible = false
+	if poster_blur_rect:
+		poster_blur_rect.visible = false
+
 	next_witness_timer = witness_interval
 	if door:
 		door.visitor_revealed.connect(_on_visitor_revealed)
@@ -75,7 +110,10 @@ func _ready() -> void:
 		Accept.pressed.connect(_on_accept_pressed)
 	if Decline:
 		Decline.pressed.connect(_on_decline_pressed)
-		
+
+	if play_intro:
+		_start_intro()
+
 func register_clock_1(label: Label) -> void:
 	clock_label_1 = label
 
@@ -89,30 +127,77 @@ func update_clocks(time_str_1: String, time_str_2: String) -> void:
 		clock_label_2.text = time_str_2
 
 func _input(event: InputEvent) -> void:
-	if not in_conversation:
+	if not in_conversation and not intro_dialogue_open and not poster_pause_active:
 		return
+
 	var advance_pressed := false
 	if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
 		advance_pressed = true
 	elif event.is_action_pressed("ui_accept"):
 		advance_pressed = true
 
-	if advance_pressed:
-		get_viewport().set_input_as_handled()
-		# If text is still typing out, finish the current line immediately
-		if _active_type_tween and _active_type_tween.is_valid() and _active_type_tween.is_running():
-			_active_type_tween.kill()
-			if dialogue_label:
-				dialogue_label.visible_characters = -1
+	if not advance_pressed:
+		return
+
+	get_viewport().set_input_as_handled()
+
+	# First input after the poster appears dismisses it and continues the intro.
+	if poster_pause_active:
+		_hide_wanted_poster_focus()
+		intro_index += 1
+		if intro_index < intro_lines.size():
+			_play_intro_line(intro_index)
+		else:
+			_end_intro()
+		return
+
+	# If text is still typing out, finish the current line immediately.
+	if _active_type_tween and _active_type_tween.is_valid() and _active_type_tween.is_running():
+		_active_type_tween.kill()
+		if dialogue_label:
+			dialogue_label.visible_characters = -1
+		return
+
+	# Show the wanted poster after the Maya Reyes line (intro line index 3).
+	if intro_dialogue_open:
+		if intro_index == 3:
+			_show_wanted_poster_focus()
 			return
 
-		# Otherwise move to the next conversation line or into the testimony
-		conversation_index += 1
-		if conversation_index < current_conversation.size():
-			_play_conversation_line(conversation_index)
+		intro_index += 1
+		if intro_index < intro_lines.size():
+			_play_intro_line(intro_index)
 		else:
-			_show_testimony_line()
-		
+			_end_intro()
+		return
+
+	# Otherwise move to the next conversation line or into the testimony.
+	conversation_index += 1
+	if conversation_index < current_conversation.size():
+		_play_conversation_line(conversation_index)
+	else:
+		_show_testimony_line()
+
+func _show_wanted_poster_focus() -> void:
+	if wanted_poster_rect == null:
+		push_warning("GameManager: PosterFocusLayer/WantedPoster TextureRect is missing.")
+		return
+	if wanted_poster_rect.texture == null:
+		push_warning("GameManager: Assign the wanted poster image to wanted_poster_texture or WantedPoster.texture.")
+		return
+
+	poster_pause_active = true
+	wanted_poster_rect.visible = true
+	if poster_blur_rect:
+		poster_blur_rect.visible = true
+
+func _hide_wanted_poster_focus() -> void:
+	poster_pause_active = false
+	if wanted_poster_rect:
+		wanted_poster_rect.visible = false
+	if poster_blur_rect:
+		poster_blur_rect.visible = false
+
 func _process(delta: float) -> void:
 	# 1. FLOATING NAME TAG LOGIC
 	if Engine.get_meta("menu_paused", false):
@@ -131,8 +216,8 @@ func _process(delta: float) -> void:
 					screen_pos.y - vertical_pixel_offset
 				)
 
-	# 2. TIME SHIFT LOGIC
-	if not shift_ended:
+	# 2. TIME SHIFT LOGIC (frozen while the opening monologue is running)
+	if not shift_ended and not in_intro:
 		if not is_witness_busy() and not witnesses.is_empty() and not _is_blackout_active():   # <--- UPDATED
 			next_witness_timer -= delta
 			if next_witness_timer <= 0.0:
@@ -156,6 +241,10 @@ func _process(delta: float) -> void:
 func _knock_for_next_witness() -> void:
 	print("knock check: witnesses=", witnesses.size(), " busy=", is_witness_busy(), " waiting=", waiting_for_door, " blackout=", _is_blackout_active(), " timer=", next_witness_timer)
 	if door == null or _is_blackout_active():   # <--- UPDATED
+		return
+	# Never knock while an anomaly event / life-lost sound is running.
+	# next_witness_timer is already <= 0, so this retries every frame until it's clear.
+	if _is_anomaly_active():
 		return
 	if door.is_open or door.is_animating or door.choosing or door.at_breaker or door.traveling:
 		return
@@ -319,6 +408,83 @@ func _show_testimony_line() -> void:
 		if Decline: Decline.visible = true
 	)
 
+# ---------------- OPENING MONOLOGUE ----------------
+func _start_intro() -> void:
+	if intro_played or intro_lines.is_empty():
+		return
+	intro_played = true
+	in_intro = true   # clock + witness spawning wait until the monologue ends
+	dominic.set_events_paused(true)
+	var my_run := _run_id
+
+	await get_tree().create_timer(intro_start_delay, false).timeout
+	if my_run != _run_id or not is_inside_tree() or not in_intro:
+		return
+
+	# Same camera lock the witnesses use (they walk to this marker)
+	var cam = get_tree().get_first_node_in_group("player_camera")
+	if cam and witness_target and cam.has_method("lock_on_target"):
+		cam.lock_on_target(witness_target)
+
+	# Inner monologue: no floating name tag, no Accept/Decline
+	if name_label: name_label.visible = false
+	if Accept: Accept.visible = false
+	if Decline: Decline.visible = false
+
+	# Same dialogue box as the testimonies, with the same fade-in
+	if dialogue_ui:
+		dialogue_ui.visible = true
+		if dialogue_ui.get_child_count() > 0:
+			var ui_root = dialogue_ui.get_child(0)
+			if "modulate" in ui_root:
+				ui_root.modulate.a = 0.0
+				create_tween().tween_property(ui_root, "modulate:a", 1.0, 0.5)
+
+	intro_index = 0
+	intro_dialogue_open = true
+	_play_intro_line(0)
+
+func _play_intro_line(idx: int) -> void:
+	if dialogue_label == null or idx >= intro_lines.size():
+		return
+	var hint := "Click to begin..." if idx == intro_lines.size() - 1 else "Click to continue..."
+	dialogue_label.text = "[i]" + intro_lines[idx] + "[/i]\n[i][color=#aaaaaa](" + hint + ")[/color][/i]"
+	dialogue_label.visible_characters = 0
+
+	var total_chars := dialogue_label.get_total_character_count()
+	var typing_duration := total_chars * 0.01
+
+	if _active_type_tween and _active_type_tween.is_valid():
+		_active_type_tween.kill()
+	_active_type_tween = create_tween()
+	_active_type_tween.tween_property(dialogue_label, "visible_characters", total_chars, typing_duration)
+
+func _end_intro() -> void:
+	_hide_wanted_poster_focus()
+	intro_dialogue_open = false
+	in_intro = false
+	dominic.set_events_paused(false) 
+
+	if _active_type_tween and _active_type_tween.is_valid():
+		_active_type_tween.kill()
+	_active_type_tween = null
+
+	# Give the camera back to the player
+	var cam = get_tree().get_first_node_in_group("player_camera")
+	if cam and cam.has_method("unlock_camera"):
+		cam.unlock_camera()
+
+	# Fade the box out
+	if dialogue_ui:
+		if dialogue_ui.get_child_count() > 0:
+			var ui_root = dialogue_ui.get_child(0)
+			if "modulate" in ui_root:
+				var ui_tween = create_tween()
+				ui_tween.tween_property(ui_root, "modulate:a", 0.0, 0.4)
+				ui_tween.finished.connect(func(): dialogue_ui.visible = false)
+				return
+		dialogue_ui.visible = false
+
 func _on_close_button_pressed() -> void:
 	in_conversation = false
 	if name_label:
@@ -401,7 +567,11 @@ func show_time() -> void:
 
 func is_witness_busy() -> bool:
 	var door_has_visitor: bool = door != null and door.has_visitor
-	return active_witness != null or waiting_for_door or witness_exiting or door_has_visitor
+	return in_intro or active_witness != null or waiting_for_door or witness_exiting or door_has_visitor
+
+func _is_anomaly_active() -> bool:
+	var a = get_tree().get_first_node_in_group("anomaly_manager")
+	return a != null and a.has_method("is_anomaly_active") and a.is_anomaly_active()
 
 func _is_blackout_active() -> bool:
 	for lm in get_tree().get_nodes_in_group("light_manager"):
@@ -416,6 +586,17 @@ func reset_state() -> void:
 	if _active_type_tween and _active_type_tween.is_valid():
 		_active_type_tween.kill()
 	_active_type_tween = null
+
+	_hide_wanted_poster_focus()
+
+	# Cancel the opening monologue if a reset happens mid-way (it does not replay)
+	if in_intro:
+		in_intro = false
+		intro_dialogue_open = false
+		dominic.set_events_paused(false) 
+		var intro_cam = get_tree().get_first_node_in_group("player_camera")
+		if intro_cam and intro_cam.has_method("unlock_camera"):
+			intro_cam.unlock_camera()
 
 	# Jumpscare
 	jumpscare_pending = false

@@ -29,7 +29,7 @@ const GAME_OVER_SCENE: String = ""
 
 # Seconds the player gets to secure the room, depending on which event played
 const WINDOW_NORMAL_WALK: float = 12.5
-const WINDOW_FAST_WALK: float = 8.0
+const WINDOW_FAST_WALK: float = 6.0
 const WINDOW_NORMAL_TAP: float = 6.0
 const WINDOW_FAST_TAP: float = 6.0
 # Seconds the warning stays on screen before game over kicks in.
@@ -57,9 +57,13 @@ var _node_cache: Dictionary = {}
 # no challenge countdown. The generator minigame turns this on and off.
 var events_paused: bool = false
 
+# Life-lost sounds that are waiting for a witness knock / visit to finish.
+var _pending_life_audio: Array[int] = []
+
 var blinds_timer: Timer
 func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
+	add_to_group("anomaly_manager")   # lets GameManager ask is_anomaly_active()
 	_schedule_next_event()
 	blinds_timer = Timer.new()
 	blinds_timer.one_shot = true
@@ -112,8 +116,34 @@ func reset_state() -> void:
 	_blinds_closed_seen = false
 	_game_over = false
 	_node_cache.clear()
+	_pending_life_audio.clear()
 
 	_schedule_next_event()
+
+# ------------------------------------------------------------------
+# WITNESS <-> ANOMALY EXCLUSION
+# ------------------------------------------------------------------
+
+# True while a witness is knocking, at the door, being interviewed or leaving
+# (GameManager.is_witness_busy() also covers the opening monologue).
+func _witness_event_active() -> bool:
+	var gm = get_tree().get_first_node_in_group("game_manager")
+	return gm != null and gm.has_method("is_witness_busy") and gm.is_witness_busy()
+
+# GameManager asks this before it knocks. True while an anomaly event is running:
+# its sound, its "secure the room" countdown, or a life-lost sound (even a queued one).
+func is_anomaly_active() -> bool:
+	if _challenge_active or not _pending_life_audio.is_empty():
+		return true
+	for p in [sound_1, sound_2, sound_3, sound_4, life_lost_1, life_lost_2, life_lost_3]:
+		if p and p.playing:
+			return true
+	return false
+
+func _flush_pending_life_audio() -> void:
+	if _pending_life_audio.is_empty() or _witness_event_active():
+		return
+	_play_life_lost_audio(_pending_life_audio.pop_front())
 
 func _process(delta: float) -> void:
 	var menu_paused: bool = Engine.get_meta("menu_paused", false)
@@ -128,11 +158,14 @@ func _process(delta: float) -> void:
 	elapsed_time += delta
 	cooldown_timer -= delta
 
-	if cooldown_timer <= 0.0:
+	# Never start an anomaly while a witness is knocking / present.
+	# The cooldown stays at <= 0, so it fires the moment the witness is done.
+	if cooldown_timer <= 0.0 and not _witness_event_active():
 		_trigger_random_event()
 		_schedule_next_event()
 
 	_update_challenge(delta)
+	_flush_pending_life_audio()
 
 func _schedule_next_event() -> void:
 	var total_minutes := elapsed_time / 60.0
@@ -232,7 +265,9 @@ func _resolve_challenge() -> void:
 
 	if _lives > 0:
 		var life_lost_index := MAX_LIVES - _lives
-		_play_life_lost_audio(life_lost_index)
+		# Queued: plays right away unless a witness is knocking/present, then waits.
+		_pending_life_audio.append(life_lost_index)
+		_flush_pending_life_audio()
 
 	Notify.show_message(_build_warning(missing))
 

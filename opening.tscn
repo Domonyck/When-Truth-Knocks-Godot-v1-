@@ -1,0 +1,190 @@
+[gd_scene format=3 uid="uid://ckxn5y828tr6s"]
+
+[ext_resource type="Script" uid="uid://c28r5pafhu7ww" path="res://Scripts/opening.gd" id="1_7vh34"]
+[ext_resource type="PackedScene" uid="uid://ds8qhbocxa2ii" path="res://assets/door.glb" id="1_gggm5"]
+[ext_resource type="AudioStream" uid="uid://qn4m3r4a2a72" path="res://assets/Sounds/generator_off.mp3" id="2_psf0h"]
+[ext_resource type="AudioStream" uid="uid://6pkdujohhpca" path="res://assets/Sounds/knocking-on-door-46237.mp3" id="4_7vh34"]
+[ext_resource type="AudioStream" uid="uid://3ratexwhlk1h" path="res://assets/Sounds/OpenCloseDoor.mp3" id="4_g1ynq"]
+[ext_resource type="Script" uid="uid://flot5xeammx7" path="res://Scripts/opening_scene.gd" id="5_psf0h"]
+[ext_resource type="Shader" uid="uid://dyc8oegt1unci" path="res://Scripts/new.gdshader" id="6_mha44"]
+[ext_resource type="AudioStream" uid="uid://cejp8ogj5i0w2" path="res://assets/Sounds/ThunClap.mp3" id="8_g1ynq"]
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_g1ynq"]
+sky_top_color = Color(0.0011252849, 0.12802976, 0.30780676, 1)
+sky_horizon_color = Color(0.003070068, 0.10436324, 0.25312415, 1)
+ground_bottom_color = Color(0, 0, 0, 1)
+ground_horizon_color = Color(0, 0, 0, 1)
+
+[sub_resource type="Sky" id="Sky_2gs6a"]
+sky_material = SubResource("ProceduralSkyMaterial_g1ynq")
+
+[sub_resource type="Environment" id="Environment_n13d8"]
+sky = SubResource("Sky_2gs6a")
+ambient_light_source = 3
+ambient_light_color = Color(0.0012205493, 8.534494e-05, 0.0036303957, 0.8980392)
+ambient_light_sky_contribution = 0.4
+ambient_light_energy = 0.16
+fog_enabled = true
+fog_light_color = Color(0.06469653, 0.06469653, 0.06469653, 1)
+fog_light_energy = 0.4
+fog_depth_begin = 5.0
+fog_depth_end = 15.0
+volumetric_fog_enabled = true
+volumetric_fog_density = 0.0309
+volumetric_fog_albedo = Color(0.07206691, 0.11128565, 0.15376717, 1)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_nw8uy"]
+size = Vector3(9.372101, 232.14267, 128.69183)
+
+[sub_resource type="Animation" id="Animation_o5ftv"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:rotation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(0, 1.5707964, 0)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath(".:position")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(9.17397, 50.464397, -96.50599)]
+}
+
+[sub_resource type="Animation" id="Animation_muwe1"]
+resource_name = "door_animation"
+length = 2.2
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:rotation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 1.1, 2.2),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [Vector3(0, 1.5707964, 0), Vector3(0, 2.5529609, 0), Vector3(0, 3.1303422, 0)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath(".:position")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 1.1, 2.2),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [Vector3(9.17397, 50.464397, -96.50599), Vector3(21.428349, 50.464397, -71.59764), Vector3(37.412327, 50.464397, -66.40285)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_tdt4t"]
+_data = {
+&"RESET": SubResource("Animation_o5ftv"),
+&"door_open": SubResource("Animation_muwe1")
+}
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_d0hwy"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_cpeaq"]
+albedo_color = Color(0, 0, 0, 1)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_7vh34"]
+shader = ExtResource("6_mha44")
+shader_parameter/shake = 0.015
+shader_parameter/noiseQuality = 250.0
+shader_parameter/noiseIntensity = 0.0010000000475
+shader_parameter/offsetIntensity = 0.0029999999241
+shader_parameter/colorOffsetIntensity = 0.2
+shader_parameter/pixelSize = 268.658012713755
+shader_parameter/grainIntensity = 0.0
+shader_parameter/use_overlay = true
+shader_parameter/use_lens_distortion = true
+shader_parameter/overlay_color = Color(1, 1, 1, 10)
+shader_parameter/lens_distortion_strength = 0.0
+
+[node name="Node3D" type="Node3D" unique_id=2120495949]
+script = ExtResource("1_7vh34")
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=1722224986]
+environment = SubResource("Environment_n13d8")
+
+[node name="door" parent="." unique_id=1256455934 instance=ExtResource("1_gggm5")]
+transform = Transform3D(-9.438777e-09, 0, 0.62468654, 0, 0.47113836, 0, -0.21593405, 0, -2.7305916e-08, 9.17397, 50.464397, -96.50599)
+
+[node name="Area3D" type="Area3D" parent="door" unique_id=1850687816]
+
+[node name="GeneratorOff" type="AudioStreamPlayer" parent="door/Area3D" unique_id=2092244116]
+stream = ExtResource("2_psf0h")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="door/Area3D" unique_id=673428154]
+transform = Transform3D(1, 0, -8.100187e-13, 0, 0.9999457, 0, -1.7763568e-15, 0, 1, -0.29919434, 3.911728, -1.0256138)
+shape = SubResource("BoxShape3D_nw8uy")
+
+[node name="OpenCloseDoor" type="AudioStreamPlayer" parent="door/Area3D" unique_id=1343352066]
+stream = ExtResource("4_g1ynq")
+
+[node name="KnockingOnDoor46237" type="AudioStreamPlayer" parent="door/Area3D" unique_id=1288700330]
+stream = ExtResource("4_7vh34")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="door" unique_id=1087047547]
+libraries/ = SubResource("AnimationLibrary_tdt4t")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=452227318]
+transform = Transform3D(230.85765, 0, 0, 0, 1.876811, 0, 0, 0, 207.64644, 0, 1.8456306, -99.63907)
+mesh = SubResource("PlaneMesh_d0hwy")
+surface_material_override/0 = SubResource("StandardMaterial3D_cpeaq")
+
+[node name="SpotLight3D" type="SpotLight3D" parent="." unique_id=1858488559]
+transform = Transform3D(-0.9998766, 0.015707236, 4.794892e-10, -0.0033233808, -0.2115567, 0.97736007, 0.015351625, 0.97723943, 0.21158282, 4.6661167, 308.88306, -55.808918)
+light_energy = 1.722
+light_indirect_energy = 6.069
+light_volumetric_fog_energy = 1.69
+light_specular = 0.075
+spot_range = 452.86
+spot_attenuation = -1.04
+spot_angle = 14.7
+spot_angle_attenuation = 1.07
+
+[node name="Camera3D" type="Camera3D" parent="." unique_id=746704823 node_paths=PackedStringArray("door", "trigger_point", "transition_trigger_point")]
+transform = Transform3D(0.9998477, 0, 0.017452406, 0, 1, 0, -0.017452406, 0, 0.9998477, 10.09, 50.46, 148.4307)
+script = ExtResource("5_psf0h")
+door = NodePath("../door")
+trigger_point = NodePath("../Marker3D")
+transition_trigger_point = NodePath("../Marker3D2")
+next_scene = "uid://bidhay1q88cyu"
+
+[node name="CanvasLayer" type="CanvasLayer" parent="Camera3D" unique_id=1422589929]
+
+[node name="ColorRect" type="ColorRect" parent="Camera3D/CanvasLayer" unique_id=648952902]
+material = SubResource("ShaderMaterial_7vh34")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="Marker3D" type="Marker3D" parent="." unique_id=1264979667]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9.543575, 49.628094, 106.98884)
+gizmo_extents = 0.5
+
+[node name="Marker3D2" type="Marker3D" parent="." unique_id=78570446]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9.543575, 49.628094, -95.67868)
+gizmo_extents = 10.0
+
+[node name="ThunClap" type="AudioStreamPlayer" parent="." unique_id=151131309]
+stream = ExtResource("8_g1ynq")
