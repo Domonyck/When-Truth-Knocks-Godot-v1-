@@ -1,0 +1,153 @@
+[gd_scene format=3 uid="uid://b3u526cylrpca"]
+
+[ext_resource type="Script" uid="uid://7f278m30nrjb" path="res://Scripts/gameover_1.gd" id="1_nnb5j"]
+[ext_resource type="Shader" uid="uid://bgoufatl7itmd" path="res://Scripts/gameover.gdshader" id="1_rgeop"]
+[ext_resource type="Shader" uid="uid://bhfnrdi278aw4" path="res://gameover1.gdshader" id="2_b087f"]
+[ext_resource type="VideoStream" uid="uid://ciy87k8i0qpnq" path="res://assets/gameover1.ogv" id="2_kaina"]
+[ext_resource type="Texture2D" uid="uid://cjk54h0ig8wxp" path="res://assets/Ending Cutscene (9).png" id="3_raqnq"]
+[ext_resource type="Texture2D" uid="uid://bc8n8iw1a8win" path="res://assets/Gemini_Generated_Image_jmz42tjmz42tjmz4.png" id="6_hhv6v"]
+[ext_resource type="Texture2D" uid="uid://bxtynx2j0gtgw" path="res://assets/Gemini_Generated_Image_tvsicftvsicftvsi.png" id="7_t0o31"]
+[ext_resource type="FontFile" uid="uid://1qviefdhvfht" path="res://WindowsDesktop/JMH Typewriter.otf" id="8_w12hp"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_1vivr"]
+shader = ExtResource("1_rgeop")
+shader_parameter/color_levels = 16.7790007020025
+shader_parameter/chromatic_aberration = 0.0050000002375
+shader_parameter/blur_amount = 0.0
+shader_parameter/brightness = 1.5070000478325
+shader_parameter/saturation = 2.9470000924825
+shader_parameter/color_offset_multiplier = 0.004
+shader_parameter/black_offset_multiplier = 0.02400000114
+shader_parameter/color_offset = 0.009000003687379993
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_8vrlf"]
+shader = ExtResource("2_b087f")
+shader_parameter/overlay = true
+shader_parameter/scanlines_opacity = 0.54800002603
+shader_parameter/scanlines_width = 0.2050000097375
+shader_parameter/grille_opacity = 0.0
+shader_parameter/resolution = Vector2(1920, 1080)
+shader_parameter/pixelate = true
+shader_parameter/roll = false
+shader_parameter/roll_speed = 2.76
+shader_parameter/roll_size = 3.5970001708575
+shader_parameter/roll_variation = 0.46100001863762
+shader_parameter/distort_intensity = 0.06800000323
+shader_parameter/noise_opacity = 0.16800000798
+shader_parameter/noise_speed = 5.0
+shader_parameter/static_noise_intensity = 0.0
+shader_parameter/aberration = 0.021000048497499924
+shader_parameter/brightness = 1.4
+shader_parameter/discolor = false
+shader_parameter/warp_amount = 0.0
+shader_parameter/clip_warp = false
+shader_parameter/vignette_intensity = 0.4
+shader_parameter/vignette_opacity = 0.5010000237975
+
+[node name="Node2D" type="Node2D" unique_id=116557089]
+script = ExtResource("1_nnb5j")
+you_delay = 1.0
+failed_delay = 1.0
+buttons_delay = 1.0
+
+[node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=1513589155]
+
+[node name="VHS" type="ColorRect" parent="CanvasLayer" unique_id=63670375]
+material = SubResource("ShaderMaterial_1vivr")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="VideoStreamPlayer" type="VideoStreamPlayer" parent="." unique_id=2103168234]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 10.0
+offset_top = 7.0
+offset_right = 1930.0
+offset_bottom = 1087.0
+grow_horizontal = 2
+grow_vertical = 2
+stream = ExtResource("2_kaina")
+autoplay = true
+
+[node name="CanvasLayer2" type="CanvasLayer" parent="." unique_id=1174259202]
+
+[node name="VHS2" type="ColorRect" parent="CanvasLayer2" unique_id=1359335042]
+material = SubResource("ShaderMaterial_8vrlf")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="Newspaper" type="TextureRect" parent="." unique_id=421753210]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 5.0
+offset_top = 3.0
+offset_right = 1925.0
+offset_bottom = 1083.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("3_raqnq")
+
+[node name="you" type="TextureRect" parent="." unique_id=1362993313]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 519.0
+offset_top = 331.0
+offset_right = 519.0
+offset_bottom = 331.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("6_hhv6v")
+stretch_mode = 3
+
+[node name="failed" type="TextureRect" parent="." unique_id=1707204995]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 518.0
+offset_top = 156.0
+offset_right = 1952.6665
+offset_bottom = 963.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("7_t0o31")
+
+[node name="restart" type="Button" parent="." unique_id=678903824]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 948.0
+offset_top = 715.0
+offset_right = 1417.1177
+offset_bottom = 860.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_fonts/font = ExtResource("8_w12hp")
+theme_override_font_sizes/font_size = 83
+text = "RESTART"
+flat = true
+
+[node name="quit" type="Button" parent="." unique_id=798612654]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 1121.0
+offset_top = 840.0
+offset_right = 1409.0
+offset_bottom = 954.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_fonts/font = ExtResource("8_w12hp")
+theme_override_font_sizes/font_size = 83
+text = "QUIT"
+flat = true

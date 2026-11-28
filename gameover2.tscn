@@ -1,0 +1,191 @@
+[gd_scene format=3 uid="uid://cfbcccmn36g2w"]
+
+[ext_resource type="Script" uid="uid://5noe7v0wx248" path="res://Scripts/gameover_2.gd" id="1_6mhin"]
+[ext_resource type="Shader" uid="uid://bgoufatl7itmd" path="res://Scripts/gameover.gdshader" id="1_wcoyo"]
+[ext_resource type="AudioStream" uid="uid://bxeqgkdm1m20n" path="res://assets/Sounds/fnaf-4-nightmare-jumpscare-sound-effect.mp3" id="2_6fj58"]
+[ext_resource type="Shader" uid="uid://bhfnrdi278aw4" path="res://gameover1.gdshader" id="2_byg1v"]
+[ext_resource type="Texture2D" uid="uid://cjk54h0ig8wxp" path="res://assets/Ending Cutscene (9).png" id="3_6mhin"]
+[ext_resource type="VideoStream" uid="uid://bjbxbl7gkrrmi" path="res://assets/gameover2.ogv" id="3_byg1v"]
+[ext_resource type="Shader" uid="uid://bu7ntctdedavn" path="res://Scripts/jumpscare2.gdshader" id="3_gfg35"]
+[ext_resource type="Texture2D" uid="uid://cdx21043mnrj0" path="res://assets/jumpscare1.png" id="4_dfbvk"]
+[ext_resource type="Texture2D" uid="uid://bc8n8iw1a8win" path="res://assets/Gemini_Generated_Image_jmz42tjmz42tjmz4.png" id="7_3ovqo"]
+[ext_resource type="Texture2D" uid="uid://bxtynx2j0gtgw" path="res://assets/Gemini_Generated_Image_tvsicftvsicftvsi.png" id="8_d7sjf"]
+[ext_resource type="FontFile" uid="uid://1qviefdhvfht" path="res://WindowsDesktop/JMH Typewriter.otf" id="9_mn0ln"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_ao7jb"]
+shader = ExtResource("1_wcoyo")
+shader_parameter/color_levels = 15.1210006232475
+shader_parameter/chromatic_aberration = 0.0030000001425
+shader_parameter/blur_amount = 0.0
+shader_parameter/brightness = 1.3650000410874998
+shader_parameter/saturation = 1.7200000342
+shader_parameter/color_offset_multiplier = 0.0030000001425
+shader_parameter/black_offset_multiplier = 0.0
+shader_parameter/color_offset = 0.00400000344987999
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_kuj5m"]
+shader = ExtResource("2_byg1v")
+shader_parameter/overlay = true
+shader_parameter/scanlines_opacity = 0.54800002603
+shader_parameter/scanlines_width = 0.2050000097375
+shader_parameter/grille_opacity = 0.0
+shader_parameter/resolution = Vector2(1920, 1080)
+shader_parameter/pixelate = false
+shader_parameter/roll = false
+shader_parameter/roll_speed = 2.76
+shader_parameter/roll_size = 3.5970001708575
+shader_parameter/roll_variation = 0.46100001863762
+shader_parameter/distort_intensity = 0.06800000323
+shader_parameter/noise_opacity = 0.16800000798
+shader_parameter/noise_speed = 5.0
+shader_parameter/static_noise_intensity = 0.0
+shader_parameter/aberration = 0.03
+shader_parameter/brightness = 1.4
+shader_parameter/discolor = false
+shader_parameter/warp_amount = 0.0
+shader_parameter/clip_warp = false
+shader_parameter/vignette_intensity = 0.4
+shader_parameter/vignette_opacity = 0.5010000237975
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_6fj58"]
+shader = ExtResource("3_gfg35")
+shader_parameter/color_levels = 2.7340000348649998
+shader_parameter/chromatic_aberration = 0.0090000004275
+shader_parameter/blur_amount = 0.0
+shader_parameter/brightness = 2.4390000921025
+shader_parameter/saturation = 1.400000019
+shader_parameter/color_offset_multiplier = 0.074000003515
+shader_parameter/black_offset_multiplier = 0.1110000052725
+shader_parameter/color_offset = 0.04000000515988
+
+[node name="Node2D" type="Node2D" unique_id=921510979]
+script = ExtResource("1_6mhin")
+jumpscare_sound = ExtResource("2_6fj58")
+you_delay = 1.0
+failed_delay = 1.0
+buttons_delay = 1.0
+
+[node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=1894204700]
+
+[node name="VHS" type="ColorRect" parent="CanvasLayer" unique_id=1809542678]
+material = SubResource("ShaderMaterial_ao7jb")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="CanvasLayer2" type="CanvasLayer" parent="." unique_id=1081720877]
+
+[node name="VHS2" type="ColorRect" parent="CanvasLayer2" unique_id=932902116]
+material = SubResource("ShaderMaterial_kuj5m")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="VideoStreamPlayer" type="VideoStreamPlayer" parent="." unique_id=316228212]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 4.0
+offset_right = 1924.0
+offset_bottom = 1080.0
+grow_horizontal = 2
+grow_vertical = 2
+stream = ExtResource("3_byg1v")
+autoplay = true
+
+[node name="Newspaper" type="TextureRect" parent="." unique_id=851416264]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 5.0
+offset_top = 3.0
+offset_right = 1925.0
+offset_bottom = 1083.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("3_6mhin")
+
+[node name="you" type="TextureRect" parent="." unique_id=1100288502]
+visibility_layer = 512
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 7.0
+offset_top = 43.0
+offset_right = 1031.0
+offset_bottom = 619.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("7_3ovqo")
+stretch_mode = 3
+
+[node name="failed" type="TextureRect" parent="." unique_id=1621028609]
+visibility_layer = 512
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 518.0
+offset_top = 156.0
+offset_right = 1952.6665
+offset_bottom = 963.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("8_d7sjf")
+
+[node name="restart" type="Button" parent="." unique_id=1150509599]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 970.0
+offset_top = 718.0
+offset_right = 1439.1177
+offset_bottom = 863.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/outline_size = 5
+theme_override_fonts/font = ExtResource("9_mn0ln")
+theme_override_font_sizes/font_size = 83
+text = "RESTART"
+flat = true
+
+[node name="quit" type="Button" parent="." unique_id=1962000531]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 1144.0
+offset_top = 841.0
+offset_right = 1432.0
+offset_bottom = 955.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/outline_size = 5
+theme_override_fonts/font = ExtResource("9_mn0ln")
+theme_override_font_sizes/font_size = 83
+text = "QUIT"
+flat = true
+
+[node name="jumpscare" type="CanvasLayer" parent="." unique_id=1420658620]
+
+[node name="TextureRect" type="TextureRect" parent="jumpscare" unique_id=1701011194]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_right = 3.555542
+offset_bottom = 2.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("4_dfbvk")
+
+[node name="ColorRect" type="ColorRect" parent="jumpscare" unique_id=2061265290]
+material = SubResource("ShaderMaterial_6fj58")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2

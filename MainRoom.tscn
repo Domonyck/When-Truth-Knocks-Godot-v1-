@@ -62,7 +62,6 @@
 [ext_resource type="Texture2D" uid="uid://bf40rm0rev2px" path="res://assets/acc3a5c7-4958-4116-b3f2-be42d3da8e9c.png" id="52_p7kvt"]
 [ext_resource type="Texture2D" uid="uid://t5ism43ug1oj" path="res://assets/c0d18a6a-5da2-4ccc-8d23-7f12a55ccb91.png" id="53_d2nro"]
 [ext_resource type="Texture2D" uid="uid://ch86fvsfkdh28" path="res://assets/Gemini_Generated_Image_f8g2bef8g2bef8g2_-_Edited.png" id="53_v8c74"]
-[ext_resource type="PackedScene" uid="uid://c1nwvwcqhwxwy" path="res://assets/katrina_0930145730_texture.glb" id="54_bk1hi"]
 [ext_resource type="Script" uid="uid://d3jqom0mxu1hi" path="res://Scripts/generator.gd" id="55_ske8v"]
 [ext_resource type="Script" uid="uid://3a46qebxw8hd" path="res://Scripts/skill_check.gd" id="55_xqgp3"]
 [ext_resource type="AudioStream" uid="uid://bd7q675kmunhr" path="res://assets/Sounds/powerdown.mp3" id="56_2syam"]
@@ -1167,10 +1166,6 @@ theme_override_font_sizes/font_size = 22
 text = "Go Back"
 flat = true
 
-[node name="katrina_0930145730_texture" parent="." unique_id=411335890 instance=ExtResource("54_bk1hi")]
-transform = Transform3D(22.264519, 0, 0, 0, 22.16081, 0, 0, 0, 17.866833, -115.86988, 64.42372, 49.961357)
-visible = false
-
 [node name="ClockUI" type="CanvasLayer" parent="." unique_id=1297701799]
 
 [node name="TimeLabel" type="Label" parent="ClockUI" unique_id=299789421]
@@ -1223,4 +1218,3 @@ grow_vertical = 2
 [connection signal="input_event" from="SubViewportContainer/SubViewport/StaticBody3D" to="SubViewportContainer/SubViewport/StaticBody3D" method="_on_input_event"]
 
 [editable path="DialogueUI"]
-[editable path="katrina_0930145730_texture"]
